@@ -1,21 +1,31 @@
-import { Observable, defer, map } from 'rxjs';
-import axios from 'axios';
+import { Observable, defer, map } from "rxjs"
+import axios from "axios"
 
 interface IYouTubeApi {
-  getSuggestions(query: string): Observable<string[]>;
+  getSuggestions(query: string): Observable<string[]>
+  getSearchResults(query: string): Observable<SearchResult[]>
+}
+
+export interface SearchResult {
+  thumbnail: string
 }
 
 export const YouTubeApi = {
   getApi(): IYouTubeApi {
-    return new PipedApi();
-  },
-};
+    return new PipedApi()
+  }
+}
 
 class PipedApi implements IYouTubeApi {
-  static baseUrl = 'https://pipedapi.tokhmi.xyz';
+  static baseUrl = "https://watchapi.whatever.social"
 
   getSuggestions(query: string): Observable<string[]> {
-    //search?q=kapil sharma show&filter=all
-    return defer(() => axios.get(`${PipedApi.baseUrl}/suggestions?query=${query}`)).pipe(map(response => response.data));
+    return defer(() => axios.get(`${PipedApi.baseUrl}/suggestions?query=${query}`)).pipe(map(response => response.data))
+  }
+
+  getSearchResults(query: string): Observable<SearchResult[]> {
+    return defer(() => axios.get(`${PipedApi.baseUrl}/search?q=${query}&filter=all`)).pipe(
+      map(response => response.data.items)
+    )
   }
 }

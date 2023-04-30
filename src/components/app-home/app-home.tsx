@@ -1,49 +1,91 @@
-import { Component, State, h } from '@stencil/core';
-import { Subject, debounceTime, switchMap, takeUntil, tap } from 'rxjs';
-import { YouTubeApi } from '../../YoutubeApi';
+import { Component, State, h } from "@stencil/core"
+import { Subject, debounceTime, filter, map, switchMap, takeUntil, tap } from "rxjs"
+import { SearchResult, YouTubeApi } from "../../YoutubeApi"
 
 @Component({
-  tag: 'app-home',
-  styleUrl: 'app-home.scss',
-  shadow: true,
+  tag: "app-home",
+  styleUrl: "app-home.scss",
+  shadow: true
 })
 export class AppHome {
-  searchText$ = new Subject<string>();
-  disconnected$ = new Subject<void>();
+  searchText$ = new Subject<string>()
+  disconnected$ = new Subject<void>()
+  searchSubmit$ = new Subject<void>()
 
-  @State() suggestions: string[] = [];
+  @State() suggestions: string[] = []
+  @State() searchResults: SearchResult[] = []
+  @State() searchText = ""
+  @State() showSuggestions = false
 
   componentWillLoad() {
-    const api = YouTubeApi.getApi();
+    const api = YouTubeApi.getApi()
 
-    this.searchText$.pipe(debounceTime(300), switchMap(api.getSuggestions), takeUntil(this.disconnected$)).subscribe(suggetions => {
-      this.suggestions = suggetions;
-    });
+    this.searchText$
+      .pipe(
+        filter(text => !!text),
+        tap(text => {
+          this.searchText = text
+        }),
+        debounceTime(300),
+        switchMap(api.getSuggestions),
+        takeUntil(this.disconnected$)
+      )
+      .subscribe(suggetions => {
+        this.suggestions = suggetions
+        this.showSuggestions = true
+      })
+
+    this.searchSubmit$
+      .pipe(
+        map(() => this.searchText),
+        switchMap(api.getSearchResults),
+        takeUntil(this.disconnected$)
+      )
+      .subscribe(results => {
+        this.searchResults = results
+        this.showSuggestions = false
+      })
   }
 
   disconnectedCallback() {
-    this.disconnected$.next();
-    this.disconnected$.complete();
+    this.disconnected$.next()
+    this.disconnected$.complete()
   }
 
   private onSearchTextChange = (ev: Event) => {
-    const target = ev.target as HTMLInputElement;
-    this.searchText$.next(target.value);
-  };
+    const target = ev.target as HTMLInputElement
+    this.searchText$.next(target.value)
+  }
+
+  private onSearchSubmit = (ev: Event) => {
+    ev.preventDefault()
+    this.searchSubmit$.next()
+  }
 
   render() {
     return (
       <div class="app-home">
         <div class="search">
-          <input type="search" placeholder="Search" onInput={this.onSearchTextChange} />
-          <ul class="suggestions">
-            {this.suggestions.map(s => (
-              <li>{s}</li>
-            ))}
-          </ul>
+          <form onSubmit={this.onSearchSubmit}>
+            <input type="search" placeholder="Search" onInput={this.onSearchTextChange} />
+          </form>
+          {this.showSuggestions && (
+            <ul class="suggestions">
+              {this.suggestions.map(s => (
+                <li>{s}</li>
+              ))}
+            </ul>
+          )}
         </div>
         <h1>Youtube Search Results</h1>
+        <ul>
+          {this.searchResults.map(r => (
+            <li>
+              <img src={r.thumbnail}></img>
+            </li>
+          ))}
+        </ul>
       </div>
-    );
+    )
   }
 }
