@@ -5,14 +5,21 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { MatchResults } from "@stencil-community/router";
+import { MatchResults, RouterHistory } from "@stencil-community/router";
 export namespace Components {
     interface AppHome {
+        "history": RouterHistory;
     }
     interface AppProfile {
         "match": MatchResults;
     }
     interface AppRoot {
+    }
+    interface VideoPage {
+        "match": MatchResults;
+    }
+    interface VideoPlayer {
+        "src": string;
     }
 }
 declare global {
@@ -34,24 +41,47 @@ declare global {
         prototype: HTMLAppRootElement;
         new (): HTMLAppRootElement;
     };
+    interface HTMLVideoPageElement extends Components.VideoPage, HTMLStencilElement {
+    }
+    var HTMLVideoPageElement: {
+        prototype: HTMLVideoPageElement;
+        new (): HTMLVideoPageElement;
+    };
+    interface HTMLVideoPlayerElement extends Components.VideoPlayer, HTMLStencilElement {
+    }
+    var HTMLVideoPlayerElement: {
+        prototype: HTMLVideoPlayerElement;
+        new (): HTMLVideoPlayerElement;
+    };
     interface HTMLElementTagNameMap {
         "app-home": HTMLAppHomeElement;
         "app-profile": HTMLAppProfileElement;
         "app-root": HTMLAppRootElement;
+        "video-page": HTMLVideoPageElement;
+        "video-player": HTMLVideoPlayerElement;
     }
 }
 declare namespace LocalJSX {
     interface AppHome {
+        "history"?: RouterHistory;
     }
     interface AppProfile {
         "match"?: MatchResults;
     }
     interface AppRoot {
     }
+    interface VideoPage {
+        "match"?: MatchResults;
+    }
+    interface VideoPlayer {
+        "src"?: string;
+    }
     interface IntrinsicElements {
         "app-home": AppHome;
         "app-profile": AppProfile;
         "app-root": AppRoot;
+        "video-page": VideoPage;
+        "video-player": VideoPlayer;
     }
 }
 export { LocalJSX as JSX };
@@ -61,6 +91,8 @@ declare module "@stencil/core" {
             "app-home": LocalJSX.AppHome & JSXBase.HTMLAttributes<HTMLAppHomeElement>;
             "app-profile": LocalJSX.AppProfile & JSXBase.HTMLAttributes<HTMLAppProfileElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
+            "video-page": LocalJSX.VideoPage & JSXBase.HTMLAttributes<HTMLVideoPageElement>;
+            "video-player": LocalJSX.VideoPlayer & JSXBase.HTMLAttributes<HTMLVideoPlayerElement>;
         }
     }
 }

@@ -1,6 +1,7 @@
-import { Component, State, h } from "@stencil/core"
+import { Component, State, h, Prop } from "@stencil/core"
 import { Subject, debounceTime, filter, map, switchMap, takeUntil, tap } from "rxjs"
 import { SearchResult, YouTubeApi } from "../../YoutubeApi"
+import { RouterHistory } from "@stencil-community/router"
 
 @Component({
   tag: "app-home",
@@ -16,6 +17,8 @@ export class AppHome {
   @State() searchResults: SearchResult[] = []
   @State() searchText = ""
   @State() showSuggestions = false
+
+  @Prop() history: RouterHistory
 
   componentWillLoad() {
     const api = YouTubeApi.getApi()
@@ -62,6 +65,14 @@ export class AppHome {
     this.searchSubmit$.next()
   }
 
+  private createVideoClickHandler = (video: SearchResult) => {
+    const handler = () => {
+      this.history.push(`/videos/${video.videoId}`)
+    }
+
+    return handler
+  }
+
   render() {
     return (
       <div class="app-home">
@@ -80,7 +91,7 @@ export class AppHome {
         <h1>Youtube Search Results</h1>
         <ul>
           {this.searchResults.map(r => (
-            <li>
+            <li onClick={this.createVideoClickHandler(r)}>
               <img src={r.thumbnail}></img>
             </li>
           ))}
