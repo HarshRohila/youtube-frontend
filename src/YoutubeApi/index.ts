@@ -5,6 +5,7 @@ interface IYouTubeApi {
   getSuggestions(query: string): Observable<string[]>
   getSearchResults(query: string): Observable<SearchResult[]>
   getStream(videoId: string): Observable<Stream>
+  getTrendingVideos(): Observable<SearchResult[]>
 }
 
 interface Stream {
@@ -36,6 +37,19 @@ class PipedApi implements IYouTubeApi {
         return {
           sources: [{ url: data.hls }]
         }
+      })
+    )
+  }
+
+  getTrendingVideos(): Observable<SearchResult[]> {
+    const region = "IN"
+    return defer(() => axios.get(`${PipedApi.baseUrl}/trending?region=${region}`)).pipe(
+      map(response => response.data),
+      map(videos => {
+        return videos.map(v => ({
+          videoId: v.url.split("/watch?v=")[1],
+          thumbnail: v.thumbnail
+        }))
       })
     )
   }

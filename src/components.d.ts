@@ -15,6 +15,8 @@ export namespace Components {
     }
     interface AppRoot {
     }
+    interface TrendingPage {
+    }
     interface VideoPage {
         "match": MatchResults;
     }
@@ -41,6 +43,12 @@ declare global {
         prototype: HTMLAppRootElement;
         new (): HTMLAppRootElement;
     };
+    interface HTMLTrendingPageElement extends Components.TrendingPage, HTMLStencilElement {
+    }
+    var HTMLTrendingPageElement: {
+        prototype: HTMLTrendingPageElement;
+        new (): HTMLTrendingPageElement;
+    };
     interface HTMLVideoPageElement extends Components.VideoPage, HTMLStencilElement {
     }
     var HTMLVideoPageElement: {
@@ -57,6 +65,7 @@ declare global {
         "app-home": HTMLAppHomeElement;
         "app-profile": HTMLAppProfileElement;
         "app-root": HTMLAppRootElement;
+        "trending-page": HTMLTrendingPageElement;
         "video-page": HTMLVideoPageElement;
         "video-player": HTMLVideoPlayerElement;
     }
@@ -70,6 +79,8 @@ declare namespace LocalJSX {
     }
     interface AppRoot {
     }
+    interface TrendingPage {
+    }
     interface VideoPage {
         "match"?: MatchResults;
     }
@@ -80,6 +91,7 @@ declare namespace LocalJSX {
         "app-home": AppHome;
         "app-profile": AppProfile;
         "app-root": AppRoot;
+        "trending-page": TrendingPage;
         "video-page": VideoPage;
         "video-player": VideoPlayer;
     }
@@ -91,6 +103,7 @@ declare module "@stencil/core" {
             "app-home": LocalJSX.AppHome & JSXBase.HTMLAttributes<HTMLAppHomeElement>;
             "app-profile": LocalJSX.AppProfile & JSXBase.HTMLAttributes<HTMLAppProfileElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
+            "trending-page": LocalJSX.TrendingPage & JSXBase.HTMLAttributes<HTMLTrendingPageElement>;
             "video-page": LocalJSX.VideoPage & JSXBase.HTMLAttributes<HTMLVideoPageElement>;
             "video-player": LocalJSX.VideoPlayer & JSXBase.HTMLAttributes<HTMLVideoPlayerElement>;
         }
