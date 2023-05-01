@@ -4,6 +4,35 @@ ul {
   padding: 0;
 }
 
-.thumbnail {
-  width: 100%;
+.card {
+  position: relative;
+  margin-bottom: 50px;
+  .thumbnail {
+    border-radius: 15px;
+    width: 100%;
+  }
+  .video-desc {
+    // box-shadow: 0px -13px 21px -5px rgba(2, 0, 36, 1);
+    box-shadow: 0px 0px 21px 12px rgba(2, 0, 36, 1);
+    // z-index: 1;
+    width: 100%;
+    position: absolute;
+    background: #020024;
+    // background: rgb(2, 0, 36);
+    // background: linear-gradient(0deg, rgba(2, 0, 36, 1) 15%, rgba(255, 255, 255, 0) 100%);
+    bottom: -37px;
+    display: flex;
+    height: 50px;
+    align-items: center;
+    .uploader-avatar {
+      padding: 0 10px;
+      $dim: 48px;
+      border-radius: 50%;
+      height: $dim;
+      width: $dim;
+    }
+    h3 {
+      font-size: 1rem;
+    }
+  }
 }

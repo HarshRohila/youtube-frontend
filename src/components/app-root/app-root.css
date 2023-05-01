@@ -1,4 +1,5 @@
 header {
+  z-index: 1;
   background: #5851ff;
   color: white;
   height: 56px;

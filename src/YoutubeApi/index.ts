@@ -19,6 +19,8 @@ interface StreamSource {
 export interface SearchResult {
   thumbnail: string
   videoId: string
+  title: string
+  uploaderAvatar: string
 }
 
 export const YouTubeApi = {
@@ -48,7 +50,9 @@ class PipedApi implements IYouTubeApi {
       map(videos => {
         return videos.map(v => ({
           videoId: v.url.split("/watch?v=")[1],
-          thumbnail: v.thumbnail
+          thumbnail: v.thumbnail,
+          title: v.title,
+          uploaderAvatar: v.uploaderAvatar
         }))
       })
     )

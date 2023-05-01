@@ -1,6 +1,7 @@
 import { Component, Host, State, h } from "@stencil/core"
 import { SearchResult, YouTubeApi } from "../../YoutubeApi"
 import { Subject, takeUntil } from "rxjs"
+import { Card } from "./card"
 
 @Component({
   tag: "trending-page",
@@ -33,7 +34,7 @@ export class TrendingPage {
           {this.videos &&
             this.videos.map(r => (
               <li>
-                <img class="thumbnail" src={r.thumbnail}></img>
+                <Card video={r} />
               </li>
             ))}
         </ul>
