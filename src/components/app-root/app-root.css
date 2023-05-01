@@ -2,9 +2,14 @@ header {
   background: #5851ff;
   color: white;
   height: 56px;
+  width: 100%;
   display: flex;
   align-items: center;
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+  position: fixed;
+  border-bottom-right-radius: 20px;
+  background: rgb(2, 0, 36);
+  background: linear-gradient(171deg, rgba(2, 0, 36, 1) 15%, rgba(255, 255, 255, 0) 100%);
 }
 
 h1 {

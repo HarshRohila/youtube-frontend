@@ -4,6 +4,7 @@ import { Subject, takeUntil } from "rxjs"
 
 @Component({
   tag: "trending-page",
+  styleUrl: "trending-page.scss",
   shadow: true
 })
 export class TrendingPage {
@@ -16,7 +17,6 @@ export class TrendingPage {
       .getTrendingVideos()
       .pipe(takeUntil(this.disconnected$))
       .subscribe(videos => {
-        debugger
         this.videos = videos
       })
   }
@@ -33,7 +33,7 @@ export class TrendingPage {
           {this.videos &&
             this.videos.map(r => (
               <li>
-                <img src={r.thumbnail}></img>
+                <img class="thumbnail" src={r.thumbnail}></img>
               </li>
             ))}
         </ul>
