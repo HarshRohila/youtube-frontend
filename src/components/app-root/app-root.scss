@@ -17,6 +17,39 @@ header {
   &.search-active {
     width: 100%;
   }
+
+  .search-bar {
+    display: flex;
+    align-items: center;
+    button {
+      background: transparent;
+      border: 0;
+      color: white;
+      font-size: 1.5em;
+      padding: 10px;
+    }
+
+    form {
+      flex: 1;
+      input {
+        padding: 0 10px;
+        width: 100%;
+        background: transparent;
+        border: 0;
+        color: white;
+        font-size: 1.5em;
+        &:focus {
+          outline: none;
+        }
+      }
+    }
+  }
+
+  &.search-active {
+    .search-bar {
+      width: 100%;
+    }
+  }
 }
 
 h1 {
@@ -26,8 +59,4 @@ h1 {
   font-family: "Rancho";
   font-size: 2rem;
   margin: 0;
-}
-
-.search-bar {
-  display: flex;
 }

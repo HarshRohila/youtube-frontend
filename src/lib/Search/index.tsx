@@ -20,7 +20,7 @@ export function SearchBar({
     <div class="search-bar">
       {showSearchbar && (
         <form class="search-form" onSubmit={onSearchSubmit}>
-          <input type="search" placeholder="Search" onInput={onSearchTextChange} />
+          <input type="text" placeholder="Search" onInput={onSearchTextChange} />
         </form>
       )}
       {showSearchbar && (
