@@ -1,0 +1,18 @@
+:host {
+  --font-size: inherit;
+
+  .svg-inline--fa {
+    font-size: var(--font-size);
+  }
+}
+
+span {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+  > svg.svg-inline--fa.fa-w-16 {
+    height: 100%;
+    width: var(--x-icon-svg-width, 1em);
+  }
+}

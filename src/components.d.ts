@@ -6,6 +6,7 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { MatchResults, RouterHistory } from "@stencil-community/router";
+import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 export namespace Components {
     interface AppHome {
         "history": RouterHistory;
@@ -23,6 +24,12 @@ export namespace Components {
     }
     interface VideoPlayer {
         "src": string;
+    }
+    interface XIcon {
+        "icon": IconDefinition;
+        "mask"?: IconDefinition;
+        "size"?: string;
+        "spin": boolean;
     }
 }
 declare global {
@@ -62,6 +69,12 @@ declare global {
         prototype: HTMLVideoPlayerElement;
         new (): HTMLVideoPlayerElement;
     };
+    interface HTMLXIconElement extends Components.XIcon, HTMLStencilElement {
+    }
+    var HTMLXIconElement: {
+        prototype: HTMLXIconElement;
+        new (): HTMLXIconElement;
+    };
     interface HTMLElementTagNameMap {
         "app-home": HTMLAppHomeElement;
         "app-profile": HTMLAppProfileElement;
@@ -69,6 +82,7 @@ declare global {
         "trending-page": HTMLTrendingPageElement;
         "video-page": HTMLVideoPageElement;
         "video-player": HTMLVideoPlayerElement;
+        "x-icon": HTMLXIconElement;
     }
 }
 declare namespace LocalJSX {
@@ -89,6 +103,12 @@ declare namespace LocalJSX {
     interface VideoPlayer {
         "src"?: string;
     }
+    interface XIcon {
+        "icon"?: IconDefinition;
+        "mask"?: IconDefinition;
+        "size"?: string;
+        "spin"?: boolean;
+    }
     interface IntrinsicElements {
         "app-home": AppHome;
         "app-profile": AppProfile;
@@ -96,6 +116,7 @@ declare namespace LocalJSX {
         "trending-page": TrendingPage;
         "video-page": VideoPage;
         "video-player": VideoPlayer;
+        "x-icon": XIcon;
     }
 }
 export { LocalJSX as JSX };
@@ -108,6 +129,7 @@ declare module "@stencil/core" {
             "trending-page": LocalJSX.TrendingPage & JSXBase.HTMLAttributes<HTMLTrendingPageElement>;
             "video-page": LocalJSX.VideoPage & JSXBase.HTMLAttributes<HTMLVideoPageElement>;
             "video-player": LocalJSX.VideoPlayer & JSXBase.HTMLAttributes<HTMLVideoPlayerElement>;
+            "x-icon": LocalJSX.XIcon & JSXBase.HTMLAttributes<HTMLXIconElement>;
         }
     }
 }
