@@ -1,4 +1,5 @@
 import { Component, h } from "@stencil/core"
+import { AppRoute } from "../../utils/AppRoute"
 
 @Component({
   tag: "app-root",
@@ -16,10 +17,9 @@ export class AppRoot {
         <main>
           <stencil-router>
             <stencil-route-switch scrollTopOffset={0}>
-              <stencil-route url="/" component="trending-page" exact={true} />
-              <stencil-route url="/profile/:name" component="app-profile" />
-              <stencil-route url="/videos/:videoId" component="video-page" />
-              <stencil-route url="/trending" component="trending-page" />
+              <stencil-route url={AppRoute.getPath("")} component="trending-page" exact />
+              <stencil-route url={AppRoute.getPath("/videos/:videoId")} component="video-page" />
+              <stencil-route url={AppRoute.getPath("/trending")} component="trending-page" />
             </stencil-route-switch>
           </stencil-router>
         </main>

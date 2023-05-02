@@ -1,19 +1,23 @@
-import { Config } from '@stencil/core';
-import { sass } from '@stencil/sass';
+import { Config } from "@stencil/core"
+import { sass } from "@stencil/sass"
 
-// https://stenciljs.com/docs/config
+const dev: boolean = process.argv && process.argv.indexOf("--dev") > -1
+const apiEnv: string = dev ? "dev" : "prod"
 
 export const config: Config = {
-  globalStyle: 'src/global/app.css',
-  globalScript: 'src/global/app.ts',
-  taskQueue: 'async',
+  globalStyle: "src/global/app.css",
+  globalScript: "src/global/app.ts",
+  taskQueue: "async",
   outputTargets: [
     {
-      type: 'www',
+      type: "www",
       // comment the following line to disable service workers in production
       serviceWorker: null,
-      baseUrl: 'https://myapp.local/',
-    },
+      baseUrl: "https://myapp.local/"
+    }
   ],
-  plugins: [sass()],
-};
+  env: {
+    apiEnv
+  },
+  plugins: [sass()]
+}
