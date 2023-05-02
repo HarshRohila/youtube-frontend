@@ -5,7 +5,8 @@ import { Subject, takeUntil } from "rxjs"
 
 @Component({
   tag: "video-page",
-  shadow: true
+  styleUrl: "video-page.scss",
+  shadow: false
 })
 export class VideoPage {
   @Prop() match: MatchResults
@@ -34,8 +35,7 @@ export class VideoPage {
   render() {
     return (
       <Host>
-        <h1>Player</h1>
-        {this.url && <video-player src={this.url}></video-player>}
+        <div class="video-page">{this.url && <video-player src={this.url}></video-player>}</div>
       </Host>
     )
   }

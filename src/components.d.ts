@@ -16,6 +16,7 @@ export namespace Components {
     interface AppRoot {
     }
     interface TrendingPage {
+        "history": RouterHistory;
     }
     interface VideoPage {
         "match": MatchResults;
@@ -80,6 +81,7 @@ declare namespace LocalJSX {
     interface AppRoot {
     }
     interface TrendingPage {
+        "history"?: RouterHistory;
     }
     interface VideoPage {
         "match"?: MatchResults;

@@ -1,7 +1,9 @@
-import { Component, Host, State, h } from "@stencil/core"
+import { Component, Host, Prop, State, h } from "@stencil/core"
 import { SearchResult, YouTubeApi } from "../../YoutubeApi"
 import { Subject, takeUntil } from "rxjs"
 import { Card } from "./card"
+import { RouterHistory } from "@stencil-community/router"
+import { Router } from "../../lib/Router"
 
 @Component({
   tag: "trending-page",
@@ -10,6 +12,8 @@ import { Card } from "./card"
 })
 export class TrendingPage {
   @State() videos: SearchResult[]
+
+  @Prop() history: RouterHistory
 
   disconnected$ = new Subject<void>()
 
@@ -27,13 +31,21 @@ export class TrendingPage {
     this.disconnected$.complete()
   }
 
+  private createVideoClickHandler = (video: SearchResult) => {
+    const handler = () => {
+      new Router(this.history).showVideoPage(video)
+    }
+
+    return handler
+  }
+
   render() {
     return (
       <Host>
         <ul>
           {this.videos &&
             this.videos.map(r => (
-              <li>
+              <li onClick={this.createVideoClickHandler(r)}>
                 <Card video={r} />
               </li>
             ))}

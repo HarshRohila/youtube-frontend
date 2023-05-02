@@ -2,6 +2,7 @@ import { Component, State, h, Prop } from "@stencil/core"
 import { Subject, debounceTime, filter, map, switchMap, takeUntil, tap } from "rxjs"
 import { SearchResult, YouTubeApi } from "../../YoutubeApi"
 import { RouterHistory } from "@stencil-community/router"
+import { Router } from "../../lib/Router"
 
 @Component({
   tag: "app-home",
@@ -67,7 +68,7 @@ export class AppHome {
 
   private createVideoClickHandler = (video: SearchResult) => {
     const handler = () => {
-      this.history.push(`/videos/${video.videoId}`)
+      new Router(this.history).showVideoPage(video)
     }
 
     return handler

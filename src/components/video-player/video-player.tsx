@@ -4,7 +4,7 @@ import videojs from "video.js"
 @Component({
   tag: "video-player",
   styleUrl: "video-player.scss",
-  shadow: true
+  shadow: false
 })
 export class VideoPlayer {
   videoElement!: HTMLElement
