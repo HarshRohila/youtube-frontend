@@ -3,19 +3,21 @@ header {
   background: #5851ff;
   color: white;
   height: 56px;
-  width: 100%;
   display: flex;
   align-items: center;
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
   position: fixed;
   border-bottom-right-radius: 20px;
+  box-shadow: 0px 1px 12px 5px rgba(2, 0, 36, 1);
   background: rgb(2, 0, 36);
   background: linear-gradient(171deg, rgba(2, 0, 36, 1) 15%, rgba(255, 255, 255, 0) 100%);
 }
 
 h1 {
-  font-size: 1.4rem;
   font-weight: 500;
   color: #fff;
   padding: 0 12px;
+  font-family: "Rancho";
+  font-size: 2rem;
+  margin: 0;
 }
