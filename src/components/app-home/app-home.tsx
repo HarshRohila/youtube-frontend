@@ -3,6 +3,7 @@ import { Subject, debounceTime, filter, map, switchMap, takeUntil, tap } from "r
 import { SearchResult, YouTubeApi } from "../../YoutubeApi"
 import { RouterHistory } from "@stencil-community/router"
 import { Router } from "../../lib/Router"
+import { Suggestions } from "../../lib/Search"
 
 @Component({
   tag: "app-home",
@@ -77,18 +78,7 @@ export class AppHome {
   render() {
     return (
       <div class="app-home">
-        <div class="search">
-          <form onSubmit={this.onSearchSubmit}>
-            <input type="search" placeholder="Search" onInput={this.onSearchTextChange} />
-          </form>
-          {this.showSuggestions && (
-            <ul class="suggestions">
-              {this.suggestions.map(s => (
-                <li>{s}</li>
-              ))}
-            </ul>
-          )}
-        </div>
+        <div class="search">{this.showSuggestions && <Suggestions suggestions={this.suggestions} />}</div>
         <h1>Youtube Search Results</h1>
         <ul>
           {this.searchResults.map(r => (
