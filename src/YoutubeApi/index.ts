@@ -21,6 +21,9 @@ export interface SearchResult {
   videoId: string
   title: string
   uploaderAvatar: string
+  uploaderName: string
+  uploadedDate: string
+  views: number
 }
 
 export const YouTubeApi = {
@@ -52,7 +55,10 @@ class PipedApi implements IYouTubeApi {
           videoId: v.url.split("/watch?v=")[1],
           thumbnail: v.thumbnail,
           title: v.title,
-          uploaderAvatar: v.uploaderAvatar
+          uploaderAvatar: v.uploaderAvatar,
+          uploaderName: v.uploaderName,
+          uploadedDate: v.uploadedDate,
+          views: v.views
         }))
       })
     )
