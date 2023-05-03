@@ -7,18 +7,20 @@ interface SearchBarProps {
   onSearchBtnClick: (ev: Event) => void
   onCloseClick: (ev: Event) => void
   showSearchbar: boolean
+  searchText: string
 }
 export function SearchBar({
   onSearchSubmit,
   onSearchTextChange,
   onSearchBtnClick,
+  searchText,
   showSearchbar,
   onCloseClick
 }: SearchBarProps) {
   return (
     <div class="search-bar">
       <form class={"search-form " + (showSearchbar ? "" : "hide")} onSubmit={onSearchSubmit}>
-        <input type="text" class="search-input" placeholder="Search" onInput={onSearchTextChange} />
+        <input type="text" class="search-input" value={searchText} placeholder="Search" onInput={onSearchTextChange} />
       </form>
       {showSearchbar && (
         <button class="close" onClick={onCloseClick}>

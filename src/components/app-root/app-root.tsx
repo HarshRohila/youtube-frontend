@@ -15,6 +15,7 @@ export class AppRoot {
   disconnected$ = new Subject<void>()
   @State() showSearchbar = false
   @State() suggestions: string[]
+  @State() searchText: string
 
   @Element() el: HTMLElement
 
@@ -27,6 +28,7 @@ export class AppRoot {
       .subscribe(state => {
         this.showSearchbar = state.showSearchBar
         this.suggestions = state.suggestions
+        this.searchText = state.searchText
       })
   }
 
@@ -40,6 +42,7 @@ export class AppRoot {
         <header class={this.showSearchbar ? "search-active" : ""}>
           {!this.showSearchbar && <h1>Another YouTube Front-end</h1>}
           <SearchBar
+            searchText={this.searchText}
             onCloseClick={() => store.dispatch(toggleSearchBar())}
             onSearchBtnClick={() => {
               const searchInput = this.el.querySelector(".search-input") as HTMLInputElement
