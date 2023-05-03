@@ -7,7 +7,7 @@ import { Router } from "../../lib/Router"
 import { state$, store } from "../../lib/redux"
 import { untilDestroyed } from "@ngneat/until-destroy"
 import { SearchBar, Suggestions } from "../../lib/Search"
-import { keyPress, toggleSearchBar } from "../../lib/redux/search"
+import { keyPress, setSearchResult, submitSearch, toggleSearchBar } from "../../lib/redux/search"
 
 @Component({
   tag: "trending-page",
@@ -32,7 +32,7 @@ export class TrendingPage {
       .getTrendingVideos()
       .pipe(takeUntil(this.disconnected$))
       .subscribe(videos => {
-        this.videos = videos
+        store.dispatch(setSearchResult(videos))
       })
 
     state$
@@ -44,6 +44,7 @@ export class TrendingPage {
         this.showSearchbar = state.showSearchBar
         this.suggestions = state.suggestions
         this.searchText = state.searchText
+        this.videos = state.searchResults
       })
   }
 
@@ -77,7 +78,9 @@ export class TrendingPage {
                 searchInput.focus()
               })
             }}
-            onSearchSubmit={() => {}}
+            onSearchSubmit={() => {
+              store.dispatch(submitSearch())
+            }}
             showSearchbar={this.showSearchbar}
             onSearchTextChange={ev => store.dispatch(keyPress(ev.target["value"]))}
           />

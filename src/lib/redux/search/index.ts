@@ -1,13 +1,14 @@
 import { Action, PayloadAction, createSlice } from "@reduxjs/toolkit"
 import { ofType } from "redux-observable"
 import { BehaviorSubject, Observable, debounceTime, filter, map, switchMap, tap } from "rxjs"
-import { YouTubeApi } from "../../../YoutubeApi"
+import { SearchResult, YouTubeApi } from "../../../YoutubeApi"
 import { RootState } from ".."
 
 const initialState = {
   showSearchBar: false,
   searchText: "",
-  suggestions: [] as string[]
+  suggestions: [] as string[],
+  searchResults: [] as SearchResult[]
 }
 
 export const searchSlice = createSlice({
@@ -15,23 +16,26 @@ export const searchSlice = createSlice({
   initialState,
   reducers: {
     toggleSearchBar: state => {
-      state.showSearchBar = !state.showSearchBar
-
-      if (!state.showSearchBar) {
-        state.suggestions = []
-        state.searchText = ""
-      }
+      setStateAfterToggleSearchBar(state)
     },
     keyPress: (state, action: PayloadAction<string>) => {
       state.searchText = action.payload
     },
     setSuggestions: (state, action: PayloadAction<string[]>) => {
       state.suggestions = action.payload
+    },
+    submitSearch: () => {},
+    setSearchResult: (state, action: PayloadAction<SearchResult[]>) => {
+      state.searchResults = action.payload
+
+      if (state.showSearchBar) {
+        setStateAfterToggleSearchBar(state)
+      }
     }
   }
 })
 
-export const { keyPress, toggleSearchBar, setSuggestions } = searchSlice.actions
+export const { keyPress, toggleSearchBar, setSuggestions, submitSearch, setSearchResult } = searchSlice.actions
 
 export default searchSlice.reducer
 
@@ -44,3 +48,21 @@ export const fetchSuggestionsEpic = (action$: Observable<Action>, state$: Behavi
     switchMap(text => YouTubeApi.getApi().getSuggestions(text)),
     map(results => setSuggestions(results))
   )
+
+export const doSearchEpic = (action$: Observable<Action>, state$: BehaviorSubject<RootState>) =>
+  action$.pipe(
+    ofType(submitSearch.type),
+    map(() => state$.value.search.searchText),
+    filter(text => !!text.length),
+    switchMap(text => YouTubeApi.getApi().getSearchResults(text)),
+    map(results => setSearchResult(results))
+  )
+
+function setStateAfterToggleSearchBar(state) {
+  state.showSearchBar = !state.showSearchBar
+
+  if (!state.showSearchBar) {
+    state.suggestions = []
+    state.searchText = ""
+  }
+}

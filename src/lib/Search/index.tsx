@@ -19,7 +19,13 @@ export function SearchBar({
 }: SearchBarProps) {
   return (
     <div class="search-bar">
-      <form class={"search-form " + (showSearchbar ? "" : "hide")} onSubmit={onSearchSubmit}>
+      <form
+        class={"search-form " + (showSearchbar ? "" : "hide")}
+        onSubmit={ev => {
+          ev.preventDefault()
+          onSearchSubmit(ev)
+        }}
+      >
         <input type="text" class="search-input" value={searchText} placeholder="Search" onInput={onSearchTextChange} />
       </form>
       {showSearchbar && (
