@@ -3,7 +3,6 @@ import { Subject, debounceTime, filter, map, switchMap, takeUntil, tap } from "r
 import { SearchResult, YouTubeApi } from "../../YoutubeApi"
 import { RouterHistory } from "@stencil-community/router"
 import { Router } from "../../lib/Router"
-import { Suggestions } from "../../lib/Search"
 
 @Component({
   tag: "app-home",

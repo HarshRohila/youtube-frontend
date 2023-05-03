@@ -1,6 +1,6 @@
 import { Action, PayloadAction, createSlice } from "@reduxjs/toolkit"
 import { ofType } from "redux-observable"
-import { BehaviorSubject, Observable, debounceTime, filter, map, switchMap, tap } from "rxjs"
+import { BehaviorSubject, Observable, debounceTime, filter, map, switchMap } from "rxjs"
 import { SearchResult, YouTubeApi } from "../../../YoutubeApi"
 import { RootState } from ".."
 
