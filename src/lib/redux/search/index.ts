@@ -24,7 +24,11 @@ export const searchSlice = createSlice({
     setSuggestions: (state, action: PayloadAction<string[]>) => {
       state.suggestions = action.payload
     },
-    submitSearch: () => {},
+    submitSearch: (state, action: PayloadAction<string>) => {
+      if (action.payload) {
+        state.searchText = action.payload
+      }
+    },
     setSearchResult: (state, action: PayloadAction<SearchResult[]>) => {
       state.searchResults = action.payload
 

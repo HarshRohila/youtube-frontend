@@ -85,7 +85,14 @@ export class TrendingPage {
             onSearchTextChange={ev => store.dispatch(keyPress(ev.target["value"]))}
           />
         </header>
-        {isShowingSuggestions && <Suggestions suggestions={this.suggestions} />}
+        {isShowingSuggestions && (
+          <Suggestions
+            suggestions={this.suggestions}
+            onClickSuggesion={suggestion => {
+              store.dispatch(submitSearch(suggestion))
+            }}
+          />
+        )}
         <ul class={"trending " + `${isShowingSuggestions ? "suggestions-active" : ""}`}>
           {this.videos &&
             this.videos.map(r => (

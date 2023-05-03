@@ -44,12 +44,13 @@ export function SearchBar({
 
 interface SuggestionProps {
   suggestions: string[]
+  onClickSuggesion: (suggestion: string) => void
 }
-export function Suggestions({ suggestions }: SuggestionProps) {
+export function Suggestions({ suggestions, onClickSuggesion }: SuggestionProps) {
   return (
     <ul class="suggestions">
       {suggestions.map(s => (
-        <li>{s}</li>
+        <li onClick={() => onClickSuggesion(s)}>{s}</li>
       ))}
     </ul>
   )

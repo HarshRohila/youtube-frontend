@@ -68,7 +68,6 @@ export class AppHome {
   render() {
     return (
       <div class="app-home">
-        <div class="search">{this.showSuggestions && <Suggestions suggestions={this.suggestions} />}</div>
         <h1>Youtube Search Results</h1>
         <ul>
           {this.searchResults.map(r => (
