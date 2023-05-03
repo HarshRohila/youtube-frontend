@@ -1,8 +1,11 @@
 import { Component, State, h } from "@stencil/core"
 import { AppRoute } from "../../utils/AppRoute"
 import { SearchBar } from "../../lib/Search"
-import { state$, userEvents } from "../../lib/Search/state"
-import { Subject, takeUntil } from "rxjs"
+import { Subject, map } from "rxjs"
+import { state$, store } from "../../lib/redux"
+import { toggleSearchBar } from "../../lib/redux/search/actions"
+import { untilDestroyed } from "@ngneat/until-destroy"
+
 @Component({
   tag: "app-root",
   styleUrl: "app-root.scss",
@@ -13,18 +16,17 @@ export class AppRoot {
   @State() showSearchbar = false
 
   componentWillLoad() {
-    state$.pipe(takeUntil(this.disconnected$)).subscribe(state => {
-      this.showSearchbar = state.showSearchbar
-    })
+    state$
+      .pipe(
+        map(state => state.search),
+        untilDestroyed(this, "disconnectedCallback")
+      )
+      .subscribe(state => {
+        this.showSearchbar = state.showSearchBar
+      })
   }
 
-  disconnectedCallback() {
-    this.disconnected$.next()
-    this.disconnected$.complete()
-  }
-
-  searchCloseEvent = userEvents.searchClose(this.disconnected$)
-  searchClick = userEvents.searchClick(this.disconnected$)
+  disconnectedCallback() {}
 
   render() {
     return (
@@ -32,8 +34,8 @@ export class AppRoot {
         <header class={this.showSearchbar ? "search-active" : ""}>
           {!this.showSearchbar && <h1>Another YouTube Front-end</h1>}
           <SearchBar
-            onCloseClick={() => this.searchCloseEvent.emit()}
-            onSearchBtnClick={() => this.searchClick.emit()}
+            onCloseClick={() => store.dispatch(toggleSearchBar())}
+            onSearchBtnClick={() => store.dispatch(toggleSearchBar())}
             onSearchSubmit={() => {}}
             showSearchbar={this.showSearchbar}
             onSearchTextChange={() => {}}
