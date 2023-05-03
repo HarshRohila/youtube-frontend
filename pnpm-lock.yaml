@@ -22,6 +22,9 @@ dependencies:
   axios:
     specifier: ^1.4.0
     version: 1.4.0
+  redux-observable:
+    specifier: ^2.0.0
+    version: 2.0.0(redux@4.2.1)
   rxjs:
     specifier: ^7.8.1
     version: 7.8.1
@@ -2819,6 +2822,16 @@ packages:
       util-deprecate: 1.0.2
     dev: true
 
+  /redux-observable@2.0.0(redux@4.2.1):
+    resolution: {integrity: sha512-FJz4rLXX+VmDDwZS/LpvQsKnSanDOe8UVjiLryx1g3seZiS69iLpMrcvXD5oFO7rtkPyRdo/FmTqldnT3X3m+w==}
+    peerDependencies:
+      redux: '>=4 <5'
+    dependencies:
+      redux: 4.2.1
+      rxjs: 7.8.1
+      tslib: 2.1.0
+    dev: false
+
   /redux-thunk@2.4.2(redux@4.2.1):
     resolution: {integrity: sha512-+P3TjtnP0k/FEjcBL5FZpoovtvrTNT/UXd4/sluaSyrURlSlhLSzEdfsTBW7WsKB6yPvgd7q/iZPICFjW4o57Q==}
     peerDependencies:
@@ -3155,6 +3168,10 @@ packages:
     dependencies:
       escape-string-regexp: 1.0.5
     dev: true
+
+  /tslib@2.1.0:
+    resolution: {integrity: sha512-hcVC3wYEziELGGmEEXue7D75zbwIIVUMWAVbHItGPx0ziyXxrOMQx4rQEVEV45Ut/1IotuEvwqPopzIOkDMf0A==}
+    dev: false
 
   /tslib@2.5.0:
     resolution: {integrity: sha512-336iVw3rtn2BUK7ORdIAHTyxHGRIHVReokCR3XjbckJMK7ms8FysBfhLR8IXnAgy7T0PTPNBWKiH514FOW/WSg==}

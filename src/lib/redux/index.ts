@@ -1,12 +1,20 @@
 import { from } from "rxjs"
 import { configureStore } from "@reduxjs/toolkit"
-import search from "./search"
+import search, { fetchSuggestionsEpic } from "./search"
+import { createEpicMiddleware, combineEpics } from "redux-observable"
+
+const epicMiddleware = createEpicMiddleware()
+// @ts-ignore
+export const rootEpic = combineEpics(fetchSuggestionsEpic)
 
 export const store = configureStore({
+  middleware: getDefaultMiddleware => getDefaultMiddleware().concat(epicMiddleware),
   reducer: {
     search
   }
 })
+
+epicMiddleware.run(rootEpic)
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>

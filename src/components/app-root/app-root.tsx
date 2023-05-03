@@ -1,10 +1,10 @@
-import { Component, State, h } from "@stencil/core"
+import { Component, State, h, Element } from "@stencil/core"
 import { AppRoute } from "../../utils/AppRoute"
-import { SearchBar } from "../../lib/Search"
+import { SearchBar, Suggestions } from "../../lib/Search"
 import { Subject, map } from "rxjs"
 import { state$, store } from "../../lib/redux"
 import { untilDestroyed } from "@ngneat/until-destroy"
-import { toggleSearchBar } from "../../lib/redux/search"
+import { keyPress, toggleSearchBar } from "../../lib/redux/search"
 
 @Component({
   tag: "app-root",
@@ -14,6 +14,9 @@ import { toggleSearchBar } from "../../lib/redux/search"
 export class AppRoot {
   disconnected$ = new Subject<void>()
   @State() showSearchbar = false
+  @State() suggestions: string[]
+
+  @Element() el: HTMLElement
 
   componentWillLoad() {
     state$
@@ -23,26 +26,37 @@ export class AppRoot {
       )
       .subscribe(state => {
         this.showSearchbar = state.showSearchBar
+        this.suggestions = state.suggestions
       })
   }
 
   disconnectedCallback() {}
 
   render() {
+    const isShowingSuggestions = this.showSearchbar && !!this.suggestions.length
+
     return (
       <div>
         <header class={this.showSearchbar ? "search-active" : ""}>
           {!this.showSearchbar && <h1>Another YouTube Front-end</h1>}
           <SearchBar
             onCloseClick={() => store.dispatch(toggleSearchBar())}
-            onSearchBtnClick={() => store.dispatch(toggleSearchBar())}
+            onSearchBtnClick={() => {
+              const searchInput = this.el.querySelector(".search-input") as HTMLInputElement
+
+              store.dispatch(toggleSearchBar())
+              setTimeout(() => {
+                searchInput.focus()
+              })
+            }}
             onSearchSubmit={() => {}}
             showSearchbar={this.showSearchbar}
-            onSearchTextChange={() => {}}
+            onSearchTextChange={ev => store.dispatch(keyPress(ev.target["value"]))}
           />
         </header>
+        {isShowingSuggestions && <Suggestions suggestions={this.suggestions} />}
 
-        <main>
+        <main class={`${isShowingSuggestions ? "suggestions-active" : ""}`}>
           <stencil-router>
             <stencil-route-switch scrollTopOffset={0}>
               <stencil-route url={AppRoute.getPath("")} component="trending-page" exact />

@@ -2,7 +2,7 @@ header {
   z-index: 1;
   background: #5851ff;
   color: white;
-  height: 56px;
+  height: $header-height;
   display: flex;
   align-items: center;
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
@@ -30,6 +30,9 @@ header {
     }
 
     form {
+      &.hide {
+        display: none;
+      }
       flex: 1;
       input {
         padding: 0 10px;
@@ -59,4 +62,28 @@ h1 {
   font-family: "Rancho";
   font-size: 2rem;
   margin: 0;
+}
+
+.suggestions {
+  padding-top: $header-height;
+  border: 1px solid;
+  color: white;
+  position: absolute;
+  z-index: 1;
+  margin: 0;
+  width: 100%;
+  border: 0;
+  list-style-type: none;
+  li {
+    font-size: 1.2rem;
+    padding-top: 15px;
+    @include ellipsis();
+    width: calc(100% - 50px);
+  }
+}
+
+main {
+  &.suggestions-active {
+    filter: blur(45px);
+  }
 }

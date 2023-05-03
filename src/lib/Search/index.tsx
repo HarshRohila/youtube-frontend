@@ -13,16 +13,13 @@ export function SearchBar({
   onSearchTextChange,
   onSearchBtnClick,
   showSearchbar,
-
   onCloseClick
 }: SearchBarProps) {
   return (
     <div class="search-bar">
-      {showSearchbar && (
-        <form class="search-form" onSubmit={onSearchSubmit}>
-          <input type="text" placeholder="Search" onInput={onSearchTextChange} />
-        </form>
-      )}
+      <form class={"search-form " + (showSearchbar ? "" : "hide")} onSubmit={onSearchSubmit}>
+        <input type="text" class="search-input" placeholder="Search" onInput={onSearchTextChange} />
+      </form>
       {showSearchbar && (
         <button class="close" onClick={onCloseClick}>
           <x-icon icon={faClose}></x-icon>

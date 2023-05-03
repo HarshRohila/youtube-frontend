@@ -57,16 +57,6 @@ export class AppHome {
     this.disconnected$.complete()
   }
 
-  private onSearchTextChange = (ev: Event) => {
-    const target = ev.target as HTMLInputElement
-    this.searchText$.next(target.value)
-  }
-
-  private onSearchSubmit = (ev: Event) => {
-    ev.preventDefault()
-    this.searchSubmit$.next()
-  }
-
   private createVideoClickHandler = (video: SearchResult) => {
     const handler = () => {
       new Router(this.history).showVideoPage(video)

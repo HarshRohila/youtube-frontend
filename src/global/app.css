@@ -23,3 +23,6 @@ body {
     margin: auto;
   }
 }
+button {
+  outline: none;
+}

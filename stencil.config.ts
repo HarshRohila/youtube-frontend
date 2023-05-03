@@ -19,5 +19,9 @@ export const config: Config = {
   env: {
     apiEnv
   },
-  plugins: [sass()]
+  plugins: [
+    sass({
+      injectGlobalPaths: ["src/global/mixins.scss", "src/global/variables.scss"]
+    })
+  ]
 }
