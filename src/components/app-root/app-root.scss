@@ -81,9 +81,3 @@ h1 {
     width: calc(100% - 50px);
   }
 }
-
-main {
-  &.suggestions-active {
-    filter: blur(45px);
-  }
-}

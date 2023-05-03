@@ -1,4 +1,4 @@
-ul {
+ul.trending {
   list-style-type: none;
   margin: 0;
   padding: 0;
@@ -47,5 +47,11 @@ ul {
       font-size: 0.9rem;
       @include ellipsis();
     }
+  }
+}
+
+ul.trending {
+  &.suggestions-active {
+    filter: blur(45px);
   }
 }
