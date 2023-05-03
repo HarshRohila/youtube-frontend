@@ -51,15 +51,7 @@ class PipedApi implements IYouTubeApi {
     return defer(() => axios.get(`${PipedApi.baseUrl}/trending?region=${region}`)).pipe(
       map(response => response.data),
       map(videos => {
-        return videos.map(v => ({
-          videoId: v.url.split("/watch?v=")[1],
-          thumbnail: v.thumbnail,
-          title: v.title,
-          uploaderAvatar: v.uploaderAvatar,
-          uploaderName: v.uploaderName,
-          uploadedDate: v.uploadedDate,
-          views: v.views
-        }))
+        return videos.map(createApiMapFunc())
       })
     )
   }
@@ -81,10 +73,19 @@ class PipedApi implements IYouTubeApi {
     return defer(() => axios.get(`${PipedApi.baseUrl}/search?q=${query}&filter=videos`)).pipe(
       map(response => response.data.items),
       map(items => {
-        return items.map(i => {
-          return { thumbnail: i.thumbnail, videoId: i.url.split("/watch?v=")[1] }
-        })
+        return items.map(createApiMapFunc())
       })
     )
   }
+}
+function createApiMapFunc(): any {
+  return v => ({
+    videoId: v.url.split("/watch?v=")[1],
+    thumbnail: v.thumbnail,
+    title: v.title,
+    uploaderAvatar: v.uploaderAvatar,
+    uploaderName: v.uploaderName,
+    uploadedDate: v.uploadedDate,
+    views: v.views
+  })
 }

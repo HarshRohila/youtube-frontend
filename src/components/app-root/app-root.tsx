@@ -1,19 +1,20 @@
-import { Component, h } from "@stencil/core"
+import { Component, h, Element } from "@stencil/core"
 import { AppRoute } from "../../utils/AppRoute"
+import { Subject } from "rxjs"
 
 @Component({
   tag: "app-root",
-  styleUrl: "app-root.css",
+  styleUrl: "app-root.scss",
   shadow: false
 })
 export class AppRoot {
+  disconnected$ = new Subject<void>()
+
+  @Element() el: HTMLElement
+
   render() {
     return (
       <div>
-        <header>
-          <h1>Another YouTube Front-end</h1>
-        </header>
-
         <main>
           <stencil-router>
             <stencil-route-switch scrollTopOffset={0}>

@@ -1,17 +1,27 @@
-import { Component, Host, Prop, State, h } from "@stencil/core"
+import { Component, Host, Prop, State, h, Element } from "@stencil/core"
 import { SearchResult, YouTubeApi } from "../../YoutubeApi"
-import { Subject, takeUntil } from "rxjs"
+import { Subject, map, takeUntil } from "rxjs"
 import { Card } from "./card"
 import { RouterHistory } from "@stencil-community/router"
 import { Router } from "../../lib/Router"
+import { state$, store } from "../../lib/redux"
+import { untilDestroyed } from "@ngneat/until-destroy"
+import { SearchBar, Suggestions } from "../../lib/Search"
+import { keyPress, setSearchResult, submitSearch, toggleSearchBar } from "../../lib/redux/search"
 
 @Component({
   tag: "trending-page",
   styleUrl: "trending-page.scss",
-  shadow: true
+  shadow: false
 })
 export class TrendingPage {
   @State() videos: SearchResult[]
+
+  @State() showSearchbar = false
+  @State() suggestions: string[]
+  @State() searchText: string
+
+  @Element() el: HTMLElement
 
   @Prop() history: RouterHistory
 
@@ -22,7 +32,19 @@ export class TrendingPage {
       .getTrendingVideos()
       .pipe(takeUntil(this.disconnected$))
       .subscribe(videos => {
-        this.videos = videos
+        store.dispatch(setSearchResult(videos))
+      })
+
+    state$
+      .pipe(
+        map(state => state.search),
+        untilDestroyed(this, "disconnectedCallback")
+      )
+      .subscribe(state => {
+        this.showSearchbar = state.showSearchBar
+        this.suggestions = state.suggestions
+        this.searchText = state.searchText
+        this.videos = state.searchResults
       })
   }
 
@@ -40,9 +62,38 @@ export class TrendingPage {
   }
 
   render() {
+    const isShowingSuggestions = this.showSearchbar && !!this.suggestions.length
     return (
       <Host>
-        <ul>
+        <header class={this.showSearchbar ? "search-active" : ""}>
+          {!this.showSearchbar && <h1>Another YouTube Front-end</h1>}
+          <SearchBar
+            searchText={this.searchText}
+            onCloseClick={() => store.dispatch(toggleSearchBar())}
+            onSearchBtnClick={() => {
+              const searchInput = this.el.querySelector(".search-input") as HTMLInputElement
+
+              store.dispatch(toggleSearchBar())
+              setTimeout(() => {
+                searchInput.focus()
+              })
+            }}
+            onSearchSubmit={() => {
+              store.dispatch(submitSearch())
+            }}
+            showSearchbar={this.showSearchbar}
+            onSearchTextChange={ev => store.dispatch(keyPress(ev.target["value"]))}
+          />
+        </header>
+        {isShowingSuggestions && (
+          <Suggestions
+            suggestions={this.suggestions}
+            onClickSuggesion={suggestion => {
+              store.dispatch(submitSearch(suggestion))
+            }}
+          />
+        )}
+        <ul class={"trending " + `${isShowingSuggestions ? "suggestions-active" : ""}`}>
           {this.videos &&
             this.videos.map(r => (
               <li onClick={this.createVideoClickHandler(r)}>

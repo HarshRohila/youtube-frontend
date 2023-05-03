@@ -17,9 +17,18 @@ body {
     "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
+html {
+  font-size: 14px;
+}
 @media only screen and (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
   body {
     max-width: 700px;
     margin: auto;
   }
+}
+button {
+  outline: none;
 }
