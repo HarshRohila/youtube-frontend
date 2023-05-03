@@ -3,8 +3,8 @@ import { AppRoute } from "../../utils/AppRoute"
 import { SearchBar } from "../../lib/Search"
 import { Subject, map } from "rxjs"
 import { state$, store } from "../../lib/redux"
-import { toggleSearchBar } from "../../lib/redux/search/actions"
 import { untilDestroyed } from "@ngneat/until-destroy"
+import { toggleSearchBar } from "../../lib/redux/search"
 
 @Component({
   tag: "app-root",

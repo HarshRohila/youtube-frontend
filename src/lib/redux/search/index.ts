@@ -1,16 +1,23 @@
-const initialState = {
-  showSearchBar: false
-}
-interface Action {
-  type: string
-  payload?: any
-}
-export function search(state = initialState, action: Action) {
-  switch (action.type) {
-    case "search/toggleSearchBar":
-      return { showSearchBar: !state.showSearchBar }
+import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 
-    default:
-      return initialState
-  }
+const initialState = {
+  showSearchBar: false,
+  searchText: ""
 }
+
+export const searchSlice = createSlice({
+  name: "search",
+  initialState,
+  reducers: {
+    toggleSearchBar: state => {
+      state.showSearchBar = !state.showSearchBar
+    },
+    keyPress: (state, action: PayloadAction<string>) => {
+      state.searchText = action.payload
+    }
+  }
+})
+
+export const { keyPress, toggleSearchBar } = searchSlice.actions
+
+export default searchSlice.reducer
