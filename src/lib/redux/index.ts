@@ -1,6 +1,8 @@
 import { from } from "rxjs"
 import { configureStore } from "@reduxjs/toolkit"
 import search, { doSearchEpic, fetchSuggestionsEpic } from "./search"
+import global from "./global"
+
 import { createEpicMiddleware, combineEpics } from "redux-observable"
 
 const epicMiddleware = createEpicMiddleware()
@@ -10,7 +12,8 @@ export const rootEpic = combineEpics(fetchSuggestionsEpic, doSearchEpic)
 export const store = configureStore({
   middleware: getDefaultMiddleware => getDefaultMiddleware().concat(epicMiddleware),
   reducer: {
-    search
+    search,
+    global
   }
 })
 

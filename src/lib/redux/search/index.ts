@@ -1,8 +1,9 @@
 import { Action, PayloadAction, createSlice } from "@reduxjs/toolkit"
 import { ofType } from "redux-observable"
-import { BehaviorSubject, Observable, concat, debounceTime, delay, filter, map, of, switchMap } from "rxjs"
+import { BehaviorSubject, Observable, catchError, concat, debounceTime, filter, map, of, switchMap } from "rxjs"
 import { SearchResult, YouTubeApi } from "../../../YoutubeApi"
 import { RootState } from ".."
+import { setError } from "../global"
 
 const initialState = {
   showSearchBar: false,
@@ -70,7 +71,10 @@ export const doSearchEpic = (action$: Observable<Action>, state$: BehaviorSubjec
     switchMap(text => {
       const api$ = YouTubeApi.getApi()
         .getSearchResults(text)
-        .pipe(map(results => setSearchResult(results)))
+        .pipe(
+          map(results => setSearchResult(results)),
+          catchError(() => of(setError({ message: "Search Error. Please try after some time." })))
+        )
 
       const dispatchLoading = (isLoading: boolean) => {
         return of(setLoading(isLoading))
