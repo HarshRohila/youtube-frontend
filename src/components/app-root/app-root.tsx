@@ -1,6 +1,8 @@
-import { Component, h, Element } from "@stencil/core"
+import { Component, h, Element, State } from "@stencil/core"
 import { AppRoute } from "../../utils/AppRoute"
-import { Subject } from "rxjs"
+import { Subject, map } from "rxjs"
+import { state$ } from "../../lib/redux"
+import { untilDestroyed } from "@ngneat/until-destroy"
 
 @Component({
   tag: "app-root",
@@ -11,6 +13,20 @@ export class AppRoot {
   disconnected$ = new Subject<void>()
 
   @Element() el: HTMLElement
+  @State() private isLoading: boolean
+
+  componentWillLoad() {
+    state$
+      .pipe(
+        map(state => state.search),
+        untilDestroyed(this, "disconnectedCallback")
+      )
+      .subscribe(state => {
+        this.isLoading = state.isLoading
+      })
+  }
+
+  disconnectedCallback() {}
 
   render() {
     return (
@@ -24,6 +40,7 @@ export class AppRoot {
             </stencil-route-switch>
           </stencil-router>
         </main>
+        {this.isLoading && <loading-page></loading-page>}
       </div>
     )
   }

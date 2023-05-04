@@ -16,6 +16,8 @@ export namespace Components {
     }
     interface AppRoot {
     }
+    interface LoadingPage {
+    }
     interface TrendingPage {
         "history": RouterHistory;
     }
@@ -51,6 +53,12 @@ declare global {
         prototype: HTMLAppRootElement;
         new (): HTMLAppRootElement;
     };
+    interface HTMLLoadingPageElement extends Components.LoadingPage, HTMLStencilElement {
+    }
+    var HTMLLoadingPageElement: {
+        prototype: HTMLLoadingPageElement;
+        new (): HTMLLoadingPageElement;
+    };
     interface HTMLTrendingPageElement extends Components.TrendingPage, HTMLStencilElement {
     }
     var HTMLTrendingPageElement: {
@@ -79,6 +87,7 @@ declare global {
         "app-home": HTMLAppHomeElement;
         "app-profile": HTMLAppProfileElement;
         "app-root": HTMLAppRootElement;
+        "loading-page": HTMLLoadingPageElement;
         "trending-page": HTMLTrendingPageElement;
         "video-page": HTMLVideoPageElement;
         "video-player": HTMLVideoPlayerElement;
@@ -93,6 +102,8 @@ declare namespace LocalJSX {
         "match"?: MatchResults;
     }
     interface AppRoot {
+    }
+    interface LoadingPage {
     }
     interface TrendingPage {
         "history"?: RouterHistory;
@@ -113,6 +124,7 @@ declare namespace LocalJSX {
         "app-home": AppHome;
         "app-profile": AppProfile;
         "app-root": AppRoot;
+        "loading-page": LoadingPage;
         "trending-page": TrendingPage;
         "video-page": VideoPage;
         "video-player": VideoPlayer;
@@ -126,6 +138,7 @@ declare module "@stencil/core" {
             "app-home": LocalJSX.AppHome & JSXBase.HTMLAttributes<HTMLAppHomeElement>;
             "app-profile": LocalJSX.AppProfile & JSXBase.HTMLAttributes<HTMLAppProfileElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
+            "loading-page": LocalJSX.LoadingPage & JSXBase.HTMLAttributes<HTMLLoadingPageElement>;
             "trending-page": LocalJSX.TrendingPage & JSXBase.HTMLAttributes<HTMLTrendingPageElement>;
             "video-page": LocalJSX.VideoPage & JSXBase.HTMLAttributes<HTMLVideoPageElement>;
             "video-player": LocalJSX.VideoPlayer & JSXBase.HTMLAttributes<HTMLVideoPlayerElement>;
