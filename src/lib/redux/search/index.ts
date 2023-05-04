@@ -1,14 +1,16 @@
 import { Action, PayloadAction, createSlice } from "@reduxjs/toolkit"
 import { ofType } from "redux-observable"
-import { BehaviorSubject, Observable, debounceTime, filter, map, switchMap } from "rxjs"
+import { BehaviorSubject, Observable, catchError, concat, debounceTime, filter, map, of, switchMap } from "rxjs"
 import { SearchResult, YouTubeApi } from "../../../YoutubeApi"
 import { RootState } from ".."
+import { setError } from "../global"
 
 const initialState = {
   showSearchBar: false,
   searchText: "",
   suggestions: [] as string[],
-  searchResults: [] as SearchResult[]
+  searchResults: [] as SearchResult[],
+  isLoading: false
 }
 
 export const searchSlice = createSlice({
@@ -35,11 +37,15 @@ export const searchSlice = createSlice({
       if (state.showSearchBar) {
         setStateAfterToggleSearchBar(state)
       }
+    },
+    setLoading(state, action: PayloadAction<boolean>) {
+      state.isLoading = action.payload
     }
   }
 })
 
-export const { keyPress, toggleSearchBar, setSuggestions, submitSearch, setSearchResult } = searchSlice.actions
+export const { keyPress, toggleSearchBar, setSuggestions, submitSearch, setSearchResult, setLoading } =
+  searchSlice.actions
 
 export default searchSlice.reducer
 
@@ -49,8 +55,12 @@ export const fetchSuggestionsEpic = (action$: Observable<Action>, state$: Behavi
     map(() => state$.value.search.searchText),
     filter(text => !!text.length),
     debounceTime(300),
-    switchMap(text => YouTubeApi.getApi().getSuggestions(text)),
-    map(results => setSuggestions(results))
+    switchMap(text => {
+      const api$ = YouTubeApi.getApi()
+        .getSuggestions(text)
+        .pipe(map(results => setSuggestions(results)))
+      return api$
+    })
   )
 
 export const doSearchEpic = (action$: Observable<Action>, state$: BehaviorSubject<RootState>) =>
@@ -58,8 +68,20 @@ export const doSearchEpic = (action$: Observable<Action>, state$: BehaviorSubjec
     ofType(submitSearch.type),
     map(() => state$.value.search.searchText),
     filter(text => !!text.length),
-    switchMap(text => YouTubeApi.getApi().getSearchResults(text)),
-    map(results => setSearchResult(results))
+    switchMap(text => {
+      const api$ = YouTubeApi.getApi()
+        .getSearchResults(text)
+        .pipe(
+          map(results => setSearchResult(results)),
+          catchError(() => of(setError({ message: "Search Error. Please try after some time." })))
+        )
+
+      const dispatchLoading = (isLoading: boolean) => {
+        return of(setLoading(isLoading))
+      }
+
+      return concat(dispatchLoading(true), api$, dispatchLoading(false))
+    })
   )
 
 function setStateAfterToggleSearchBar(state) {

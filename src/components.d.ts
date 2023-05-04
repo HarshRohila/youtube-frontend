@@ -6,6 +6,7 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { MatchResults, RouterHistory } from "@stencil-community/router";
+import { IAppError } from "./lib/redux/global";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 export namespace Components {
     interface AppHome {
@@ -15,6 +16,11 @@ export namespace Components {
         "match": MatchResults;
     }
     interface AppRoot {
+    }
+    interface ErrorPage {
+        "error": IAppError;
+    }
+    interface LoadingPage {
     }
     interface TrendingPage {
         "history": RouterHistory;
@@ -51,6 +57,18 @@ declare global {
         prototype: HTMLAppRootElement;
         new (): HTMLAppRootElement;
     };
+    interface HTMLErrorPageElement extends Components.ErrorPage, HTMLStencilElement {
+    }
+    var HTMLErrorPageElement: {
+        prototype: HTMLErrorPageElement;
+        new (): HTMLErrorPageElement;
+    };
+    interface HTMLLoadingPageElement extends Components.LoadingPage, HTMLStencilElement {
+    }
+    var HTMLLoadingPageElement: {
+        prototype: HTMLLoadingPageElement;
+        new (): HTMLLoadingPageElement;
+    };
     interface HTMLTrendingPageElement extends Components.TrendingPage, HTMLStencilElement {
     }
     var HTMLTrendingPageElement: {
@@ -79,6 +97,8 @@ declare global {
         "app-home": HTMLAppHomeElement;
         "app-profile": HTMLAppProfileElement;
         "app-root": HTMLAppRootElement;
+        "error-page": HTMLErrorPageElement;
+        "loading-page": HTMLLoadingPageElement;
         "trending-page": HTMLTrendingPageElement;
         "video-page": HTMLVideoPageElement;
         "video-player": HTMLVideoPlayerElement;
@@ -93,6 +113,11 @@ declare namespace LocalJSX {
         "match"?: MatchResults;
     }
     interface AppRoot {
+    }
+    interface ErrorPage {
+        "error"?: IAppError;
+    }
+    interface LoadingPage {
     }
     interface TrendingPage {
         "history"?: RouterHistory;
@@ -113,6 +138,8 @@ declare namespace LocalJSX {
         "app-home": AppHome;
         "app-profile": AppProfile;
         "app-root": AppRoot;
+        "error-page": ErrorPage;
+        "loading-page": LoadingPage;
         "trending-page": TrendingPage;
         "video-page": VideoPage;
         "video-player": VideoPlayer;
@@ -126,6 +153,8 @@ declare module "@stencil/core" {
             "app-home": LocalJSX.AppHome & JSXBase.HTMLAttributes<HTMLAppHomeElement>;
             "app-profile": LocalJSX.AppProfile & JSXBase.HTMLAttributes<HTMLAppProfileElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
+            "error-page": LocalJSX.ErrorPage & JSXBase.HTMLAttributes<HTMLErrorPageElement>;
+            "loading-page": LocalJSX.LoadingPage & JSXBase.HTMLAttributes<HTMLLoadingPageElement>;
             "trending-page": LocalJSX.TrendingPage & JSXBase.HTMLAttributes<HTMLTrendingPageElement>;
             "video-page": LocalJSX.VideoPage & JSXBase.HTMLAttributes<HTMLVideoPageElement>;
             "video-player": LocalJSX.VideoPlayer & JSXBase.HTMLAttributes<HTMLVideoPlayerElement>;

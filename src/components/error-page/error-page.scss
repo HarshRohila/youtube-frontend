@@ -1,0 +1,15 @@
+:host {
+  display: block;
+}
+
+.error-page {
+  position: fixed;
+  height: 200px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+  max-width: 500px;
+  background: blueviolet;
+  border-radius: 12px;
+  z-index: $z-index-error;
+}
