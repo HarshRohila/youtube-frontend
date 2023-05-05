@@ -12,7 +12,7 @@ header {
   background: rgb(2, 0, 36);
   background: linear-gradient(171deg, rgba(2, 0, 36, 1) 15%, rgba(255, 255, 255, 0) 100%);
   transition-property: width;
-  transition: width 0.5s;
+  transition: width 0.1s;
   width: calc(100% - 60px);
   &.search-active {
     width: 100%;

@@ -76,7 +76,7 @@ export class TrendingPage {
               store.dispatch(toggleSearchBar())
               setTimeout(() => {
                 searchInput.focus()
-              })
+              }, 150)
             }}
             onSearchSubmit={() => {
               store.dispatch(submitSearch())
