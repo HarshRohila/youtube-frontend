@@ -1,6 +1,5 @@
 header {
   z-index: 2;
-  background: #5851ff;
   color: white;
   height: $header-height;
   display: flex;
@@ -13,7 +12,11 @@ header {
   background: linear-gradient(171deg, rgba(2, 0, 36, 1) 15%, rgba(255, 255, 255, 0) 100%);
   transition-property: width;
   transition: width 0.1s;
-  width: calc(100% - 60px);
+
+  width: 310px;
+  @include desktop() {
+    width: 360px;
+  }
   &.search-active {
     width: 100%;
   }
@@ -26,7 +29,7 @@ header {
       border: 0;
       color: white;
       font-size: 1.5em;
-      padding: 10px;
+      padding: 10px 18px;
     }
 
     form {

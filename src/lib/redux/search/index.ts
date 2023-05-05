@@ -73,7 +73,9 @@ export const doSearchEpic = (action$: Observable<Action>, state$: BehaviorSubjec
         .getSearchResults(text)
         .pipe(
           map(results => setSearchResult(results)),
-          catchError(() => of(setError({ message: "Search Error. Please try after some time." })))
+          catchError(() =>
+            of(setError({ message: "Failed to get response from the Server. Please try again after some time." }))
+          )
         )
 
       const dispatchLoading = (isLoading: boolean) => {

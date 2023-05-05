@@ -7,8 +7,9 @@
   position: fixed;
   height: 200px;
   top: 50%;
-  transform: translateY(-50%);
-  width: 100%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: calc(100% - 40px);
   max-width: 500px;
   background: blueviolet;
   border-radius: 12px;
@@ -18,6 +19,11 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
+
+  padding: 10px;
+  text-align: center;
+  box-sizing: border-box;
+  margin: auto;
 
   .close-btn {
     position: absolute;
