@@ -1,6 +1,7 @@
 import { Component, Host, h, Prop } from "@stencil/core"
 import { IAppError, setError } from "../../lib/redux/global"
 import { store } from "../../lib/redux"
+import { faClose } from "@fortawesome/free-solid-svg-icons"
 
 @Component({
   tag: "error-page",
@@ -15,7 +16,9 @@ export class ErrorPage {
       <Host>
         <div class="error-page">
           <h3>{this.error.message}</h3>
-          <button onClick={() => store.dispatch(setError(undefined))}>Close Message</button>
+          <button class="close-btn" onClick={() => store.dispatch(setError(undefined))}>
+            <x-icon icon={faClose}></x-icon>
+          </button>
         </div>
       </Host>
     )
