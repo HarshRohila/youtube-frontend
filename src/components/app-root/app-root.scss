@@ -4,14 +4,13 @@ header {
   height: $header-height;
   display: flex;
   align-items: center;
-  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
   position: fixed;
   border-bottom-right-radius: 20px;
-  box-shadow: 0px 1px 12px 5px rgba(2, 0, 36, 1);
-  background: rgb(2, 0, 36);
-  background: linear-gradient(171deg, rgba(2, 0, 36, 1) 15%, rgba(255, 255, 255, 0) 100%);
+
   transition-property: width;
   transition: width 0.1s;
+
+  @include glass-ui();
 
   width: 155px;
   @include desktop() {
@@ -67,21 +66,33 @@ h1 {
   font-size: 2rem;
   margin: 0;
 }
-
-.suggestions {
+.suggestions-container {
   padding-top: $header-height;
-  border: 1px solid;
-  color: white;
-  position: absolute;
-  z-index: 1;
-  margin: 0;
   width: 100%;
-  border: 0;
-  list-style-type: none;
-  li {
-    font-size: 1.2rem;
-    padding-top: 15px;
-    @include ellipsis();
-    width: calc(100% - 50px);
+  position: absolute;
+
+  z-index: 1;
+  .suggestions {
+    border: 1px solid;
+    color: white;
+    margin: 0;
+    width: 100%;
+    border: 0;
+    list-style-type: none;
+    li {
+      font-size: 1.2rem;
+      padding-top: 15px;
+      @include ellipsis();
+      width: calc(100% - 50px);
+    }
+  }
+  .error {
+    padding: 20px;
+  }
+  .loading {
+    min-height: 100px;
+    display: grid;
+    place-items: center;
+    font-size: 1.5em;
   }
 }

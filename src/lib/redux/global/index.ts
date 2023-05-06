@@ -1,7 +1,8 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 
 const initialState = {
-  error: undefined as IAppError | undefined
+  error: undefined as IAppError | undefined,
+  isLoading: false
 }
 
 export const globalSlice = createSlice({
@@ -10,11 +11,14 @@ export const globalSlice = createSlice({
   reducers: {
     setError: (state, action: PayloadAction<IAppError>) => {
       state.error = action.payload
+    },
+    setLoading(state, action: PayloadAction<boolean>) {
+      state.isLoading = action.payload
     }
   }
 })
 
-export const { setError } = globalSlice.actions
+export const { setError, setLoading } = globalSlice.actions
 
 export default globalSlice.reducer
 

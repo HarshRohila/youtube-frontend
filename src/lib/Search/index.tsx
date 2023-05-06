@@ -1,5 +1,6 @@
 import { h } from "@stencil/core"
-import { faSearch, faClose } from "@fortawesome/free-solid-svg-icons"
+import { faSearch, faClose, faSpinner } from "@fortawesome/free-solid-svg-icons"
+import { IAppError } from "../redux/global"
 
 interface SearchBarProps {
   onSearchSubmit: (ev: Event) => void
@@ -45,13 +46,21 @@ export function SearchBar({
 interface SuggestionProps {
   suggestions: string[]
   onClickSuggesion: (suggestion: string) => void
+  error: IAppError | undefined
+  loading: boolean
 }
-export function Suggestions({ suggestions, onClickSuggesion }: SuggestionProps) {
+export function Suggestions({ suggestions, onClickSuggesion, error, loading }: SuggestionProps) {
   return (
-    <ul class="suggestions">
-      {suggestions.map(s => (
-        <li onClick={() => onClickSuggesion(s)}>{s}</li>
-      ))}
-    </ul>
+    <div class="suggestions-container">
+      {error && <div class="error">{error.message}</div>}
+      {loading && (
+        <div class="loading">
+          <x-icon icon={faSpinner} spin></x-icon>
+        </div>
+      )}
+      <ul class="suggestions">
+        {!loading && !error && suggestions.map(s => <li onClick={() => onClickSuggesion(s)}>{s}</li>)}
+      </ul>
+    </div>
   )
 }

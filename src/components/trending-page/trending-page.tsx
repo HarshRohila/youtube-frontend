@@ -1,13 +1,14 @@
 import { Component, Host, Prop, State, h, Element } from "@stencil/core"
-import { SearchResult, YouTubeApi } from "../../YoutubeApi"
-import { Subject, map, takeUntil } from "rxjs"
+import { SearchResult } from "../../YoutubeApi"
+import { Subject, map } from "rxjs"
 import { Card } from "./card"
 import { RouterHistory } from "@stencil-community/router"
 import { Router } from "../../lib/Router"
 import { state$, store } from "../../lib/redux"
 import { untilDestroyed } from "@ngneat/until-destroy"
 import { SearchBar, Suggestions } from "../../lib/Search"
-import { keyPress, setSearchResult, submitSearch, toggleSearchBar } from "../../lib/redux/search"
+import { keyPress, loadTrending, submitSearch, toggleSearchBar } from "../../lib/redux/search"
+import { IAppError } from "../../lib/redux/global"
 
 @Component({
   tag: "trending-page",
@@ -19,6 +20,8 @@ export class TrendingPage {
 
   @State() showSearchbar = false
   @State() suggestions: string[]
+  @State() private suggestionsError: IAppError | undefined
+  @State() private suggestionsLoading: boolean
   @State() searchText: string
 
   @Element() el: HTMLElement
@@ -28,12 +31,7 @@ export class TrendingPage {
   disconnected$ = new Subject<void>()
 
   componentWillLoad() {
-    YouTubeApi.getApi()
-      .getTrendingVideos()
-      .pipe(takeUntil(this.disconnected$))
-      .subscribe(videos => {
-        store.dispatch(setSearchResult(videos))
-      })
+    store.dispatch(loadTrending())
 
     state$
       .pipe(
@@ -45,6 +43,8 @@ export class TrendingPage {
         this.suggestions = state.suggestions
         this.searchText = state.searchText
         this.videos = state.searchResults
+        this.suggestionsError = state.suggestionsError
+        this.suggestionsLoading = state.suggestionsLoading
       })
   }
 
@@ -62,7 +62,7 @@ export class TrendingPage {
   }
 
   render() {
-    const isShowingSuggestions = this.showSearchbar && !!this.suggestions.length
+    const isShowingSuggestions = this.showSearchbar
     return (
       <Host>
         <header class={this.showSearchbar ? "search-active" : ""}>
@@ -88,6 +88,8 @@ export class TrendingPage {
         {isShowingSuggestions && (
           <Suggestions
             suggestions={this.suggestions}
+            error={this.suggestionsError}
+            loading={this.suggestionsLoading}
             onClickSuggesion={suggestion => {
               store.dispatch(submitSearch(suggestion))
             }}
