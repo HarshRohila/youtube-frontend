@@ -1,13 +1,12 @@
 import { Component, Host, Prop, State, h, Element } from "@stencil/core"
 import { SearchResult } from "../../YoutubeApi"
-import { Subject, map } from "rxjs"
-import { Card } from "./card"
+import { map } from "rxjs"
 import { RouterHistory } from "@stencil-community/router"
 import { Router } from "../../lib/Router"
 import { state$, store } from "../../lib/redux"
 import { untilDestroyed } from "@ngneat/until-destroy"
-import { SearchBar, Suggestions } from "../../lib/Search"
-import { keyPress, loadTrending, submitSearch, toggleSearchBar } from "../../lib/redux/search"
+import { SearchBar, Suggestions, Videos } from "../../lib/Search"
+import { keyPress, loadTrending, toggleSearchBar } from "../../lib/redux/search"
 import { IAppError } from "../../lib/redux/global"
 
 @Component({
@@ -28,8 +27,6 @@ export class TrendingPage {
 
   @Prop() history: RouterHistory
 
-  disconnected$ = new Subject<void>()
-
   componentWillLoad() {
     store.dispatch(loadTrending())
 
@@ -40,25 +37,18 @@ export class TrendingPage {
       )
       .subscribe(state => {
         this.showSearchbar = state.showSearchBar
-        this.suggestions = state.suggestions
         this.searchText = state.searchText
         this.videos = state.searchResults
+        this.suggestions = state.suggestions
         this.suggestionsError = state.suggestionsError
         this.suggestionsLoading = state.suggestionsLoading
       })
   }
 
-  disconnectedCallback() {
-    this.disconnected$.next()
-    this.disconnected$.complete()
-  }
+  disconnectedCallback() {}
 
-  private createVideoClickHandler = (video: SearchResult) => {
-    const handler = () => {
-      new Router(this.history).showVideoPage(video)
-    }
-
-    return handler
+  private onSearchSubmit = (searchText: string) => {
+    new Router(this.history).showSearchPage(searchText)
   }
 
   render() {
@@ -79,7 +69,7 @@ export class TrendingPage {
               }, 150)
             }}
             onSearchSubmit={() => {
-              store.dispatch(submitSearch())
+              this.onSearchSubmit(this.searchText)
             }}
             showSearchbar={this.showSearchbar}
             onSearchTextChange={ev => store.dispatch(keyPress(ev.target["value"]))}
@@ -91,18 +81,17 @@ export class TrendingPage {
             error={this.suggestionsError}
             loading={this.suggestionsLoading}
             onClickSuggesion={suggestion => {
-              store.dispatch(submitSearch(suggestion))
+              this.onSearchSubmit(suggestion)
             }}
           />
         )}
-        <ul class={"trending " + `${isShowingSuggestions ? "suggestions-active" : ""}`}>
-          {this.videos &&
-            this.videos.map(r => (
-              <li onClick={this.createVideoClickHandler(r)}>
-                <Card video={r} />
-              </li>
-            ))}
-        </ul>
+        <Videos
+          videos={this.videos}
+          isShowingSuggestions={isShowingSuggestions}
+          onClickVideo={video => {
+            new Router(this.history).showVideoPage(video)
+          }}
+        />
       </Host>
     )
   }

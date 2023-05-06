@@ -22,6 +22,9 @@ export namespace Components {
     }
     interface LoadingPage {
     }
+    interface SearchPage {
+        "history": RouterHistory;
+    }
     interface TrendingPage {
         "history": RouterHistory;
     }
@@ -69,6 +72,12 @@ declare global {
         prototype: HTMLLoadingPageElement;
         new (): HTMLLoadingPageElement;
     };
+    interface HTMLSearchPageElement extends Components.SearchPage, HTMLStencilElement {
+    }
+    var HTMLSearchPageElement: {
+        prototype: HTMLSearchPageElement;
+        new (): HTMLSearchPageElement;
+    };
     interface HTMLTrendingPageElement extends Components.TrendingPage, HTMLStencilElement {
     }
     var HTMLTrendingPageElement: {
@@ -99,6 +108,7 @@ declare global {
         "app-root": HTMLAppRootElement;
         "error-page": HTMLErrorPageElement;
         "loading-page": HTMLLoadingPageElement;
+        "search-page": HTMLSearchPageElement;
         "trending-page": HTMLTrendingPageElement;
         "video-page": HTMLVideoPageElement;
         "video-player": HTMLVideoPlayerElement;
@@ -118,6 +128,9 @@ declare namespace LocalJSX {
         "error"?: IAppError;
     }
     interface LoadingPage {
+    }
+    interface SearchPage {
+        "history"?: RouterHistory;
     }
     interface TrendingPage {
         "history"?: RouterHistory;
@@ -140,6 +153,7 @@ declare namespace LocalJSX {
         "app-root": AppRoot;
         "error-page": ErrorPage;
         "loading-page": LoadingPage;
+        "search-page": SearchPage;
         "trending-page": TrendingPage;
         "video-page": VideoPage;
         "video-player": VideoPlayer;
@@ -155,6 +169,7 @@ declare module "@stencil/core" {
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
             "error-page": LocalJSX.ErrorPage & JSXBase.HTMLAttributes<HTMLErrorPageElement>;
             "loading-page": LocalJSX.LoadingPage & JSXBase.HTMLAttributes<HTMLLoadingPageElement>;
+            "search-page": LocalJSX.SearchPage & JSXBase.HTMLAttributes<HTMLSearchPageElement>;
             "trending-page": LocalJSX.TrendingPage & JSXBase.HTMLAttributes<HTMLTrendingPageElement>;
             "video-page": LocalJSX.VideoPage & JSXBase.HTMLAttributes<HTMLVideoPageElement>;
             "video-player": LocalJSX.VideoPlayer & JSXBase.HTMLAttributes<HTMLVideoPlayerElement>;

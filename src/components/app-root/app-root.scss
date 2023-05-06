@@ -15,6 +15,7 @@ header {
   width: 155px;
   @include desktop() {
     width: 170px;
+    max-width: $max-width;
   }
   &.search-active {
     width: 100%;
@@ -69,7 +70,10 @@ h1 {
 .suggestions-container {
   padding-top: $header-height;
   width: 100%;
-  position: absolute;
+  @include desktop() {
+    max-width: $max-width;
+  }
+  position: fixed;
 
   z-index: 1;
   .suggestions {
@@ -85,6 +89,7 @@ h1 {
       @include ellipsis();
       width: calc(100% - 50px);
     }
+    box-sizing: border-box;
   }
   .error {
     padding: 20px;
@@ -94,5 +99,60 @@ h1 {
     display: grid;
     place-items: center;
     font-size: 1.5em;
+  }
+}
+
+ul.trending {
+  &.suggestions-active {
+    filter: blur(45px);
+  }
+}
+ul.trending {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.card {
+  position: relative;
+  margin-bottom: 50px;
+  .thumbnail {
+    border-radius: 15px;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    @include loading();
+  }
+  .video-desc {
+    box-shadow: 0px 0px 21px 12px rgba(2, 0, 36, 1);
+    width: 100%;
+    position: absolute;
+    background: $primary-color;
+    bottom: -37px;
+    display: flex;
+    height: 50px;
+    align-items: center;
+    .uploader-avatar {
+      padding: 0 10px;
+      $dim: 35px;
+      border-radius: 50%;
+      height: $dim;
+      width: $dim;
+    }
+    span {
+      width: 100px;
+      flex: 1;
+      display: block;
+    }
+    h3 {
+      margin: 0;
+      font-size: 1rem;
+      margin-bottom: 2px;
+      @include ellipsis();
+    }
+    p {
+      margin: 0;
+      font-size: 0.9rem;
+      @include ellipsis();
+    }
   }
 }

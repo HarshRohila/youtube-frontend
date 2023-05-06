@@ -1,6 +1,17 @@
 import { Action, PayloadAction, createSlice } from "@reduxjs/toolkit"
 import { ofType } from "redux-observable"
-import { BehaviorSubject, Observable, catchError, concat, debounceTime, filter, map, of, switchMap } from "rxjs"
+import {
+  BehaviorSubject,
+  Observable,
+  catchError,
+  concat,
+  debounceTime,
+  filter,
+  map,
+  of,
+  switchMap,
+  takeUntil
+} from "rxjs"
 import { SearchResult, YouTubeApi } from "../../../YoutubeApi"
 import { RootState } from ".."
 import { IAppError, setError, setLoading } from "../global"
@@ -31,6 +42,7 @@ export const searchSlice = createSlice({
       if (action.payload) {
         state.searchText = action.payload
       }
+      state.suggestions = []
     },
     setSearchResult: (state, action: PayloadAction<SearchResult[]>) => {
       state.searchResults = action.payload
@@ -45,6 +57,9 @@ export const searchSlice = createSlice({
     loadTrending() {},
     setSuggestionsLoading(state, action: PayloadAction<boolean>) {
       state.suggestionsLoading = action.payload
+    },
+    setSearchText(state, action: PayloadAction<string>) {
+      state.searchText = action.payload
     }
   }
 })
@@ -57,7 +72,8 @@ export const {
   setSearchResult,
   loadTrending,
   setSuggestionsError,
-  setSuggestionsLoading
+  setSuggestionsLoading,
+  setSearchText
 } = searchSlice.actions
 
 export default searchSlice.reducer
@@ -100,7 +116,8 @@ export const fetchSuggestionsEpic = (action$: Observable<Action>, state$: Behavi
               map(results => setSuggestions(results)),
               catchError(() =>
                 of(setSuggestionsError({ message: "Failed to get Suggestions from the Server. Press Enter to Search" }))
-              )
+              ),
+              takeUntil(action$.pipe(ofType(submitSearch.type)))
             )
 
           const dispatchLoading = (isLoading: boolean) => {
@@ -143,6 +160,5 @@ function setStateAfterToggleSearchBar(state) {
 
   if (!state.showSearchBar) {
     state.suggestions = []
-    state.searchText = ""
   }
 }

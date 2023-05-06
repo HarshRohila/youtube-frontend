@@ -7,6 +7,12 @@ import { Component, Host, h } from "@stencil/core"
   shadow: true
 })
 export class LoadingPage {
+  connectedCallback() {
+    document.body.style.overflow = "hidden"
+  }
+  disconnectedCallback() {
+    document.body.style.overflow = "initial"
+  }
   render() {
     return (
       <Host>
