@@ -1,4 +1,4 @@
-import { MatchResults } from "@stencil-community/router"
+import { MatchResults, RouterHistory } from "@stencil-community/router"
 import { Component, Host, Prop, h, State, Fragment } from "@stencil/core"
 import { Stream, YouTubeApi } from "../../YoutubeApi"
 import { Subject, takeUntil } from "rxjs"
@@ -6,6 +6,7 @@ import { IAppError, setError, setLoading } from "../../lib/redux/global"
 import { store } from "../../lib/redux"
 import { Header } from "../../lib/Header"
 import { faShare } from "@fortawesome/free-solid-svg-icons"
+import { Router } from "../../lib/Router"
 
 @Component({
   tag: "video-page",
@@ -14,6 +15,7 @@ import { faShare } from "@fortawesome/free-solid-svg-icons"
 })
 export class VideoPage {
   @Prop() match: MatchResults
+  @Prop() history: RouterHistory
 
   @State() stream: Stream
   @State() error: IAppError | undefined
@@ -58,11 +60,15 @@ export class VideoPage {
     }
   }
 
+  private handleHeaderClick = () => {
+    new Router(this.history).showTrendingPage()
+  }
+
   render() {
     return (
       <Host>
         <div class="video-page">
-          <Header />
+          <Header onHeaderClick={this.handleHeaderClick} />
           {this.stream && (
             <Fragment>
               <video-player src={this.url}></video-player>

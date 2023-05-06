@@ -16,7 +16,7 @@ export class Router {
     }
   }
   showTrendingPage() {
-    this.history.push(AppRoute.getPath(`/trending`))
+    this.history.push(AppRoute.getPath(`/`))
   }
 }
 

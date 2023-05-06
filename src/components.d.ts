@@ -34,6 +34,7 @@ export namespace Components {
         "history": RouterHistory;
     }
     interface VideoPage {
+        "history": RouterHistory;
         "match": MatchResults;
     }
     interface VideoPlayer {
@@ -153,6 +154,7 @@ declare namespace LocalJSX {
         "history"?: RouterHistory;
     }
     interface VideoPage {
+        "history"?: RouterHistory;
         "match"?: MatchResults;
     }
     interface VideoPlayer {

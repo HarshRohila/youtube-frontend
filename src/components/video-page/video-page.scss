@@ -1,15 +1,15 @@
 .video-page {
   height: 100vh;
+
+  header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: static;
+  }
 }
 
 h3 {
   margin: 16px;
-}
-
-Header {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: static;
 }

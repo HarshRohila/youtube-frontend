@@ -39,7 +39,6 @@ export class AppRoot {
             <stencil-route-switch scrollTopOffset={0}>
               <stencil-route url={AppRoute.getPath("")} component="trending-page" exact />
               <stencil-route url={AppRoute.getPath("/videos/:videoId")} component="video-page" />
-              <stencil-route url={AppRoute.getPath("/trending")} component="trending-page" />
               <stencil-route url={AppRoute.getPath("/search")} component="search-page" />
             </stencil-route-switch>
           </stencil-router>
