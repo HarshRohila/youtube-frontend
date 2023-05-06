@@ -36,13 +36,36 @@ export const searchSlice = createSlice({
       if (state.showSearchBar) {
         setStateAfterToggleSearchBar(state)
       }
-    }
+    },
+    loadTrending() {}
   }
 })
 
-export const { keyPress, toggleSearchBar, setSuggestions, submitSearch, setSearchResult } = searchSlice.actions
+export const { keyPress, toggleSearchBar, setSuggestions, submitSearch, setSearchResult, loadTrending } =
+  searchSlice.actions
 
 export default searchSlice.reducer
+
+export const fetchTrendingEpic = (action$: Observable<Action>, state$: BehaviorSubject<RootState>) =>
+  action$.pipe(
+    ofType(loadTrending),
+    switchMap(() => {
+      const api$ = YouTubeApi.getApi()
+        .getTrendingVideos()
+        .pipe(
+          map(results => setSearchResult(results)),
+          catchError(() =>
+            of(setError({ message: "Failed to get response from the Server. Please try again after some time." }))
+          )
+        )
+
+      const dispatchLoading = (isLoading: boolean) => {
+        return of(setLoading(isLoading))
+      }
+
+      return concat(dispatchLoading(true), api$, dispatchLoading(false))
+    })
+  )
 
 export const fetchSuggestionsEpic = (action$: Observable<Action>, state$: BehaviorSubject<RootState>) =>
   action$.pipe(

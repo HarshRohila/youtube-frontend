@@ -1,13 +1,13 @@
 import { Component, Host, Prop, State, h, Element } from "@stencil/core"
-import { SearchResult, YouTubeApi } from "../../YoutubeApi"
-import { Subject, map, takeUntil } from "rxjs"
+import { SearchResult } from "../../YoutubeApi"
+import { Subject, map } from "rxjs"
 import { Card } from "./card"
 import { RouterHistory } from "@stencil-community/router"
 import { Router } from "../../lib/Router"
 import { state$, store } from "../../lib/redux"
 import { untilDestroyed } from "@ngneat/until-destroy"
 import { SearchBar, Suggestions } from "../../lib/Search"
-import { keyPress, setSearchResult, submitSearch, toggleSearchBar } from "../../lib/redux/search"
+import { keyPress, loadTrending, submitSearch, toggleSearchBar } from "../../lib/redux/search"
 
 @Component({
   tag: "trending-page",
@@ -28,12 +28,7 @@ export class TrendingPage {
   disconnected$ = new Subject<void>()
 
   componentWillLoad() {
-    YouTubeApi.getApi()
-      .getTrendingVideos()
-      .pipe(takeUntil(this.disconnected$))
-      .subscribe(videos => {
-        store.dispatch(setSearchResult(videos))
-      })
+    store.dispatch(loadTrending())
 
     state$
       .pipe(
