@@ -1,5 +1,5 @@
 {
-  "name": "youtube-frontend",
+  "name": "PipedRx",
   "private": true,
   "version": "0.0.1",
   "description": "Another YouTube Front-end",
@@ -14,6 +14,7 @@
     "generateIndexHtmlProd": "sed \"s/{{rootUrl}}/\\/youtube-frontend\\//g\" src/indexTemplate.html > src/index.html"
   },
   "devDependencies": {
+    "@capacitor/cli": "^5.0.0",
     "@stencil-community/router": "^1.0.2",
     "@stencil/core": "2.13.0",
     "@stencil/sass": "^3.0.1",
@@ -26,6 +27,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@capacitor/core": "^5.0.0",
     "@fortawesome/fontawesome-svg-core": "^6.4.0",
     "@fortawesome/free-brands-svg-icons": "^6.4.0",
     "@fortawesome/free-regular-svg-icons": "^6.4.0",

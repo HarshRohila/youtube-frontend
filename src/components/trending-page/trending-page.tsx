@@ -66,7 +66,7 @@ export class TrendingPage {
     return (
       <Host>
         <header class={this.showSearchbar ? "search-active" : ""}>
-          {!this.showSearchbar && <h1>Another YouTube Front-end</h1>}
+          {!this.showSearchbar && <h1>PipedRx</h1>}
           <SearchBar
             searchText={this.searchText}
             onCloseClick={() => store.dispatch(toggleSearchBar())}
