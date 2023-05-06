@@ -15,6 +15,7 @@ header {
   width: 155px;
   @include desktop() {
     width: 170px;
+    max-width: $max-width;
   }
   &.search-active {
     width: 100%;
@@ -69,6 +70,9 @@ h1 {
 .suggestions-container {
   padding-top: $header-height;
   width: 100%;
+  @include desktop() {
+    max-width: $max-width;
+  }
   position: absolute;
 
   z-index: 1;
