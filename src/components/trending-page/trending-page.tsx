@@ -47,14 +47,6 @@ export class TrendingPage {
 
   disconnectedCallback() {}
 
-  private createVideoClickHandler = (video: SearchResult) => {
-    const handler = () => {
-      new Router(this.history).showVideoPage(video)
-    }
-
-    return handler
-  }
-
   private onSearchSubmit = (searchText: string) => {
     new Router(this.history).showSearchPage(searchText)
   }
@@ -96,7 +88,9 @@ export class TrendingPage {
         <Videos
           videos={this.videos}
           isShowingSuggestions={isShowingSuggestions}
-          onClickVideo={this.createVideoClickHandler}
+          onClickVideo={video => {
+            new Router(this.history).showVideoPage(video)
+          }}
         />
       </Host>
     )

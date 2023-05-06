@@ -11,6 +11,13 @@ import { faClose } from "@fortawesome/free-solid-svg-icons"
 export class ErrorPage {
   @Prop() error: IAppError
 
+  connectedCallback() {
+    document.body.style.overflow = "hidden"
+  }
+  disconnectedCallback() {
+    document.body.style.overflow = "initial"
+  }
+
   render() {
     return (
       <Host>

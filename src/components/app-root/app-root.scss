@@ -73,7 +73,7 @@ h1 {
   @include desktop() {
     max-width: $max-width;
   }
-  position: absolute;
+  position: fixed;
 
   z-index: 1;
   .suggestions {
@@ -89,6 +89,7 @@ h1 {
       @include ellipsis();
       width: calc(100% - 50px);
     }
+    box-sizing: border-box;
   }
   .error {
     padding: 20px;
