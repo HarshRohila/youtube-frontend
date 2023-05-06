@@ -1,0 +1,1 @@
+import{E as t}from"./p-bb4ef53f.js";const p={prod:{appPath:"/youtube-frontend"},dev:{appPath:""}},a={getPath(a){const{appPath:o}=p[t.apiEnv];return a||(a="/"),o+a}};export{a as A}
