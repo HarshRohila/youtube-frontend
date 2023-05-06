@@ -13,9 +13,9 @@ header {
   transition-property: width;
   transition: width 0.1s;
 
-  width: 310px;
+  width: 155px;
   @include desktop() {
-    width: 360px;
+    width: 170px;
   }
   &.search-active {
     width: 100%;
