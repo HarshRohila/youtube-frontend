@@ -1,7 +1,5 @@
 header {
-  z-index: 2;
-  color: white;
-  height: $header-height;
+  @include header();
   display: flex;
   align-items: center;
   position: fixed;
@@ -9,8 +7,6 @@ header {
 
   transition-property: width;
   transition: width 0.1s;
-
-  @include glass-ui();
 
   width: 155px;
   @include desktop() {

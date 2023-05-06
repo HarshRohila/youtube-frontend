@@ -1,0 +1,19 @@
+:host {
+  display: block;
+}
+button {
+  background: transparent;
+  border: 0;
+  color: white;
+}
+x-icon {
+  font-size: 2rem;
+}
+
+label {
+  display: grid;
+  place-items: center;
+  span {
+    font-size: 0.9rem;
+  }
+}

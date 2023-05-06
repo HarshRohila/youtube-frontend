@@ -2,8 +2,10 @@ import { MatchResults } from "@stencil-community/router"
 import { Component, Host, Prop, h, State, Fragment } from "@stencil/core"
 import { Stream, YouTubeApi } from "../../YoutubeApi"
 import { Subject, takeUntil } from "rxjs"
-import { IAppError, setLoading } from "../../lib/redux/global"
+import { IAppError, setError, setLoading } from "../../lib/redux/global"
 import { store } from "../../lib/redux"
+import { Header } from "../../lib/Header"
+import { faShare } from "@fortawesome/free-solid-svg-icons"
 
 @Component({
   tag: "video-page",
@@ -46,14 +48,28 @@ export class VideoPage {
     this.disconnected$.complete()
   }
 
+  private share = () => {
+    if (navigator.share) {
+      const url = document.location.href
+
+      navigator.share({ url })
+    } else {
+      store.dispatch(setError({ message: "Sharing not supported in your Device for now" }))
+    }
+  }
+
   render() {
     return (
       <Host>
         <div class="video-page">
+          <Header />
           {this.stream && (
             <Fragment>
               <video-player src={this.url}></video-player>
               <h3>{this.stream.title}</h3>
+              <div class="actions">
+                <icon-btn icon={faShare} onBtnClicked={this.share} label="Share"></icon-btn>
+              </div>
             </Fragment>
           )}
           {this.error && <h3>{this.error.message}</h3>}

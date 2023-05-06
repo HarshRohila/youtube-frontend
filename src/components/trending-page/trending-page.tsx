@@ -8,6 +8,7 @@ import { untilDestroyed } from "@ngneat/until-destroy"
 import { SearchBar, Suggestions, Videos } from "../../lib/Search"
 import { keyPress, loadTrending, toggleSearchBar } from "../../lib/redux/search"
 import { IAppError } from "../../lib/redux/global"
+import { APP_NAME } from "../../utils/constants"
 
 @Component({
   tag: "trending-page",
@@ -56,7 +57,7 @@ export class TrendingPage {
     return (
       <Host>
         <header class={this.showSearchbar ? "search-active" : ""}>
-          {!this.showSearchbar && <h1>PipedRx</h1>}
+          {!this.showSearchbar && <h1>{APP_NAME}</h1>}
           <SearchBar
             searchText={this.searchText}
             onCloseClick={() => store.dispatch(toggleSearchBar())}

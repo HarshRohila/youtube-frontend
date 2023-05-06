@@ -7,7 +7,8 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { MatchResults, RouterHistory } from "@stencil-community/router";
 import { IAppError } from "./lib/redux/global";
-import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
+import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
+import { IconDefinition as IconDefinition1 } from "@fortawesome/fontawesome-svg-core";
 export namespace Components {
     interface AppHome {
         "history": RouterHistory;
@@ -19,6 +20,10 @@ export namespace Components {
     }
     interface ErrorPage {
         "error": IAppError;
+    }
+    interface IconBtn {
+        "icon": IconDefinition;
+        "label": string;
     }
     interface LoadingPage {
     }
@@ -66,6 +71,12 @@ declare global {
         prototype: HTMLErrorPageElement;
         new (): HTMLErrorPageElement;
     };
+    interface HTMLIconBtnElement extends Components.IconBtn, HTMLStencilElement {
+    }
+    var HTMLIconBtnElement: {
+        prototype: HTMLIconBtnElement;
+        new (): HTMLIconBtnElement;
+    };
     interface HTMLLoadingPageElement extends Components.LoadingPage, HTMLStencilElement {
     }
     var HTMLLoadingPageElement: {
@@ -107,6 +118,7 @@ declare global {
         "app-profile": HTMLAppProfileElement;
         "app-root": HTMLAppRootElement;
         "error-page": HTMLErrorPageElement;
+        "icon-btn": HTMLIconBtnElement;
         "loading-page": HTMLLoadingPageElement;
         "search-page": HTMLSearchPageElement;
         "trending-page": HTMLTrendingPageElement;
@@ -126,6 +138,11 @@ declare namespace LocalJSX {
     }
     interface ErrorPage {
         "error"?: IAppError;
+    }
+    interface IconBtn {
+        "icon"?: IconDefinition;
+        "label"?: string;
+        "onBtnClicked"?: (event: CustomEvent<void>) => void;
     }
     interface LoadingPage {
     }
@@ -152,6 +169,7 @@ declare namespace LocalJSX {
         "app-profile": AppProfile;
         "app-root": AppRoot;
         "error-page": ErrorPage;
+        "icon-btn": IconBtn;
         "loading-page": LoadingPage;
         "search-page": SearchPage;
         "trending-page": TrendingPage;
@@ -168,6 +186,7 @@ declare module "@stencil/core" {
             "app-profile": LocalJSX.AppProfile & JSXBase.HTMLAttributes<HTMLAppProfileElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
             "error-page": LocalJSX.ErrorPage & JSXBase.HTMLAttributes<HTMLErrorPageElement>;
+            "icon-btn": LocalJSX.IconBtn & JSXBase.HTMLAttributes<HTMLIconBtnElement>;
             "loading-page": LocalJSX.LoadingPage & JSXBase.HTMLAttributes<HTMLLoadingPageElement>;
             "search-page": LocalJSX.SearchPage & JSXBase.HTMLAttributes<HTMLSearchPageElement>;
             "trending-page": LocalJSX.TrendingPage & JSXBase.HTMLAttributes<HTMLTrendingPageElement>;

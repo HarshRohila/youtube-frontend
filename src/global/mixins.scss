@@ -33,3 +33,10 @@
     @content;
   }
 }
+
+@mixin header() {
+  height: $header-height;
+  color: white;
+  z-index: 2;
+  @include glass-ui();
+}
