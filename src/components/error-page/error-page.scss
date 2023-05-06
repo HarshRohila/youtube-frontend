@@ -2,18 +2,27 @@
   display: block;
 }
 
+.container {
+  height: 100vh;
+  width: 100vw;
+  position: absolute;
+  z-index: $z-index-error;
+  top: 0;
+  background: rgba(0, 0, 0, 0.9);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  max-width: $max-width;
+}
+
 .error-page {
   position: relative;
-  position: fixed;
   height: 200px;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   width: calc(100% - 40px);
-  max-width: 500px;
   background: blueviolet;
   border-radius: 12px;
-  z-index: $z-index-error;
 
   display: flex;
   align-items: center;
@@ -24,7 +33,7 @@
   text-align: center;
   box-sizing: border-box;
   margin: auto;
-
+  @include glass-ui();
   .close-btn {
     position: absolute;
     top: 10px;
