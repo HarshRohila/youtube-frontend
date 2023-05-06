@@ -2,6 +2,8 @@ import { MatchResults } from "@stencil-community/router"
 import { Component, Host, Prop, h, State, Fragment } from "@stencil/core"
 import { Stream, YouTubeApi } from "../../YoutubeApi"
 import { Subject, takeUntil } from "rxjs"
+import { IAppError, setLoading } from "../../lib/redux/global"
+import { store } from "../../lib/redux"
 
 @Component({
   tag: "video-page",
@@ -12,17 +14,26 @@ export class VideoPage {
   @Prop() match: MatchResults
 
   @State() stream: Stream
+  @State() error: IAppError | undefined
 
   disconnected$ = new Subject<void>()
 
   componentWillLoad() {
     const videoId = this.match.params.videoId
 
+    store.dispatch(setLoading(true))
     YouTubeApi.getApi()
       .getStream(videoId)
       .pipe(takeUntil(this.disconnected$))
-      .subscribe(stream => {
-        this.stream = stream
+      .subscribe({
+        next: stream => {
+          this.stream = stream
+          store.dispatch(setLoading(false))
+        },
+        error: () => {
+          this.error = { message: "Failed to load video. Please try refreshing" }
+          store.dispatch(setLoading(false))
+        }
       })
   }
 
@@ -45,7 +56,7 @@ export class VideoPage {
               <h3>{this.stream.title}</h3>
             </Fragment>
           )}
-          {!this.stream && <h3>Failed to load video. Please try refreshing</h3>}
+          {this.error && <h3>{this.error.message}</h3>}
         </div>
       </Host>
     )
