@@ -3,7 +3,7 @@
   "description": "Another YouTube Frontend, using Piped API and RxJS",
   "short_name": "PipedRx",
   "start_url": "/youtube-frontend",
-  "display": "fullscreen",
+  "display": "standalone",
   "scope": "/youtube-frontend/",
   "icons": [
     {

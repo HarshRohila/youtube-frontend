@@ -8,8 +8,9 @@ interface IYouTubeApi {
   getTrendingVideos(): Observable<SearchResult[]>
 }
 
-interface Stream {
+export interface Stream {
   sources: StreamSource[]
+  title: string
 }
 
 interface StreamSource {
@@ -33,14 +34,15 @@ export const YouTubeApi = {
 }
 
 class PipedApi implements IYouTubeApi {
-  static baseUrl = "https://watchapi.whatever.social"
+  static baseUrl = "https://pipedapi.in.projectsegfau.lt"
 
   getStream(videoId: string): Observable<Stream> {
     return defer(() => axios.get(`${PipedApi.baseUrl}/streams/${videoId}`)).pipe(
       map(response => response.data),
       map(data => {
         return {
-          sources: [{ url: data.hls }]
+          sources: [{ url: data.hls }],
+          title: data.title
         }
       })
     )

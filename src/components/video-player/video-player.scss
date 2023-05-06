@@ -1,11 +1,16 @@
 @import "~video.js/dist/video-js.min.css";
 
 .container {
-  height: 100%;
+  aspect-ratio: 16 / 9;
   width: 100%;
 }
 
-video-js {
+video-js.video-js {
   height: 100%;
+  aspect-ratio: 16 / 9;
   width: 100%;
+  .vjs-control-bar {
+    background-color: $primary-color;
+    bottom: -1px;
+  }
 }
