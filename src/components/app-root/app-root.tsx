@@ -20,20 +20,12 @@ export class AppRoot {
   componentWillLoad() {
     state$
       .pipe(
-        map(state => state.search),
-        untilDestroyed(this, "disconnectedCallback")
-      )
-      .subscribe(state => {
-        this.isLoading = state.isLoading
-      })
-
-    state$
-      .pipe(
         map(state => state.global),
         untilDestroyed(this, "disconnectedCallback")
       )
       .subscribe(state => {
         this.error = state.error
+        this.isLoading = state.isLoading
       })
   }
 

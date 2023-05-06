@@ -3,14 +3,13 @@ import { ofType } from "redux-observable"
 import { BehaviorSubject, Observable, catchError, concat, debounceTime, filter, map, of, switchMap } from "rxjs"
 import { SearchResult, YouTubeApi } from "../../../YoutubeApi"
 import { RootState } from ".."
-import { setError } from "../global"
+import { setError, setLoading } from "../global"
 
 const initialState = {
   showSearchBar: false,
   searchText: "",
   suggestions: [] as string[],
-  searchResults: [] as SearchResult[],
-  isLoading: false
+  searchResults: [] as SearchResult[]
 }
 
 export const searchSlice = createSlice({
@@ -37,15 +36,11 @@ export const searchSlice = createSlice({
       if (state.showSearchBar) {
         setStateAfterToggleSearchBar(state)
       }
-    },
-    setLoading(state, action: PayloadAction<boolean>) {
-      state.isLoading = action.payload
     }
   }
 })
 
-export const { keyPress, toggleSearchBar, setSuggestions, submitSearch, setSearchResult, setLoading } =
-  searchSlice.actions
+export const { keyPress, toggleSearchBar, setSuggestions, submitSearch, setSearchResult } = searchSlice.actions
 
 export default searchSlice.reducer
 
