@@ -66,21 +66,33 @@ h1 {
   font-size: 2rem;
   margin: 0;
 }
-
-.suggestions {
+.suggestions-container {
   padding-top: $header-height;
-  border: 1px solid;
-  color: white;
-  position: absolute;
-  z-index: 1;
-  margin: 0;
   width: 100%;
-  border: 0;
-  list-style-type: none;
-  li {
-    font-size: 1.2rem;
-    padding-top: 15px;
-    @include ellipsis();
-    width: calc(100% - 50px);
+  position: absolute;
+
+  z-index: 1;
+  .suggestions {
+    border: 1px solid;
+    color: white;
+    margin: 0;
+    width: 100%;
+    border: 0;
+    list-style-type: none;
+    li {
+      font-size: 1.2rem;
+      padding-top: 15px;
+      @include ellipsis();
+      width: calc(100% - 50px);
+    }
+  }
+  .error {
+    padding: 20px;
+  }
+  .loading {
+    min-height: 100px;
+    display: grid;
+    place-items: center;
+    font-size: 1.5em;
   }
 }

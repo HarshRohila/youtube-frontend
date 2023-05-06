@@ -3,13 +3,15 @@ import { ofType } from "redux-observable"
 import { BehaviorSubject, Observable, catchError, concat, debounceTime, filter, map, of, switchMap } from "rxjs"
 import { SearchResult, YouTubeApi } from "../../../YoutubeApi"
 import { RootState } from ".."
-import { setError, setLoading } from "../global"
+import { IAppError, setError, setLoading } from "../global"
 
 const initialState = {
   showSearchBar: false,
   searchText: "",
   suggestions: [] as string[],
-  searchResults: [] as SearchResult[]
+  searchResults: [] as SearchResult[],
+  suggestionsError: undefined as IAppError | undefined,
+  suggestionsLoading: false
 }
 
 export const searchSlice = createSlice({
@@ -37,16 +39,30 @@ export const searchSlice = createSlice({
         setStateAfterToggleSearchBar(state)
       }
     },
-    loadTrending() {}
+    setSuggestionsError(state, action: PayloadAction<IAppError | undefined>) {
+      state.suggestionsError = action.payload
+    },
+    loadTrending() {},
+    setSuggestionsLoading(state, action: PayloadAction<boolean>) {
+      state.suggestionsLoading = action.payload
+    }
   }
 })
 
-export const { keyPress, toggleSearchBar, setSuggestions, submitSearch, setSearchResult, loadTrending } =
-  searchSlice.actions
+export const {
+  keyPress,
+  toggleSearchBar,
+  setSuggestions,
+  submitSearch,
+  setSearchResult,
+  loadTrending,
+  setSuggestionsError,
+  setSuggestionsLoading
+} = searchSlice.actions
 
 export default searchSlice.reducer
 
-export const fetchTrendingEpic = (action$: Observable<Action>, state$: BehaviorSubject<RootState>) =>
+export const fetchTrendingEpic = (action$: Observable<Action>) =>
   action$.pipe(
     ofType(loadTrending),
     switchMap(() => {
@@ -72,12 +88,30 @@ export const fetchSuggestionsEpic = (action$: Observable<Action>, state$: Behavi
     ofType(keyPress.type),
     map(() => state$.value.search.searchText),
     filter(text => !!text.length),
-    debounceTime(300),
     switchMap(text => {
-      const api$ = YouTubeApi.getApi()
-        .getSuggestions(text)
-        .pipe(map(results => setSuggestions(results)))
-      return api$
+      const resetError = of(setSuggestionsError(undefined))
+
+      const api$ = of(text).pipe(
+        debounceTime(300),
+        switchMap(text => {
+          const api$ = YouTubeApi.getApi()
+            .getSuggestions(text)
+            .pipe(
+              map(results => setSuggestions(results)),
+              catchError(() =>
+                of(setSuggestionsError({ message: "Failed to get Suggestions from the Server. Press Enter to Search" }))
+              )
+            )
+
+          const dispatchLoading = (isLoading: boolean) => {
+            return of(setSuggestionsLoading(isLoading))
+          }
+
+          return concat(dispatchLoading(true), api$, dispatchLoading(false))
+        })
+      )
+
+      return concat(resetError, api$)
     })
   )
 
