@@ -6,8 +6,21 @@ export class Router {
   showVideoPage(video: SearchResult) {
     this.history.push(AppRoute.getPath(`/videos/${video.videoId}`))
   }
+  showSearchPage(query: string, { replace }: { replace: boolean } = { replace: false }) {
+    const path = AppRoute.getPath(`/search?q=${query}`)
+
+    if (replace) {
+      this.history.replace(path)
+    } else {
+      this.history.push(path)
+    }
+  }
+  showTrendingPage() {
+    this.history.push(AppRoute.getPath(`/trending`))
+  }
 }
 
 interface IHistory {
   push(path: string): void
+  replace(path: string): void
 }

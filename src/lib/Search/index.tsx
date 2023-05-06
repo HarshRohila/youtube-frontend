@@ -1,14 +1,17 @@
 import { h } from "@stencil/core"
-import { faSearch, faClose, faSpinner } from "@fortawesome/free-solid-svg-icons"
+import { faSearch, faClose, faSpinner, faArrowLeftLong } from "@fortawesome/free-solid-svg-icons"
 import { IAppError } from "../redux/global"
+
+export { Videos } from "./Videos"
 
 interface SearchBarProps {
   onSearchSubmit: (ev: Event) => void
   onSearchTextChange: (ev: Event) => void
-  onSearchBtnClick: (ev: Event) => void
+  onSearchBtnClick?: (ev: Event) => void
   onCloseClick: (ev: Event) => void
   showSearchbar: boolean
   searchText: string
+  onClickBack?: () => void
 }
 export function SearchBar({
   onSearchSubmit,
@@ -16,10 +19,16 @@ export function SearchBar({
   onSearchBtnClick,
   searchText,
   showSearchbar,
-  onCloseClick
+  onCloseClick,
+  onClickBack
 }: SearchBarProps) {
   return (
     <div class="search-bar">
+      {onClickBack && (
+        <button class="back" onClick={onClickBack}>
+          <x-icon icon={faArrowLeftLong}></x-icon>
+        </button>
+      )}
       <form
         class={"search-form " + (showSearchbar ? "" : "hide")}
         onSubmit={ev => {
