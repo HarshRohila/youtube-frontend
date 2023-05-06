@@ -2,7 +2,7 @@ import { Component, Host, h, State, Prop } from "@stencil/core"
 import { SearchBar, Suggestions, Videos } from "../../lib/Search"
 import { state$, store } from "../../lib/redux"
 import { Subject, map, takeUntil } from "rxjs"
-import { toggleSearchBar, submitSearch, keyPress, setSearchText } from "../../lib/redux/search"
+import { submitSearch, keyPress, setSearchText } from "../../lib/redux/search"
 import { RouterHistory } from "@stencil-community/router"
 import { SearchResult } from "../../YoutubeApi"
 import { Router } from "../../lib/Router"
@@ -25,8 +25,6 @@ export class SearchPage {
   componentWillLoad() {
     const searchText = this.history.location.query.q
     store.dispatch(submitSearch(searchText))
-
-    // this.searchText = searchText
 
     state$
       .pipe(
@@ -66,7 +64,7 @@ export class SearchPage {
         <header class="search-active">
           <SearchBar
             searchText={this.searchText}
-            onCloseClick={() => store.dispatch(toggleSearchBar())}
+            onCloseClick={() => store.dispatch(setSearchText(""))}
             onSearchSubmit={() => {
               this.onSearchSubmit(this.searchText)
             }}
