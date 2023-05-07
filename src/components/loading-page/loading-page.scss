@@ -5,7 +5,7 @@
 .loading-page {
   z-index: $z-index-loader;
   background: rgba(0, 0, 0, 0.8);
-  position: absolute;
+  position: fixed;
   max-width: $max-width;
   font-size: 4rem;
   top: 0;
