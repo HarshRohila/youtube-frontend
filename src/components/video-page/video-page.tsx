@@ -43,6 +43,9 @@ export class VideoPage {
 
   private fetchVideo(videoId: string) {
     store.dispatch(setLoading(true))
+
+    window.scrollTo({ top: 0, behavior: "smooth" })
+
     YouTubeApi.getApi()
       .getStream(videoId)
       .pipe(takeUntil(this.disconnected$))
