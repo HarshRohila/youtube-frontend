@@ -7,6 +7,7 @@ import { store } from "../../lib/redux"
 import { Header } from "../../lib/Header"
 import { faShare } from "@fortawesome/free-solid-svg-icons"
 import { Router } from "../../lib/Router"
+import { AppRoute } from "../../utils/AppRoute"
 
 @Component({
   tag: "video-page",
@@ -52,8 +53,7 @@ export class VideoPage {
 
   private share = () => {
     if (navigator.share) {
-      const url = document.location.href
-
+      const url = AppRoute.getCurrentSpaUrl()
       navigator.share({ url, title: this.stream.title || "A YouTube Video" })
     } else {
       store.dispatch(setError({ message: "Sharing not supported in your Device for now" }))
