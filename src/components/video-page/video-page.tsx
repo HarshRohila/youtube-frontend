@@ -54,7 +54,7 @@ export class VideoPage {
     if (navigator.share) {
       const url = document.location.href
 
-      navigator.share({ url })
+      navigator.share({ url, title: this.stream.title || "A YouTube Video" })
     } else {
       store.dispatch(setError({ message: "Sharing not supported in your Device for now" }))
     }
