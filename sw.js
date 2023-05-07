@@ -31,7 +31,7 @@ self.__precacheManifest = [
   },
   {
     "url": "index.html",
-    "revision": "ce2c4ca322513ed5225847ec718a77ff"
+    "revision": "bed017b84c6ca1c03f7d605f55d86491"
   },
   {
     "url": "build/index.esm.js",
@@ -53,6 +53,9 @@ self.__precacheManifest = [
     "url": "build/p-4a26d71d.js"
   },
   {
+    "url": "build/p-531b0721.entry.js"
+  },
+  {
     "url": "build/p-63c55f6f.js"
   },
   {
@@ -66,9 +69,6 @@ self.__precacheManifest = [
   },
   {
     "url": "build/p-88fbaaf1.js"
-  },
-  {
-    "url": "build/p-8b2770e6.entry.js"
   },
   {
     "url": "build/p-8c8b64f6.js"
