@@ -11,6 +11,7 @@ interface IYouTubeApi {
 export interface Stream {
   sources: StreamSource[]
   title: string
+  relatedVideos: SearchResult[]
 }
 
 interface StreamSource {
@@ -37,12 +38,15 @@ class PipedApi implements IYouTubeApi {
   static baseUrl = "https://pipedapi.in.projectsegfau.lt"
 
   getStream(videoId: string): Observable<Stream> {
+    const isStream = (stream: { type: string }) => stream.type === "stream"
+
     return defer(() => axios.get(`${PipedApi.baseUrl}/streams/${videoId}`)).pipe(
       map(response => response.data),
       map(data => {
         return {
           sources: [{ url: data.hls }],
-          title: data.title
+          title: data.title,
+          relatedVideos: data.relatedStreams.filter(isStream).map(createApiMapFunc())
         }
       })
     )

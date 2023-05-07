@@ -1,6 +1,6 @@
 import { MatchResults, RouterHistory } from "@stencil-community/router"
 import { Component, Host, Prop, h, State, Fragment } from "@stencil/core"
-import { Stream, YouTubeApi } from "../../YoutubeApi"
+import { SearchResult, Stream, YouTubeApi } from "../../YoutubeApi"
 import { Subject, takeUntil } from "rxjs"
 import { IAppError, setError, setLoading } from "../../lib/redux/global"
 import { store } from "../../lib/redux"
@@ -8,6 +8,7 @@ import { Header } from "../../lib/Header"
 import { faShare } from "@fortawesome/free-solid-svg-icons"
 import { Router } from "../../lib/Router"
 import { AppRoute } from "../../utils/AppRoute"
+import { Videos } from "../../lib/Search"
 
 @Component({
   tag: "video-page",
@@ -23,9 +24,24 @@ export class VideoPage {
 
   disconnected$ = new Subject<void>()
 
+  routeChange$ = new Subject<{ videoId: string }>()
+
   componentWillLoad() {
     const videoId = this.match.params.videoId
 
+    this.history.listen(({ pathname }: { pathname: string }) => {
+      const videoId = pathname.split("/").pop()
+      this.routeChange$.next({ videoId })
+    })
+
+    this.routeChange$.pipe(takeUntil(this.disconnected$)).subscribe(({ videoId }) => {
+      this.fetchVideo(videoId)
+    })
+
+    this.fetchVideo(videoId)
+  }
+
+  private fetchVideo(videoId: string) {
     store.dispatch(setLoading(true))
     YouTubeApi.getApi()
       .getStream(videoId)
@@ -64,6 +80,10 @@ export class VideoPage {
     new Router(this.history).showTrendingPage()
   }
 
+  private handleVideoClick = (video: SearchResult) => {
+    new Router(this.history).showVideoPage(video)
+  }
+
   render() {
     return (
       <Host>
@@ -79,6 +99,14 @@ export class VideoPage {
             </Fragment>
           )}
           {this.error && <h3>{this.error.message}</h3>}
+          {this.stream && <h3>You may also like</h3>}
+          {this.stream && (
+            <Videos
+              videos={this.stream.relatedVideos}
+              isShowingSuggestions={false}
+              onClickVideo={this.handleVideoClick}
+            />
+          )}
         </div>
       </Host>
     )

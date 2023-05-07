@@ -1,5 +1,6 @@
-import { Component, Host, h, Prop } from "@stencil/core"
+import { Component, Host, h, Prop, Watch } from "@stencil/core"
 import videojs from "video.js"
+import Player from "video.js/dist/types/player"
 
 @Component({
   tag: "video-player",
@@ -8,11 +9,16 @@ import videojs from "video.js"
 })
 export class VideoPlayer {
   videoElement!: HTMLElement
+  private player: Player
 
   @Prop() src: string
+  @Watch("src")
+  onSrcChange() {
+    this.player.src({ src: this.src })
+  }
 
   componentDidLoad() {
-    videojs(this.videoElement, {
+    this.player = videojs(this.videoElement, {
       controls: true,
       autoplay: true,
       preload: "auto"
