@@ -4,7 +4,7 @@
   "short_name": "PipedRx",
   "start_url": "/youtube-frontend",
   "display": "standalone",
-  "scope": "/youtube-frontend/",
+  "scope": "https://www.rohilaharsh.in/youtube-frontend/",
   "icons": [
     {
       "src": "assets/icon/icon-48x48.png",
