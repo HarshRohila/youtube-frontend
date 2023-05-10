@@ -30,6 +30,9 @@ export namespace Components {
     interface SearchPage {
         "history": RouterHistory;
     }
+    interface SharedContentReceiver {
+        "history": RouterHistory;
+    }
     interface TrendingPage {
         "history": RouterHistory;
     }
@@ -90,6 +93,12 @@ declare global {
         prototype: HTMLSearchPageElement;
         new (): HTMLSearchPageElement;
     };
+    interface HTMLSharedContentReceiverElement extends Components.SharedContentReceiver, HTMLStencilElement {
+    }
+    var HTMLSharedContentReceiverElement: {
+        prototype: HTMLSharedContentReceiverElement;
+        new (): HTMLSharedContentReceiverElement;
+    };
     interface HTMLTrendingPageElement extends Components.TrendingPage, HTMLStencilElement {
     }
     var HTMLTrendingPageElement: {
@@ -122,6 +131,7 @@ declare global {
         "icon-btn": HTMLIconBtnElement;
         "loading-page": HTMLLoadingPageElement;
         "search-page": HTMLSearchPageElement;
+        "shared-content-receiver": HTMLSharedContentReceiverElement;
         "trending-page": HTMLTrendingPageElement;
         "video-page": HTMLVideoPageElement;
         "video-player": HTMLVideoPlayerElement;
@@ -150,6 +160,9 @@ declare namespace LocalJSX {
     interface SearchPage {
         "history"?: RouterHistory;
     }
+    interface SharedContentReceiver {
+        "history"?: RouterHistory;
+    }
     interface TrendingPage {
         "history"?: RouterHistory;
     }
@@ -174,6 +187,7 @@ declare namespace LocalJSX {
         "icon-btn": IconBtn;
         "loading-page": LoadingPage;
         "search-page": SearchPage;
+        "shared-content-receiver": SharedContentReceiver;
         "trending-page": TrendingPage;
         "video-page": VideoPage;
         "video-player": VideoPlayer;
@@ -191,6 +205,7 @@ declare module "@stencil/core" {
             "icon-btn": LocalJSX.IconBtn & JSXBase.HTMLAttributes<HTMLIconBtnElement>;
             "loading-page": LocalJSX.LoadingPage & JSXBase.HTMLAttributes<HTMLLoadingPageElement>;
             "search-page": LocalJSX.SearchPage & JSXBase.HTMLAttributes<HTMLSearchPageElement>;
+            "shared-content-receiver": LocalJSX.SharedContentReceiver & JSXBase.HTMLAttributes<HTMLSharedContentReceiverElement>;
             "trending-page": LocalJSX.TrendingPage & JSXBase.HTMLAttributes<HTMLTrendingPageElement>;
             "video-page": LocalJSX.VideoPage & JSXBase.HTMLAttributes<HTMLVideoPageElement>;
             "video-player": LocalJSX.VideoPlayer & JSXBase.HTMLAttributes<HTMLVideoPlayerElement>;
