@@ -35,11 +35,11 @@ export class AppRoot {
     return (
       <div>
         <main>
-          <stencil-router>
+          <stencil-router historyType="hash">
             <stencil-route-switch scrollTopOffset={0}>
-              <stencil-route url={AppRoute.getPath("")} component="trending-page" exact />
-              <stencil-route url={AppRoute.getPath("/videos/:videoId")} component="video-page" />
-              <stencil-route url={AppRoute.getPath("/search")} component="search-page" />
+              <stencil-route url={AppRoute.getPath("/")} component="trending-page" exact />
+              <stencil-route url={AppRoute.getPath("/videos/:videoId")} component="video-page" exact />
+              <stencil-route url={AppRoute.getPath("/search")} component="search-page" exact />
             </stencil-route-switch>
           </stencil-router>
         </main>
