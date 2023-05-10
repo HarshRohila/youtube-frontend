@@ -40,6 +40,11 @@ export class AppRoot {
               <stencil-route url={AppRoute.getPath("/")} component="trending-page" exact />
               <stencil-route url={AppRoute.getPath("/videos/:videoId")} component="video-page" exact />
               <stencil-route url={AppRoute.getPath("/search")} component="search-page" exact />
+              <stencil-route
+                url={AppRoute.getPath("/shared-content-receiver")}
+                component="shared-content-receiver"
+                exact
+              />
             </stencil-route-switch>
           </stencil-router>
         </main>
