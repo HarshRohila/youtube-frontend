@@ -64,7 +64,7 @@
   "background_color": "#020024",
   "theme_color": "#020024",
   "share_target": {
-    "action": "/shared-content-receiver/",
+    "action": "/youtube-frontend/#/shared-content-receiver/",
     "method": "GET",
     "params": {
       "url": "link"
