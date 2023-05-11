@@ -64,10 +64,10 @@
   "background_color": "#020024",
   "theme_color": "#020024",
   "share_target": {
-    "action": "/shared-content-receiver/",
+    "action": "/youtube-frontend/share.html",
     "method": "GET",
     "params": {
-      "url": "link"
+      "text": "text"
     }
   }
 }

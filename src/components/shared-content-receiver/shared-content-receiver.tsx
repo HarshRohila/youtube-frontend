@@ -10,12 +10,11 @@ export class SharedContentReceiver {
   @Prop() history: RouterHistory
 
   componentWillLoad() {
-    const url = location.search
+    const url = location.hash.split("?")[1]
 
     const params = new URLSearchParams(url)
 
-    const sharedLink = params.get("link") || ""
-
+    const sharedLink = params.get("text") || ""
     const videoId = getYouTubeVideoId(sharedLink)
 
     this.redirect(videoId)
