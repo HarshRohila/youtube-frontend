@@ -4,7 +4,7 @@ Another YouTube Frontend using [Piped API](https://github.com/TeamPiped/Piped) a
 
 Built using [Stencil.js](https://stenciljs.com/)
 
-## About Stemcil.js
+## About Stencil.js
 
 Stencil is a compiler for building fast web apps using Web Components.
 
