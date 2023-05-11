@@ -67,7 +67,8 @@
     "action": "/youtube-frontend/#/shared-content-receiver/",
     "method": "GET",
     "params": {
-      "url": "link"
+      "url": "link",
+      "text": "text"
     }
   }
 }
