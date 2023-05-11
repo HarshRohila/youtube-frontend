@@ -2,10 +2,9 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Single Page Apps for GitHub Pages</title>
+    <title>PWA share target</title>
     <script type="text/javascript">
       window.onload = function () {
-        alert(window.location.href)
         var urlParams = new URLSearchParams(window.location.search)
         var text = urlParams.get("text")
 
@@ -13,7 +12,6 @@
           var currentDomain = window.location.origin
           var redirectUrl =
             currentDomain + "/youtube-frontend/#/shared-content-receiver?text=" + encodeURIComponent(text)
-          alert(redirectUrl)
           window.location.replace(redirectUrl)
         }
       }
