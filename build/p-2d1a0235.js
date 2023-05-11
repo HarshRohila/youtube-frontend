@@ -1,0 +1,1 @@
+const t={getPath:t=>t,getCurrentSpaUrl:()=>location.href};export{t as A}
