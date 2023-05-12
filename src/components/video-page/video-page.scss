@@ -12,13 +12,17 @@
 
 h3 {
   margin: 16px;
-  margin-bottom: 10px;
+  margin-bottom: 2px;
   font-size: 1.1rem;
 }
 
 .actions {
   display: flex;
   justify-content: space-evenly;
+}
+.video-info {
+  margin-left: 16px;
+  font-size: 0.8rem;
 }
 
 .uploader-info {

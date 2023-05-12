@@ -10,6 +10,7 @@ import { Router } from "../../lib/Router"
 import { AppRoute } from "../../utils/AppRoute"
 import { Videos } from "../../lib/Search"
 import { UploaderInfo } from "./Uploader"
+import { getTimeAgoFormatter } from "../../utils/TimeFormatter"
 
 @Component({
   tag: "video-page",
@@ -88,6 +89,18 @@ export class VideoPage {
     new Router(this.history).showVideoPage(video)
   }
 
+  get views() {
+    return formatter.format(this.stream.views) + " views"
+  }
+
+  get videoInfo() {
+    return this.views + " ‧ " + this.timeAgo
+  }
+
+  get timeAgo() {
+    return getTimeAgoFormatter().format(new Date(this.stream.uploadDate))
+  }
+
   render() {
     return (
       <Host>
@@ -97,6 +110,7 @@ export class VideoPage {
             <Fragment>
               <video-player src={this.url}></video-player>
               <h3>{this.stream.title}</h3>
+              <div class="video-info">{this.videoInfo}</div>
               <UploaderInfo video={this.stream} />
               <div class="actions">
                 <icon-btn icon={faThumbsUp} label={formatter.format(this.stream.likes)} disabled></icon-btn>
