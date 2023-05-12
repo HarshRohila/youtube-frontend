@@ -9,6 +9,7 @@ import { Component, Host, h, Prop, Event, EventEmitter } from "@stencil/core"
 export class IconBtn {
   @Prop() icon: IconDefinition
   @Prop() label: string
+  @Prop() disabled = false
 
   @Event() btnClicked: EventEmitter<void>
 
@@ -20,6 +21,7 @@ export class IconBtn {
             onClick={() => {
               this.btnClicked.emit()
             }}
+            disabled
           >
             <x-icon icon={this.icon}></x-icon>
           </button>

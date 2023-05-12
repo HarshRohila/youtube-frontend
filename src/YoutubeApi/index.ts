@@ -12,6 +12,8 @@ export interface Stream {
   sources: StreamSource[]
   title: string
   relatedVideos: SearchResult[]
+  likes: number
+  dislikes: number
 }
 
 interface StreamSource {
@@ -46,7 +48,9 @@ class PipedApi implements IYouTubeApi {
         return {
           sources: [{ url: data.hls }],
           title: data.title,
-          relatedVideos: data.relatedStreams.filter(isStream).map(createApiMapFunc())
+          relatedVideos: data.relatedStreams.filter(isStream).map(createApiMapFunc()),
+          likes: data.likes,
+          dislikes: data.dislikes
         }
       })
     )

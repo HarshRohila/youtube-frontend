@@ -5,7 +5,7 @@ import { Subject, takeUntil } from "rxjs"
 import { IAppError, setError, setLoading } from "../../lib/redux/global"
 import { store } from "../../lib/redux"
 import { Header } from "../../lib/Header"
-import { faShare } from "@fortawesome/free-solid-svg-icons"
+import { faShare, faThumbsDown, faThumbsUp } from "@fortawesome/free-solid-svg-icons"
 import { Router } from "../../lib/Router"
 import { AppRoute } from "../../utils/AppRoute"
 import { Videos } from "../../lib/Search"
@@ -97,6 +97,8 @@ export class VideoPage {
               <video-player src={this.url}></video-player>
               <h3>{this.stream.title}</h3>
               <div class="actions">
+                <icon-btn icon={faThumbsUp} label={formatter.format(this.stream.likes)} disabled></icon-btn>
+                <icon-btn icon={faThumbsDown} label={formatter.format(this.stream.dislikes)} disabled></icon-btn>
                 <icon-btn icon={faShare} onBtnClicked={this.share} label="Share"></icon-btn>
               </div>
             </Fragment>
@@ -115,3 +117,5 @@ export class VideoPage {
     )
   }
 }
+
+const formatter = Intl.NumberFormat("en", { notation: "compact" })
