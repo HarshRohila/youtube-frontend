@@ -21,7 +21,7 @@ export class IconBtn {
             onClick={() => {
               this.btnClicked.emit()
             }}
-            disabled
+            disabled={this.disabled}
           >
             <x-icon icon={this.icon}></x-icon>
           </button>
