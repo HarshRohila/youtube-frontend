@@ -9,6 +9,7 @@ import { faShare, faThumbsDown, faThumbsUp } from "@fortawesome/free-solid-svg-i
 import { Router } from "../../lib/Router"
 import { AppRoute } from "../../utils/AppRoute"
 import { Videos } from "../../lib/Search"
+import { UploaderInfo } from "./Uploader"
 
 @Component({
   tag: "video-page",
@@ -96,6 +97,7 @@ export class VideoPage {
             <Fragment>
               <video-player src={this.url}></video-player>
               <h3>{this.stream.title}</h3>
+              <UploaderInfo video={this.stream} />
               <div class="actions">
                 <icon-btn icon={faThumbsUp} label={formatter.format(this.stream.likes)} disabled></icon-btn>
                 <icon-btn icon={faThumbsDown} label={formatter.format(this.stream.dislikes)} disabled></icon-btn>
