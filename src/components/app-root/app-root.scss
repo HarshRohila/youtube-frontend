@@ -128,11 +128,7 @@ ul.trending {
     height: 50px;
     align-items: center;
     .uploader-avatar {
-      padding: 0 10px;
-      $dim: 35px;
-      border-radius: 50%;
-      height: $dim;
-      width: $dim;
+      @include uploader-avatar();
     }
     span {
       width: 100px;

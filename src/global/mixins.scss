@@ -40,3 +40,11 @@
   z-index: 2;
   @include glass-ui();
 }
+
+@mixin uploader-avatar($dimention: 35px) {
+  padding: 0 10px;
+  $dim: $dimention;
+  border-radius: 50%;
+  height: $dim;
+  width: $dim;
+}

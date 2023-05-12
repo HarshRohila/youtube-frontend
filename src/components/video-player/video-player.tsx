@@ -42,6 +42,7 @@ export class VideoPlayer {
       controls: true,
       autoplay: true,
       preload: "auto",
+      loop: true,
       playbackRates: [0.5, 0.75, 1, 1.25, 1.5, 2],
       html5: {
         limitRenditionByPlayerDimensions: false

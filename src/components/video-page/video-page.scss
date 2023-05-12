@@ -12,9 +12,41 @@
 
 h3 {
   margin: 16px;
+  margin-bottom: 2px;
+  font-size: 1.1rem;
 }
 
 .actions {
   display: flex;
   justify-content: space-evenly;
+}
+.video-info {
+  margin-left: 16px;
+  font-size: 0.8rem;
+}
+
+.uploader-info {
+  margin: 10px 0;
+  margin-left: 6px;
+  display: grid;
+  grid-template-columns: 50px max-content max-content;
+  align-items: center;
+  .info {
+    display: flex;
+    align-items: baseline;
+  }
+  img {
+    @include uploader-avatar(30px);
+  }
+  h3,
+  h4 {
+    margin: 0;
+  }
+  h3 {
+    font-size: 0.9rem;
+  }
+  h4 {
+    font-size: 0.8rem;
+    padding-left: 10px;
+  }
 }
