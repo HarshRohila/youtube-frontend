@@ -7,13 +7,14 @@ button {
   color: white;
 }
 x-icon {
-  font-size: 2rem;
+  font-size: 1.6rem;
 }
 
 label {
   display: grid;
   place-items: center;
   span {
+    padding-top: 3px;
     font-size: 0.9rem;
   }
 }

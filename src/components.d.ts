@@ -22,6 +22,7 @@ export namespace Components {
         "error": IAppError;
     }
     interface IconBtn {
+        "disabled": boolean;
         "icon": IconDefinition;
         "label": string;
     }
@@ -151,6 +152,7 @@ declare namespace LocalJSX {
         "error"?: IAppError;
     }
     interface IconBtn {
+        "disabled"?: boolean;
         "icon"?: IconDefinition;
         "label"?: string;
         "onBtnClicked"?: (event: CustomEvent<void>) => void;
