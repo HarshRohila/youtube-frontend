@@ -53,6 +53,7 @@ export namespace Components {
     }
     interface VideoPlayer {
         "currentTime": () => Promise<number>;
+        "skipSegments": number[][];
         "src": string;
     }
     interface XIcon {
@@ -200,6 +201,7 @@ declare namespace LocalJSX {
     }
     interface VideoPlayer {
         "onLoaded"?: (event: CustomEvent<{ player: Player }>) => void;
+        "skipSegments"?: number[][];
         "src"?: string;
     }
     interface XIcon {

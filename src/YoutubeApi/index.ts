@@ -1,4 +1,4 @@
-import { Observable, defer, map } from "rxjs"
+import { Observable, catchError, defer, map, from, of } from "rxjs"
 import axios from "axios"
 
 interface IYouTubeApi {
@@ -6,6 +6,7 @@ interface IYouTubeApi {
   getSearchResults(query: string): Observable<SearchResult[]>
   getStream(videoId: string): Observable<Stream>
   getTrendingVideos(): Observable<SearchResult[]>
+  getSkipSegments(videoId: string): Observable<number[][]>
 }
 
 export interface Stream {
@@ -94,6 +95,20 @@ class PipedApi implements IYouTubeApi {
       map(response => response.data.items),
       map(items => {
         return items.map(createApiMapFunc())
+      })
+    )
+  }
+
+  getSkipSegments(videoId: string): Observable<number[][]> {
+    return defer(() =>
+      from(axios.get(`${PipedApi.baseUrl}/sponsors/${videoId}?category=["sponsor","interaction","selfpromo"]`))
+    ).pipe(
+      map(response => response.data.segments),
+      map(segments => {
+        return segments.map(s => s.segment)
+      }),
+      catchError(_err => {
+        return of([])
       })
     )
   }

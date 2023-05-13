@@ -27,6 +27,7 @@ export class VideoPage {
 
   @State() stream: Stream
   @State() error: IAppError | undefined
+  @State() skipSegments: number[][] = []
 
   disconnected$ = new Subject<void>()
 
@@ -58,9 +59,18 @@ export class VideoPage {
   }
 
   private fetchVideo(videoId: string) {
+    if (!videoId) return
+
     store.dispatch(setLoading(true))
 
     window.scrollTo({ top: 0, behavior: "smooth" })
+
+    YouTubeApi.getApi()
+      .getSkipSegments(videoId)
+      .subscribe(skipSegments => {
+        console.log("segs", skipSegments)
+        this.skipSegments = skipSegments
+      })
 
     YouTubeApi.getApi()
       .getStream(videoId)
@@ -136,6 +146,7 @@ export class VideoPage {
                 onLoaded={ev => {
                   this.handleVideoPlayerLoaded(ev.detail.player)
                 }}
+                skipSegments={this.skipSegments}
               ></video-player>
               <h3>{this.stream.title}</h3>
               <div class="video-info">{this.videoInfo}</div>

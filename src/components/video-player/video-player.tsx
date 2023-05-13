@@ -18,6 +18,8 @@ export class VideoPlayer {
     this.player.src({ src: this.src })
   }
 
+  @Prop() skipSegments: number[][] = []
+
   @Method()
   async currentTime() {
     return this.player?.currentTime()
@@ -70,6 +72,21 @@ export class VideoPlayer {
       dlbClick$.pipe(takeUntil(this.disconnected$)).subscribe(this.handleDblClick)
 
       this.loaded.emit({ player: this.player })
+    })
+
+    this.player.on("timeupdate", () => {
+      const segments = this.skipSegments
+      var currentTime = this.player.currentTime()
+
+      for (var i = 0; i < segments.length; i++) {
+        var segment = segments[i]
+
+        if (currentTime >= segment[0] && currentTime < segment[1]) {
+          console.log("skipped")
+          this.player.currentTime(segment[1])
+          break
+        }
+      }
     })
   }
   disconnectedCallback() {

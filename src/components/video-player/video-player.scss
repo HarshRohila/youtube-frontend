@@ -13,4 +13,14 @@ video-js.video-js {
     background-color: $primary-color;
     bottom: -1px;
   }
+
+  .vjs-remaining-time,
+  .vjs-time-divider,
+  .vjs-duration {
+    display: none;
+  }
+}
+
+.video-js .vjs-time-control {
+  display: block;
 }
