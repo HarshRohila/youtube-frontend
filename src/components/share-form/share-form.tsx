@@ -13,6 +13,7 @@ const id = getId("share-cb")
 
 @Component({
   tag: "share-form",
+  styleUrl: "share-form.scss",
   shadow: false
 })
 export class ShareForm {
