@@ -4,6 +4,7 @@ import search, { doSearchEpic, fetchSuggestionsEpic, fetchTrendingEpic } from ".
 import global from "./global"
 
 import { createEpicMiddleware, combineEpics } from "redux-observable"
+import videoPage from "./video-page"
 
 const epicMiddleware = createEpicMiddleware()
 // @ts-ignore
@@ -13,7 +14,8 @@ export const store = configureStore({
   middleware: getDefaultMiddleware => getDefaultMiddleware().concat(epicMiddleware),
   reducer: {
     search,
-    global
+    global,
+    videoPage
   }
 })
 

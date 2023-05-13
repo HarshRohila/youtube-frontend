@@ -17,4 +17,10 @@ label {
     padding-top: 3px;
     font-size: 0.8rem;
   }
+  &.small {
+    display: flex;
+    x-icon {
+      font-size: 1rem;
+    }
+  }
 }

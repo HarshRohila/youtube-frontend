@@ -8,6 +8,8 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { MatchResults, RouterHistory } from "@stencil-community/router";
 import { IAppError } from "./lib/redux/global";
 import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
+import { ShareFormState } from "./lib/redux/video-page";
+import { Stream } from "./YoutubeApi";
 import { IconDefinition as IconDefinition1 } from "@fortawesome/fontawesome-svg-core";
 export namespace Components {
     interface AppHome {
@@ -25,11 +27,18 @@ export namespace Components {
         "disabled": boolean;
         "icon": IconDefinition;
         "label": string;
+        "size": "small" | "medium";
     }
     interface LoadingPage {
     }
     interface SearchPage {
         "history": RouterHistory;
+    }
+    interface ShareForm {
+        "copiedLink": string;
+        "currentTimeEnabled": boolean;
+        "shareForm": ShareFormState | undefined;
+        "video": Stream;
     }
     interface SharedContentReceiver {
         "history": RouterHistory;
@@ -40,8 +49,10 @@ export namespace Components {
     interface VideoPage {
         "history": RouterHistory;
         "match": MatchResults;
+        "shareForm": ShareFormState | undefined;
     }
     interface VideoPlayer {
+        "currentTime": () => Promise<number>;
         "src": string;
     }
     interface XIcon {
@@ -94,6 +105,12 @@ declare global {
         prototype: HTMLSearchPageElement;
         new (): HTMLSearchPageElement;
     };
+    interface HTMLShareFormElement extends Components.ShareForm, HTMLStencilElement {
+    }
+    var HTMLShareFormElement: {
+        prototype: HTMLShareFormElement;
+        new (): HTMLShareFormElement;
+    };
     interface HTMLSharedContentReceiverElement extends Components.SharedContentReceiver, HTMLStencilElement {
     }
     var HTMLSharedContentReceiverElement: {
@@ -132,6 +149,7 @@ declare global {
         "icon-btn": HTMLIconBtnElement;
         "loading-page": HTMLLoadingPageElement;
         "search-page": HTMLSearchPageElement;
+        "share-form": HTMLShareFormElement;
         "shared-content-receiver": HTMLSharedContentReceiverElement;
         "trending-page": HTMLTrendingPageElement;
         "video-page": HTMLVideoPageElement;
@@ -156,11 +174,18 @@ declare namespace LocalJSX {
         "icon"?: IconDefinition;
         "label"?: string;
         "onBtnClicked"?: (event: CustomEvent<void>) => void;
+        "size"?: "small" | "medium";
     }
     interface LoadingPage {
     }
     interface SearchPage {
         "history"?: RouterHistory;
+    }
+    interface ShareForm {
+        "copiedLink"?: string;
+        "currentTimeEnabled"?: boolean;
+        "shareForm"?: ShareFormState | undefined;
+        "video"?: Stream;
     }
     interface SharedContentReceiver {
         "history"?: RouterHistory;
@@ -171,8 +196,10 @@ declare namespace LocalJSX {
     interface VideoPage {
         "history"?: RouterHistory;
         "match"?: MatchResults;
+        "shareForm"?: ShareFormState | undefined;
     }
     interface VideoPlayer {
+        "onLoaded"?: (event: CustomEvent<{ player: Player }>) => void;
         "src"?: string;
     }
     interface XIcon {
@@ -189,6 +216,7 @@ declare namespace LocalJSX {
         "icon-btn": IconBtn;
         "loading-page": LoadingPage;
         "search-page": SearchPage;
+        "share-form": ShareForm;
         "shared-content-receiver": SharedContentReceiver;
         "trending-page": TrendingPage;
         "video-page": VideoPage;
@@ -207,6 +235,7 @@ declare module "@stencil/core" {
             "icon-btn": LocalJSX.IconBtn & JSXBase.HTMLAttributes<HTMLIconBtnElement>;
             "loading-page": LocalJSX.LoadingPage & JSXBase.HTMLAttributes<HTMLLoadingPageElement>;
             "search-page": LocalJSX.SearchPage & JSXBase.HTMLAttributes<HTMLSearchPageElement>;
+            "share-form": LocalJSX.ShareForm & JSXBase.HTMLAttributes<HTMLShareFormElement>;
             "shared-content-receiver": LocalJSX.SharedContentReceiver & JSXBase.HTMLAttributes<HTMLSharedContentReceiverElement>;
             "trending-page": LocalJSX.TrendingPage & JSXBase.HTMLAttributes<HTMLTrendingPageElement>;
             "video-page": LocalJSX.VideoPage & JSXBase.HTMLAttributes<HTMLVideoPageElement>;

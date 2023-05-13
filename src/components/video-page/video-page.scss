@@ -50,3 +50,10 @@ h3 {
     padding-left: 10px;
   }
 }
+
+.share-form {
+  .share-actions {
+    display: flex;
+    justify-content: space-evenly;
+  }
+}
