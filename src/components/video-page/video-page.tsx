@@ -117,6 +117,7 @@ export class VideoPage {
 
     if (time) {
       player.currentTime(time)
+      removeTimeFromQueryParameter()
     }
   }
 
@@ -163,3 +164,7 @@ export class VideoPage {
 }
 
 const formatter = Intl.NumberFormat("en", { notation: "compact" })
+function removeTimeFromQueryParameter() {
+  const newUrl = location.href.split("?")[0]
+  window.history.replaceState({ path: newUrl }, "", newUrl)
+}
