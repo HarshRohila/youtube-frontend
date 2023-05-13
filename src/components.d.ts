@@ -33,6 +33,10 @@ export namespace Components {
     interface SearchPage {
         "history": RouterHistory;
     }
+    interface ShareForm {
+        "currentTimeEnabled": boolean;
+        "shareForm": ShareFormState | undefined;
+    }
     interface SharedContentReceiver {
         "history": RouterHistory;
     }
@@ -40,7 +44,6 @@ export namespace Components {
         "history": RouterHistory;
     }
     interface VideoPage {
-        "currentTimeEnabled": boolean;
         "history": RouterHistory;
         "match": MatchResults;
         "shareForm": ShareFormState | undefined;
@@ -99,6 +102,12 @@ declare global {
         prototype: HTMLSearchPageElement;
         new (): HTMLSearchPageElement;
     };
+    interface HTMLShareFormElement extends Components.ShareForm, HTMLStencilElement {
+    }
+    var HTMLShareFormElement: {
+        prototype: HTMLShareFormElement;
+        new (): HTMLShareFormElement;
+    };
     interface HTMLSharedContentReceiverElement extends Components.SharedContentReceiver, HTMLStencilElement {
     }
     var HTMLSharedContentReceiverElement: {
@@ -137,6 +146,7 @@ declare global {
         "icon-btn": HTMLIconBtnElement;
         "loading-page": HTMLLoadingPageElement;
         "search-page": HTMLSearchPageElement;
+        "share-form": HTMLShareFormElement;
         "shared-content-receiver": HTMLSharedContentReceiverElement;
         "trending-page": HTMLTrendingPageElement;
         "video-page": HTMLVideoPageElement;
@@ -168,6 +178,10 @@ declare namespace LocalJSX {
     interface SearchPage {
         "history"?: RouterHistory;
     }
+    interface ShareForm {
+        "currentTimeEnabled"?: boolean;
+        "shareForm"?: ShareFormState | undefined;
+    }
     interface SharedContentReceiver {
         "history"?: RouterHistory;
     }
@@ -175,7 +189,6 @@ declare namespace LocalJSX {
         "history"?: RouterHistory;
     }
     interface VideoPage {
-        "currentTimeEnabled"?: boolean;
         "history"?: RouterHistory;
         "match"?: MatchResults;
         "shareForm"?: ShareFormState | undefined;
@@ -197,6 +210,7 @@ declare namespace LocalJSX {
         "icon-btn": IconBtn;
         "loading-page": LoadingPage;
         "search-page": SearchPage;
+        "share-form": ShareForm;
         "shared-content-receiver": SharedContentReceiver;
         "trending-page": TrendingPage;
         "video-page": VideoPage;
@@ -215,6 +229,7 @@ declare module "@stencil/core" {
             "icon-btn": LocalJSX.IconBtn & JSXBase.HTMLAttributes<HTMLIconBtnElement>;
             "loading-page": LocalJSX.LoadingPage & JSXBase.HTMLAttributes<HTMLLoadingPageElement>;
             "search-page": LocalJSX.SearchPage & JSXBase.HTMLAttributes<HTMLSearchPageElement>;
+            "share-form": LocalJSX.ShareForm & JSXBase.HTMLAttributes<HTMLShareFormElement>;
             "shared-content-receiver": LocalJSX.SharedContentReceiver & JSXBase.HTMLAttributes<HTMLSharedContentReceiverElement>;
             "trending-page": LocalJSX.TrendingPage & JSXBase.HTMLAttributes<HTMLTrendingPageElement>;
             "video-page": LocalJSX.VideoPage & JSXBase.HTMLAttributes<HTMLVideoPageElement>;

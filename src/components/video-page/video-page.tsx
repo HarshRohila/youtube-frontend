@@ -11,7 +11,6 @@ import { Videos } from "../../lib/Search"
 import { UploaderInfo } from "./Uploader"
 import { getTimeAgoFormatter } from "../../utils/TimeFormatter"
 import { getShareHandler } from "../../lib/ShareForm/ShareHandler"
-import { ShareForm } from "../../lib/ShareForm"
 import { ShareFormState } from "../../lib/redux/video-page"
 
 @Component({
@@ -23,11 +22,10 @@ export class VideoPage {
   @Prop() match: MatchResults
   @Prop() history: RouterHistory
 
+  @Prop({ mutable: true }) shareForm: ShareFormState | undefined
+
   @State() stream: Stream
   @State() error: IAppError | undefined
-
-  @Prop({ mutable: true }) shareForm: ShareFormState | undefined
-  @Prop({ mutable: true }) currentTimeEnabled: boolean
 
   disconnected$ = new Subject<void>()
 
@@ -53,7 +51,6 @@ export class VideoPage {
       )
       .subscribe(state => {
         this.shareForm = state.shareForm
-        this.currentTimeEnabled = state.currentTimeEnabled
       })
 
     this.fetchVideo(videoId)
@@ -134,13 +131,7 @@ export class VideoPage {
                 <icon-btn icon={faThumbsUp} label={formatter.format(this.stream.likes)} disabled></icon-btn>
                 <icon-btn icon={faThumbsDown} label={formatter.format(this.stream.dislikes)} disabled></icon-btn>
                 <icon-btn icon={faShare} onBtnClicked={this.share} label="Share"></icon-btn>
-                {this.shareForm && (
-                  <ShareForm
-                    video={this.stream}
-                    state={this.shareForm}
-                    currentTimeEnabled={this.currentTimeEnabled}
-                  ></ShareForm>
-                )}
+                {this.shareForm && <share-form></share-form>}
               </div>
             </Fragment>
           )}
