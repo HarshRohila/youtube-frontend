@@ -1,4 +1,4 @@
-import { Component, Host, h, Prop, Watch } from "@stencil/core"
+import { Component, Host, h, Prop, Watch, Method } from "@stencil/core"
 import { Subject, buffer, filter, fromEvent, map, takeUntil, throttleTime } from "rxjs"
 import videojs from "video.js"
 import Player from "video.js/dist/types/player"
@@ -16,6 +16,11 @@ export class VideoPlayer {
   @Watch("src")
   onSrcChange() {
     this.player.src({ src: this.src })
+  }
+
+  @Method()
+  async currentTime() {
+    return this.player?.currentTime()
   }
 
   private handleDblClick = e => {

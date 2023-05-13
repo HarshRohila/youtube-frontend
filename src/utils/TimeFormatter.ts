@@ -1,4 +1,6 @@
 import TimeAgo from "javascript-time-ago"
+TimeAgo.addDefaultLocale(en)
+
 import en from "javascript-time-ago/locale/en"
 
 export interface TimeAgoFormatter {
@@ -12,8 +14,6 @@ export function getTimeAgoFormatter() {
 class JsTimeAgo implements TimeAgoFormatter {
   private timeAgo: TimeAgo
   constructor() {
-    TimeAgo.addDefaultLocale(en)
-
     this.timeAgo = new TimeAgo("en-US")
   }
 

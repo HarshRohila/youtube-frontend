@@ -1,16 +1,18 @@
 import { MatchResults, RouterHistory } from "@stencil-community/router"
 import { Component, Host, Prop, h, State, Fragment } from "@stencil/core"
 import { SearchResult, Stream, YouTubeApi } from "../../YoutubeApi"
-import { Subject, takeUntil } from "rxjs"
-import { IAppError, setError, setLoading } from "../../lib/redux/global"
-import { store } from "../../lib/redux"
+import { Subject, map, takeUntil } from "rxjs"
+import { IAppError, setLoading } from "../../lib/redux/global"
+import { state$, store } from "../../lib/redux"
 import { Header } from "../../lib/Header"
 import { faShare, faThumbsDown, faThumbsUp } from "@fortawesome/free-solid-svg-icons"
 import { Router } from "../../lib/Router"
-import { AppRoute } from "../../utils/AppRoute"
 import { Videos } from "../../lib/Search"
 import { UploaderInfo } from "./Uploader"
 import { getTimeAgoFormatter } from "../../utils/TimeFormatter"
+import { getShareHandler } from "../../lib/ShareForm/ShareHandler"
+import { ShareForm } from "../../lib/ShareForm"
+import { ShareFormState } from "../../lib/redux/video-page"
 
 @Component({
   tag: "video-page",
@@ -24,9 +26,12 @@ export class VideoPage {
   @State() stream: Stream
   @State() error: IAppError | undefined
 
+  @Prop({ mutable: true }) shareForm: ShareFormState | undefined
+
   disconnected$ = new Subject<void>()
 
   routeChange$ = new Subject<{ videoId: string }>()
+  videoPlayer: HTMLVideoPlayerElement
 
   componentWillLoad() {
     const videoId = this.match.params.videoId
@@ -39,6 +44,15 @@ export class VideoPage {
     this.routeChange$.pipe(takeUntil(this.disconnected$)).subscribe(({ videoId }) => {
       this.fetchVideo(videoId)
     })
+
+    state$
+      .pipe(
+        map(s => s.videoPage),
+        takeUntil(this.disconnected$)
+      )
+      .subscribe(state => {
+        this.shareForm = state.shareForm
+      })
 
     this.fetchVideo(videoId)
   }
@@ -72,13 +86,10 @@ export class VideoPage {
     this.disconnected$.complete()
   }
 
-  private share = () => {
-    if (navigator.share) {
-      const url = AppRoute.getCurrentSpaUrl()
-      navigator.share({ url, title: this.stream.title || "A YouTube Video" })
-    } else {
-      store.dispatch(setError({ message: "Sharing not supported in your Device for now" }))
-    }
+  private share = async () => {
+    const time = (await this.videoPlayer.currentTime()) ?? 0
+
+    getShareHandler().share(this.stream, { currentTime: time })
   }
 
   private handleHeaderClick = () => {
@@ -108,7 +119,12 @@ export class VideoPage {
           <Header onHeaderClick={this.handleHeaderClick} />
           {this.stream && (
             <Fragment>
-              <video-player src={this.url}></video-player>
+              <video-player
+                src={this.url}
+                ref={el => {
+                  this.videoPlayer = el
+                }}
+              ></video-player>
               <h3>{this.stream.title}</h3>
               <div class="video-info">{this.videoInfo}</div>
               <UploaderInfo video={this.stream} />
@@ -116,6 +132,7 @@ export class VideoPage {
                 <icon-btn icon={faThumbsUp} label={formatter.format(this.stream.likes)} disabled></icon-btn>
                 <icon-btn icon={faThumbsDown} label={formatter.format(this.stream.dislikes)} disabled></icon-btn>
                 <icon-btn icon={faShare} onBtnClicked={this.share} label="Share"></icon-btn>
+                {this.shareForm && <ShareForm video={this.stream} state={this.shareForm}></ShareForm>}
               </div>
             </Fragment>
           )}

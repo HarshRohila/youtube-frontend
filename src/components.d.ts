@@ -8,6 +8,7 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { MatchResults, RouterHistory } from "@stencil-community/router";
 import { IAppError } from "./lib/redux/global";
 import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
+import { ShareFormState } from "./lib/redux/video-page";
 import { IconDefinition as IconDefinition1 } from "@fortawesome/fontawesome-svg-core";
 export namespace Components {
     interface AppHome {
@@ -40,8 +41,10 @@ export namespace Components {
     interface VideoPage {
         "history": RouterHistory;
         "match": MatchResults;
+        "shareForm": ShareFormState | undefined;
     }
     interface VideoPlayer {
+        "currentTime": () => Promise<number>;
         "src": string;
     }
     interface XIcon {
@@ -171,6 +174,7 @@ declare namespace LocalJSX {
     interface VideoPage {
         "history"?: RouterHistory;
         "match"?: MatchResults;
+        "shareForm"?: ShareFormState | undefined;
     }
     interface VideoPlayer {
         "src"?: string;
