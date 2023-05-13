@@ -1,10 +1,10 @@
 import { Component, Host, h, Prop } from "@stencil/core"
 import { state$, store } from "../../lib/redux"
-import { setCurrentTimeEnabled, setShareForm } from "../../lib/redux/video-page"
+import { setCopiedLink, setCurrentTimeEnabled, setShareForm } from "../../lib/redux/video-page"
 import { getId } from "../../utils/getId"
 import { Subject, map, takeUntil } from "rxjs"
 import { Modal } from "../../lib/Modal"
-import { faLink } from "@fortawesome/free-solid-svg-icons"
+import { faCheck, faLink } from "@fortawesome/free-solid-svg-icons"
 import { AppRoute } from "../../utils/AppRoute"
 import { ShareFormState } from "../../lib/redux/video-page"
 
@@ -17,6 +17,7 @@ const id = getId("share-cb")
 export class ShareForm {
   @Prop({ mutable: true }) shareForm: ShareFormState | undefined
   @Prop({ mutable: true }) currentTimeEnabled: boolean
+  @Prop({ mutable: true }) copiedLink: string
 
   disconnected$ = new Subject<void>()
 
@@ -29,12 +30,19 @@ export class ShareForm {
       .subscribe(state => {
         this.shareForm = state.shareForm
         this.currentTimeEnabled = state.currentTimeEnabled
+        this.copiedLink = state.copiedLink
       })
   }
 
   disconnectedCallback() {
     this.disconnected$.next()
     this.disconnected$.complete()
+  }
+
+  private handleCopyLink = async (link: string) => {
+    copyToClipboard(link).then(() => {
+      store.dispatch(setCopiedLink(link))
+    })
   }
 
   render() {
@@ -66,11 +74,22 @@ export class ShareForm {
             </label>
             <p>{url}</p>
             <div class="share-actions">
-              <icon-btn icon={faLink} label="Copy Link" size="small"></icon-btn>
+              <icon-btn
+                icon={this.copiedLink ? faCheck : faLink}
+                label={`${this.copiedLink ? "Copied!" : "Copy Link"}`}
+                size="small"
+                onBtnClicked={() => {
+                  this.handleCopyLink(url)
+                }}
+              ></icon-btn>
             </div>
           </form>
         </Modal>
       </Host>
     )
   }
+}
+
+function copyToClipboard(text: string) {
+  return navigator.clipboard.writeText(text)
 }

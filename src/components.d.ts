@@ -34,6 +34,7 @@ export namespace Components {
         "history": RouterHistory;
     }
     interface ShareForm {
+        "copiedLink": string;
         "currentTimeEnabled": boolean;
         "shareForm": ShareFormState | undefined;
     }
@@ -179,6 +180,7 @@ declare namespace LocalJSX {
         "history"?: RouterHistory;
     }
     interface ShareForm {
+        "copiedLink"?: string;
         "currentTimeEnabled"?: boolean;
         "shareForm"?: ShareFormState | undefined;
     }

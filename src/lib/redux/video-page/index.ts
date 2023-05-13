@@ -14,11 +14,17 @@ export const videoPageSlice = createSlice({
   name: "video-page",
   initialState,
   reducers: {
-    setShareForm: (state, action: PayloadAction<ShareFormState>) => {
+    setShareForm: (state, action: PayloadAction<ShareFormState | undefined>) => {
       state.shareForm = action.payload
+
+      if (!action.payload) {
+        state.currentTimeEnabled = false
+        state.copiedLink = ""
+      }
     },
     setCurrentTimeEnabled(state, action: PayloadAction<boolean>) {
       state.currentTimeEnabled = action.payload
+      state.copiedLink = ""
     },
     setCopiedLink(state, action: PayloadAction<string>) {
       state.copiedLink = action.payload
