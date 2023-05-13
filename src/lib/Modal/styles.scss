@@ -31,6 +31,7 @@
   box-sizing: border-box;
   margin: auto;
   @include glass-ui();
+  background: linear-gradient(171deg, rgba(2, 0, 36, 1) 100%, rgba(255, 255, 255, 0) 100%);
   .close-btn {
     position: absolute;
     top: 10px;

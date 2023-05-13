@@ -143,7 +143,7 @@ export class VideoPage {
                 <icon-btn icon={faThumbsUp} label={formatter.format(this.stream.likes)} disabled></icon-btn>
                 <icon-btn icon={faThumbsDown} label={formatter.format(this.stream.dislikes)} disabled></icon-btn>
                 <icon-btn icon={faShare} onBtnClicked={this.share} label="Share"></icon-btn>
-                {this.shareForm && <share-form></share-form>}
+                {this.shareForm && <share-form video={this.stream}></share-form>}
               </div>
             </Fragment>
           )}

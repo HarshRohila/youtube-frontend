@@ -9,6 +9,7 @@ import { MatchResults, RouterHistory } from "@stencil-community/router";
 import { IAppError } from "./lib/redux/global";
 import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import { ShareFormState } from "./lib/redux/video-page";
+import { Stream } from "./YoutubeApi";
 import { IconDefinition as IconDefinition1 } from "@fortawesome/fontawesome-svg-core";
 export namespace Components {
     interface AppHome {
@@ -37,6 +38,7 @@ export namespace Components {
         "copiedLink": string;
         "currentTimeEnabled": boolean;
         "shareForm": ShareFormState | undefined;
+        "video": Stream;
     }
     interface SharedContentReceiver {
         "history": RouterHistory;
@@ -183,6 +185,7 @@ declare namespace LocalJSX {
         "copiedLink"?: string;
         "currentTimeEnabled"?: boolean;
         "shareForm"?: ShareFormState | undefined;
+        "video"?: Stream;
     }
     interface SharedContentReceiver {
         "history"?: RouterHistory;

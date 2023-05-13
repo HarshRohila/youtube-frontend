@@ -4,9 +4,10 @@ import { setCopiedLink, setCurrentTimeEnabled, setShareForm } from "../../lib/re
 import { getId } from "../../utils/getId"
 import { Subject, map, takeUntil } from "rxjs"
 import { Modal } from "../../lib/Modal"
-import { faCheck, faLink } from "@fortawesome/free-solid-svg-icons"
+import { faCheck, faLink, faShare } from "@fortawesome/free-solid-svg-icons"
 import { AppRoute } from "../../utils/AppRoute"
 import { ShareFormState } from "../../lib/redux/video-page"
+import { Stream } from "../../YoutubeApi"
 
 const id = getId("share-cb")
 
@@ -18,6 +19,7 @@ export class ShareForm {
   @Prop({ mutable: true }) shareForm: ShareFormState | undefined
   @Prop({ mutable: true }) currentTimeEnabled: boolean
   @Prop({ mutable: true }) copiedLink: string
+  @Prop() video: Stream
 
   disconnected$ = new Subject<void>()
 
@@ -43,6 +45,10 @@ export class ShareForm {
     copyToClipboard(link).then(() => {
       store.dispatch(setCopiedLink(link))
     })
+  }
+
+  private handleShare = (url: string) => {
+    navigator.share({ url, title: this.video.title || "A YouTube Video" })
   }
 
   render() {
@@ -82,6 +88,16 @@ export class ShareForm {
                   this.handleCopyLink(url)
                 }}
               ></icon-btn>
+              {isHavingShareSupport() && (
+                <icon-btn
+                  icon={faShare}
+                  label="Share"
+                  size="small"
+                  onBtnClicked={() => {
+                    this.handleShare(url)
+                  }}
+                ></icon-btn>
+              )}
             </div>
           </form>
         </Modal>
@@ -92,4 +108,8 @@ export class ShareForm {
 
 function copyToClipboard(text: string) {
   return navigator.clipboard.writeText(text)
+}
+
+function isHavingShareSupport() {
+  return !!navigator.share
 }
