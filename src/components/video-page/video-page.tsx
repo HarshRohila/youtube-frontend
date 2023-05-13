@@ -68,7 +68,6 @@ export class VideoPage {
     YouTubeApi.getApi()
       .getSkipSegments(videoId)
       .subscribe(skipSegments => {
-        console.log("segs", skipSegments)
         this.skipSegments = skipSegments
       })
 

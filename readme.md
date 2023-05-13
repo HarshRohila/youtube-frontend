@@ -17,6 +17,7 @@ Built using [Stencil.js](https://stenciljs.com/)
 
 - No ads, no tracking.
 - No sign in required to use.
+- Integration with [SponsorBlock](https://github.com/ajayyy/SponsorBlock) to automatically skip sponsors.
 - Free and Open Source.
 
 ### UI
