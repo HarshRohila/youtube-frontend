@@ -1,8 +1,46 @@
 # PipedRx
 
-Another YouTube Frontend using [Piped API](https://github.com/TeamPiped/Piped) and [RxJS](https://rxjs.dev/)
+Another YouTube Frontend using [Piped API](https://docs.piped.video/docs/api-documentation/) and [RxJS](https://rxjs.dev/)
 
 Built using [Stencil.js](https://stenciljs.com/)
+
+## How to use?
+
+- [Web App link](https://www.rohilaharsh.in/youtube-frontend)
+- **Recommmend** - Open above link in Mobile Chrome browser, click below option which says "Add to Home Screen". This will add icon in home screen to be used like any other Mobile app.
+
+  > This app is tested in Android only
+
+## Features
+
+### Free
+
+- No ads, no tracking.
+- No sign in required to use.
+- Integration with [SponsorBlock](https://github.com/ajayyy/SponsorBlock) to automatically skip sponsors.
+- Free and Open Source.
+
+### UI
+
+- Mobile First Design.
+- Home page shows Trending videos in India.
+- Search for any YouTube video and play.
+- Shows video suggestions based on currently playing video.
+- Shows "Dislikes" count and other video info.
+
+### Video player
+
+- Full Screen.
+- Double tap video controls for forward, backward and pause/play.
+- Playback Speed options from 0.5x to 2x
+- Picture-in-picture mode.
+- Loop video by default.
+- Play in Background.
+
+### Sharing Options
+
+- Share video Link with current video time.
+- If installed in Android, you can share Video from YouTube app to this app, to play video in this app.
 
 ## About Stencil.js
 

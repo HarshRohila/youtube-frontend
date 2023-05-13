@@ -1,4 +1,4 @@
-import { Component, Host, h, Prop, Watch, Method, Event, EventEmitter } from "@stencil/core"
+import { Component, Host, h, Prop, Watch, Method, Event, EventEmitter, State } from "@stencil/core"
 import { Subject, buffer, filter, fromEvent, map, takeUntil, throttleTime } from "rxjs"
 import videojs from "video.js"
 import Player from "video.js/dist/types/player"
@@ -17,6 +17,8 @@ export class VideoPlayer {
   onSrcChange() {
     this.player.src({ src: this.src })
   }
+
+  @Prop() skipSegments: number[][] = []
 
   @Method()
   async currentTime() {
@@ -40,6 +42,17 @@ export class VideoPlayer {
         playerJS.pause()
       }
     }
+  }
+
+  @State() isShowingToast = false
+  @State() toastMessage = ""
+  private showToast(message: string, time: number) {
+    this.isShowingToast = true
+    this.toastMessage = message
+
+    setTimeout(() => {
+      this.isShowingToast = false
+    }, time)
   }
 
   private disconnected$ = new Subject<void>()
@@ -71,6 +84,21 @@ export class VideoPlayer {
 
       this.loaded.emit({ player: this.player })
     })
+
+    this.player.on("timeupdate", () => {
+      const segments = this.skipSegments
+      var currentTime = this.player.currentTime()
+
+      for (var i = 0; i < segments.length; i++) {
+        var segment = segments[i]
+
+        if (currentTime >= segment[0] && currentTime < segment[1]) {
+          this.showToast("Skipped Sponsor", 1000)
+          this.player.currentTime(segment[1])
+          break
+        }
+      }
+    })
   }
   disconnectedCallback() {
     this.disconnected$.next()
@@ -88,6 +116,7 @@ export class VideoPlayer {
           <video-js ref={this.setVideoElement}>
             <source src={this.src} />
           </video-js>
+          {this.isShowingToast && <span class="toast">{this.toastMessage}</span>}
         </div>
       </Host>
     )

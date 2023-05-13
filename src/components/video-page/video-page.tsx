@@ -27,6 +27,7 @@ export class VideoPage {
 
   @State() stream: Stream
   @State() error: IAppError | undefined
+  @State() skipSegments: number[][] = []
 
   disconnected$ = new Subject<void>()
 
@@ -58,9 +59,17 @@ export class VideoPage {
   }
 
   private fetchVideo(videoId: string) {
+    if (!videoId) return
+
     store.dispatch(setLoading(true))
 
     window.scrollTo({ top: 0, behavior: "smooth" })
+
+    YouTubeApi.getApi()
+      .getSkipSegments(videoId)
+      .subscribe(skipSegments => {
+        this.skipSegments = skipSegments
+      })
 
     YouTubeApi.getApi()
       .getStream(videoId)
@@ -117,6 +126,7 @@ export class VideoPage {
 
     if (time) {
       player.currentTime(time)
+      removeTimeFromQueryParameter()
     }
   }
 
@@ -135,6 +145,7 @@ export class VideoPage {
                 onLoaded={ev => {
                   this.handleVideoPlayerLoaded(ev.detail.player)
                 }}
+                skipSegments={this.skipSegments}
               ></video-player>
               <h3>{this.stream.title}</h3>
               <div class="video-info">{this.videoInfo}</div>
@@ -163,3 +174,7 @@ export class VideoPage {
 }
 
 const formatter = Intl.NumberFormat("en", { notation: "compact" })
+function removeTimeFromQueryParameter() {
+  const newUrl = location.href.split("?")[0]
+  window.history.replaceState({ path: newUrl }, "", newUrl)
+}
