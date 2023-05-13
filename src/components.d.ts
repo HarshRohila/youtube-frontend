@@ -26,6 +26,7 @@ export namespace Components {
         "disabled": boolean;
         "icon": IconDefinition;
         "label": string;
+        "size": "small" | "medium";
     }
     interface LoadingPage {
     }
@@ -160,6 +161,7 @@ declare namespace LocalJSX {
         "icon"?: IconDefinition;
         "label"?: string;
         "onBtnClicked"?: (event: CustomEvent<void>) => void;
+        "size"?: "small" | "medium";
     }
     interface LoadingPage {
     }

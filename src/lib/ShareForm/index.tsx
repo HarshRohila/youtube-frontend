@@ -5,6 +5,7 @@ import { store } from "../redux"
 import { ShareFormState, setCurrentTimeEnabled, setShareForm } from "../redux/video-page"
 import { Stream } from "../../YoutubeApi"
 import { AppRoute } from "../../utils/AppRoute"
+import { faLink } from "@fortawesome/free-solid-svg-icons"
 
 const id = getId("share-cb")
 
@@ -24,7 +25,12 @@ export function ShareForm({
 
   return (
     <Modal onClose={() => store.dispatch(setShareForm(undefined))}>
-      <form>
+      <form
+        class="share-form"
+        onSubmit={ev => {
+          ev.preventDefault()
+        }}
+      >
         <input
           type="checkbox"
           id={id}
@@ -37,6 +43,9 @@ export function ShareForm({
           <span>Share with Current Time?</span>
         </label>
         <p>{url}</p>
+        <div class="share-actions">
+          <icon-btn icon={faLink} label="Copy Link" size="small"></icon-btn>
+        </div>
       </form>
     </Modal>
   )
