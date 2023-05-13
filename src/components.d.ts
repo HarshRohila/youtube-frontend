@@ -39,6 +39,7 @@ export namespace Components {
         "history": RouterHistory;
     }
     interface VideoPage {
+        "currentTimeEnabled": boolean;
         "history": RouterHistory;
         "match": MatchResults;
         "shareForm": ShareFormState | undefined;
@@ -172,6 +173,7 @@ declare namespace LocalJSX {
         "history"?: RouterHistory;
     }
     interface VideoPage {
+        "currentTimeEnabled"?: boolean;
         "history"?: RouterHistory;
         "match"?: MatchResults;
         "shareForm"?: ShareFormState | undefined;
