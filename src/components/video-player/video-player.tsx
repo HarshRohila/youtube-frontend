@@ -1,4 +1,4 @@
-import { Component, Host, h, Prop, Watch, Method, Event, EventEmitter } from "@stencil/core"
+import { Component, Host, h, Prop, Watch, Method, Event, EventEmitter, State } from "@stencil/core"
 import { Subject, buffer, filter, fromEvent, map, takeUntil, throttleTime } from "rxjs"
 import videojs from "video.js"
 import Player from "video.js/dist/types/player"
@@ -44,6 +44,17 @@ export class VideoPlayer {
     }
   }
 
+  @State() isShowingToast = false
+  @State() toastMessage = ""
+  private showToast(message: string, time: number) {
+    this.isShowingToast = true
+    this.toastMessage = message
+
+    setTimeout(() => {
+      this.isShowingToast = false
+    }, time)
+  }
+
   private disconnected$ = new Subject<void>()
 
   componentDidLoad() {
@@ -82,7 +93,7 @@ export class VideoPlayer {
         var segment = segments[i]
 
         if (currentTime >= segment[0] && currentTime < segment[1]) {
-          console.log("skipped")
+          this.showToast("Skipped Sponsor", 1000)
           this.player.currentTime(segment[1])
           break
         }
@@ -105,6 +116,7 @@ export class VideoPlayer {
           <video-js ref={this.setVideoElement}>
             <source src={this.src} />
           </video-js>
+          {this.isShowingToast && <span class="toast">{this.toastMessage}</span>}
         </div>
       </Host>
     )

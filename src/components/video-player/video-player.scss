@@ -3,6 +3,7 @@
 .container {
   aspect-ratio: 16 / 9;
   width: 100%;
+  position: relative;
 }
 
 video-js.video-js {
@@ -23,4 +24,15 @@ video-js.video-js {
 
 .video-js .vjs-time-control {
   display: block;
+}
+
+.toast {
+  position: absolute;
+  bottom: 25%;
+  background-color: gray;
+  color: white;
+  padding: 4px 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 4px;
 }
