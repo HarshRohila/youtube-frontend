@@ -196,6 +196,7 @@ declare namespace LocalJSX {
         "shareForm"?: ShareFormState | undefined;
     }
     interface VideoPlayer {
+        "onLoaded"?: (event: CustomEvent<{ player: Player }>) => void;
         "src"?: string;
     }
     interface XIcon {

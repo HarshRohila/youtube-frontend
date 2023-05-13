@@ -12,6 +12,7 @@ import { UploaderInfo } from "./Uploader"
 import { getTimeAgoFormatter } from "../../utils/TimeFormatter"
 import { getShareHandler } from "../../lib/ShareForm/ShareHandler"
 import { ShareFormState } from "../../lib/redux/video-page"
+import Player from "video.js/dist/types/player"
 
 @Component({
   tag: "video-page",
@@ -111,6 +112,14 @@ export class VideoPage {
     return getTimeAgoFormatter().format(new Date(this.stream.uploadDate))
   }
 
+  private handleVideoPlayerLoaded(player: Player) {
+    const time = this.history.location.query.t
+
+    if (time) {
+      player.currentTime(time)
+    }
+  }
+
   render() {
     return (
       <Host>
@@ -122,6 +131,9 @@ export class VideoPage {
                 src={this.url}
                 ref={el => {
                   this.videoPlayer = el
+                }}
+                onLoaded={ev => {
+                  this.handleVideoPlayerLoaded(ev.detail.player)
                 }}
               ></video-player>
               <h3>{this.stream.title}</h3>

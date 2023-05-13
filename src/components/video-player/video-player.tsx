@@ -1,4 +1,4 @@
-import { Component, Host, h, Prop, Watch, Method } from "@stencil/core"
+import { Component, Host, h, Prop, Watch, Method, Event, EventEmitter } from "@stencil/core"
 import { Subject, buffer, filter, fromEvent, map, takeUntil, throttleTime } from "rxjs"
 import videojs from "video.js"
 import Player from "video.js/dist/types/player"
@@ -22,6 +22,8 @@ export class VideoPlayer {
   async currentTime() {
     return this.player?.currentTime()
   }
+
+  @Event() loaded: EventEmitter<{ player: Player }>
 
   private handleDblClick = e => {
     const playerWidth = this.player.currentWidth()
@@ -66,6 +68,8 @@ export class VideoPlayer {
       )
 
       dlbClick$.pipe(takeUntil(this.disconnected$)).subscribe(this.handleDblClick)
+
+      this.loaded.emit({ player: this.player })
     })
   }
   disconnectedCallback() {
