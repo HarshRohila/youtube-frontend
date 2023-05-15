@@ -31,6 +31,8 @@ export namespace Components {
     }
     interface LoadingPage {
     }
+    interface MobileView {
+    }
     interface SearchPage {
         "history": RouterHistory;
     }
@@ -100,6 +102,12 @@ declare global {
         prototype: HTMLLoadingPageElement;
         new (): HTMLLoadingPageElement;
     };
+    interface HTMLMobileViewElement extends Components.MobileView, HTMLStencilElement {
+    }
+    var HTMLMobileViewElement: {
+        prototype: HTMLMobileViewElement;
+        new (): HTMLMobileViewElement;
+    };
     interface HTMLSearchPageElement extends Components.SearchPage, HTMLStencilElement {
     }
     var HTMLSearchPageElement: {
@@ -149,6 +157,7 @@ declare global {
         "error-page": HTMLErrorPageElement;
         "icon-btn": HTMLIconBtnElement;
         "loading-page": HTMLLoadingPageElement;
+        "mobile-view": HTMLMobileViewElement;
         "search-page": HTMLSearchPageElement;
         "share-form": HTMLShareFormElement;
         "shared-content-receiver": HTMLSharedContentReceiverElement;
@@ -178,6 +187,8 @@ declare namespace LocalJSX {
         "size"?: "small" | "medium";
     }
     interface LoadingPage {
+    }
+    interface MobileView {
     }
     interface SearchPage {
         "history"?: RouterHistory;
@@ -217,6 +228,7 @@ declare namespace LocalJSX {
         "error-page": ErrorPage;
         "icon-btn": IconBtn;
         "loading-page": LoadingPage;
+        "mobile-view": MobileView;
         "search-page": SearchPage;
         "share-form": ShareForm;
         "shared-content-receiver": SharedContentReceiver;
@@ -236,6 +248,7 @@ declare module "@stencil/core" {
             "error-page": LocalJSX.ErrorPage & JSXBase.HTMLAttributes<HTMLErrorPageElement>;
             "icon-btn": LocalJSX.IconBtn & JSXBase.HTMLAttributes<HTMLIconBtnElement>;
             "loading-page": LocalJSX.LoadingPage & JSXBase.HTMLAttributes<HTMLLoadingPageElement>;
+            "mobile-view": LocalJSX.MobileView & JSXBase.HTMLAttributes<HTMLMobileViewElement>;
             "search-page": LocalJSX.SearchPage & JSXBase.HTMLAttributes<HTMLSearchPageElement>;
             "share-form": LocalJSX.ShareForm & JSXBase.HTMLAttributes<HTMLShareFormElement>;
             "shared-content-receiver": LocalJSX.SharedContentReceiver & JSXBase.HTMLAttributes<HTMLSharedContentReceiverElement>;

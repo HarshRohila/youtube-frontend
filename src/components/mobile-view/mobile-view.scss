@@ -1,0 +1,12 @@
+:host {
+  display: block;
+}
+
+.mobile-view {
+  max-width: 100%;
+
+  @include desktop() {
+    max-width: $max-width;
+    margin: auto;
+  }
+}
