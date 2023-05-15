@@ -2,6 +2,7 @@ import { Component, Host, h, Prop, Watch, Method, Event, EventEmitter, State } f
 import { Subject, buffer, filter, fromEvent, map, takeUntil, throttleTime } from "rxjs"
 import videojs from "video.js"
 import Player from "video.js/dist/types/player"
+import "videojs-landscape-fullscreen"
 
 @Component({
   tag: "video-player",
@@ -97,6 +98,16 @@ export class VideoPlayer {
           this.player.currentTime(segment[1])
           break
         }
+      }
+    })
+
+    // @ts-ignore
+    this.player.landscapeFullscreen({
+      fullscreen: {
+        enterOnRotate: true,
+        exitOnRotate: true,
+        alwaysInLandscapeMode: false,
+        iOS: true
       }
     })
   }
