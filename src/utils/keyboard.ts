@@ -17,3 +17,9 @@ class Hotkeys implements IKeyboard {
 export function getKeyboard() {
   return new Hotkeys() as IKeyboard
 }
+
+export const KEYS = {
+  space: "space",
+  right: "right",
+  left: "left"
+}

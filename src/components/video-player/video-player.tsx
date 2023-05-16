@@ -3,7 +3,7 @@ import { Subject, buffer, filter, fromEvent, map, takeUntil, throttleTime } from
 import videojs from "video.js"
 import Player from "video.js/dist/types/player"
 import "videojs-landscape-fullscreen"
-import { IKeyboard, getKeyboard } from "../../utils/keyboard"
+import { IKeyboard, KEYS, getKeyboard } from "../../utils/keyboard"
 
 @Component({
   tag: "video-player",
@@ -34,9 +34,9 @@ export class VideoPlayer {
     const playerJS = this.player
 
     if (0.66 * playerWidth < e.offsetX) {
-      playerJS.currentTime(playerJS.currentTime() + 10)
+      forward(playerJS)
     } else if (e.offsetX < 0.33 * playerWidth) {
-      playerJS.currentTime(playerJS.currentTime() - 10 < 0 ? 0 : playerJS.currentTime() - 10)
+      rewind(playerJS)
     } else {
       if (playerJS.paused()) {
         playerJS.play()
@@ -129,17 +129,34 @@ export class VideoPlayer {
     }
   }
 
+  private handleRight = () => {
+    if (!this.player.isReady_) return
+
+    forward(this.player)
+  }
+
+  private handleLeft = () => {
+    if (!this.player.isReady_) return
+
+    rewind(this.player)
+  }
+
   private setupKeyboard() {
-    const keybaord = getKeyboard()
-    keybaord.bind("space", this.handleSpacebar)
-    return keybaord
+    const keyboard = getKeyboard()
+    keyboard.bind(KEYS.space, this.handleSpacebar)
+    keyboard.bind(KEYS.right, this.handleRight)
+    keyboard.bind(KEYS.left, this.handleLeft)
+    return keyboard
   }
 
   disconnectedCallback() {
     this.disconnected$.next()
     this.disconnected$.complete()
 
-    this.keyboard.unbind("space", this.handleSpacebar)
+    const { keyboard } = this
+    keyboard.unbind(KEYS.space, this.handleSpacebar)
+    keyboard.unbind(KEYS.right, this.handleRight)
+    keyboard.unbind(KEYS.left, this.handleLeft)
   }
 
   private setVideoElement = (el: HTMLElement) => {
@@ -158,4 +175,12 @@ export class VideoPlayer {
       </Host>
     )
   }
+}
+
+function forward(player: Player) {
+  player.currentTime(player.currentTime() + 10)
+}
+
+function rewind(player: Player) {
+  player.currentTime(player.currentTime() - 10 < 0 ? 0 : player.currentTime() - 10)
 }
