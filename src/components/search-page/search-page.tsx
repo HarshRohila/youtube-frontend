@@ -61,33 +61,35 @@ export class SearchPage {
 
     return (
       <Host>
-        <header class="search-active">
-          <SearchBar
-            searchText={this.searchText}
-            onCloseClick={() => store.dispatch(setSearchText(""))}
-            onSearchSubmit={() => {
-              this.onSearchSubmit(this.searchText)
-            }}
-            showSearchbar={true}
-            onSearchTextChange={ev => store.dispatch(keyPress(ev.target["value"]))}
-            onClickBack={this.handleBack}
-          />
-        </header>
-        {isShowingSuggestions && (
-          <Suggestions
-            suggestions={this.suggestions}
-            error={this.suggestionsError}
-            loading={this.suggestionsLoading}
-            onClickSuggesion={this.onSearchSubmit}
-          />
-        )}
-        {this.videos.length && (
-          <Videos
-            videos={this.videos}
-            isShowingSuggestions={isShowingSuggestions}
-            onClickVideo={video => new Router(this.history).showVideoPage(video)}
-          />
-        )}
+        <mobile-view>
+          <header class="search-active">
+            <SearchBar
+              searchText={this.searchText}
+              onCloseClick={() => store.dispatch(setSearchText(""))}
+              onSearchSubmit={() => {
+                this.onSearchSubmit(this.searchText)
+              }}
+              showSearchbar={true}
+              onSearchTextChange={ev => store.dispatch(keyPress(ev.target["value"]))}
+              onClickBack={this.handleBack}
+            />
+          </header>
+          {isShowingSuggestions && (
+            <Suggestions
+              suggestions={this.suggestions}
+              error={this.suggestionsError}
+              loading={this.suggestionsLoading}
+              onClickSuggesion={this.onSearchSubmit}
+            />
+          )}
+          {this.videos.length && (
+            <Videos
+              videos={this.videos}
+              isShowingSuggestions={isShowingSuggestions}
+              onClickVideo={video => new Router(this.history).showVideoPage(video)}
+            />
+          )}
+        </mobile-view>
       </Host>
     )
   }

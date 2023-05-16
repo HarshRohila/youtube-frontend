@@ -4,7 +4,8 @@
   position: fixed;
   z-index: $z-index-error;
   top: 0;
-  left: 0;
+  left: 50%;
+  transform: translateX(-50%);
   background: rgba(0, 0, 0, 0.9);
 
   display: flex;
