@@ -159,7 +159,7 @@ export class VideoPage {
             </Fragment>
           )}
           {this.error && <h3>{this.error.message}</h3>}
-          {this.stream && <h3>You may also like</h3>}
+          {this.stream && <h3 class="suggestion-header">You may also like</h3>}
           {this.stream && (
             <Videos
               videos={this.stream.relatedVideos}
