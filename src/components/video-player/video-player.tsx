@@ -3,6 +3,7 @@ import { Subject, buffer, filter, fromEvent, map, takeUntil, throttleTime } from
 import videojs from "video.js"
 import Player from "video.js/dist/types/player"
 import "videojs-landscape-fullscreen"
+import { IKeyboard, getKeyboard } from "../../utils/keyboard"
 
 @Component({
   tag: "video-player",
@@ -110,10 +111,35 @@ export class VideoPlayer {
         iOS: true
       }
     })
+
+    this.keyboard = this.setupKeyboard()
   }
+
+  private keyboard: IKeyboard
+
+  private handleSpacebar = (ev: Event) => {
+    ev.preventDefault()
+
+    if (!this.player.isReady_) return
+
+    if (this.player.paused()) {
+      this.player.play()
+    } else {
+      this.player.pause()
+    }
+  }
+
+  private setupKeyboard() {
+    const keybaord = getKeyboard()
+    keybaord.bind("space", this.handleSpacebar)
+    return keybaord
+  }
+
   disconnectedCallback() {
     this.disconnected$.next()
     this.disconnected$.complete()
+
+    this.keyboard.unbind("space", this.handleSpacebar)
   }
 
   private setVideoElement = (el: HTMLElement) => {
