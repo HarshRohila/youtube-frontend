@@ -7,6 +7,12 @@
     align-items: center;
     justify-content: center;
     position: static;
+    h1 {
+      height: 100%;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+    }
   }
 }
 
