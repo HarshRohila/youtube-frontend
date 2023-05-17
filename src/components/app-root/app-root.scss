@@ -1,20 +1,26 @@
 @import "../../lib/Modal/styles.scss";
 
+$header-border-radius: 20px;
+
 header {
   @include header();
   display: flex;
   align-items: center;
   position: fixed;
-  border-bottom-right-radius: 20px;
+  border-bottom-right-radius: $header-border-radius;
 
   transition-property: width;
   transition: width 0.1s;
 
   width: 155px;
-  @include desktop() {
-    width: 170px;
-    max-width: $max-width;
+  &.home,
+  &.search-active {
+    @include desktop() {
+      width: 170px;
+      max-width: $max-width;
+    }
   }
+
   &.search-active {
     width: 100%;
   }
@@ -86,6 +92,7 @@ h1 {
       padding-top: 15px;
       @include ellipsis();
       width: calc(100% - 50px);
+      cursor: pointer;
     }
     box-sizing: border-box;
   }
@@ -109,6 +116,9 @@ ul.trending {
   list-style-type: none;
   margin: 0;
   padding: 0;
+  li {
+    cursor: pointer;
+  }
 }
 
 .card {
@@ -147,6 +157,40 @@ ul.trending {
       margin: 0;
       font-size: 0.9rem;
       @include ellipsis();
+    }
+  }
+}
+
+@include desktop() {
+  $margin-top: 20px;
+
+  header.home,
+  header.search-active {
+    @include horizontal-center();
+    border-radius: $header-border-radius;
+    padding-left: 6px;
+    margin-top: $margin-top;
+  }
+
+  .suggestions-container {
+    @include horizontal-center();
+    margin-top: $margin-top;
+  }
+
+  ul.trending {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 350px);
+    gap: 20px;
+    justify-content: center;
+    margin-top: 20px;
+    li {
+      transition: transform 0.5s;
+      transition-property: transform box-shadow;
+      &:hover {
+        transform: scale(1.15);
+        box-shadow: $shadow;
+        z-index: 1;
+      }
     }
   }
 }

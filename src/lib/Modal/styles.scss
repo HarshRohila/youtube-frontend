@@ -11,11 +11,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-
-  max-width: $max-width;
 }
 
 .modal {
+  max-width: $max-width;
   position: relative;
   height: 200px;
   width: calc(100% - 40px);
