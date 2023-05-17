@@ -65,14 +65,6 @@ video-player {
 }
 
 @include desktop() {
-  ul.trending {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, 350px);
-    gap: 20px;
-    justify-content: center;
-    margin-top: 20px;
-  }
-
   .suggestion-header {
     display: none;
   }

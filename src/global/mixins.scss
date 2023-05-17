@@ -48,3 +48,8 @@
   height: $dim;
   width: $dim;
 }
+
+@mixin horizontal-center() {
+  left: 50%;
+  transform: translateX(-50%);
+}

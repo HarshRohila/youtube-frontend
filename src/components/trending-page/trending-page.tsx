@@ -52,49 +52,51 @@ export class TrendingPage {
     new Router(this.history).showSearchPage(searchText)
   }
 
+  get headerClass() {
+    return this.showSearchbar ? "search-active" : ""
+  }
+
   render() {
     const isShowingSuggestions = this.showSearchbar
     return (
       <Host>
-        <mobile-view>
-          <header class={this.showSearchbar ? "search-active" : ""}>
-            {!this.showSearchbar && <h1>{APP_NAME}</h1>}
-            <SearchBar
-              searchText={this.searchText}
-              onCloseClick={() => store.dispatch(toggleSearchBar())}
-              onSearchBtnClick={() => {
-                const searchInput = this.el.querySelector(".search-input") as HTMLInputElement
+        <header class={this.headerClass + " home"}>
+          {!this.showSearchbar && <h1>{APP_NAME}</h1>}
+          <SearchBar
+            searchText={this.searchText}
+            onCloseClick={() => store.dispatch(toggleSearchBar())}
+            onSearchBtnClick={() => {
+              const searchInput = this.el.querySelector(".search-input") as HTMLInputElement
 
-                store.dispatch(toggleSearchBar())
-                setTimeout(() => {
-                  searchInput.focus()
-                }, 150)
-              }}
-              onSearchSubmit={() => {
-                this.onSearchSubmit(this.searchText)
-              }}
-              showSearchbar={this.showSearchbar}
-              onSearchTextChange={ev => store.dispatch(keyPress(ev.target["value"]))}
-            />
-          </header>
-          {isShowingSuggestions && (
-            <Suggestions
-              suggestions={this.suggestions}
-              error={this.suggestionsError}
-              loading={this.suggestionsLoading}
-              onClickSuggesion={suggestion => {
-                this.onSearchSubmit(suggestion)
-              }}
-            />
-          )}
-          <Videos
-            videos={this.videos}
-            isShowingSuggestions={isShowingSuggestions}
-            onClickVideo={video => {
-              new Router(this.history).showVideoPage(video)
+              store.dispatch(toggleSearchBar())
+              setTimeout(() => {
+                searchInput.focus()
+              }, 150)
+            }}
+            onSearchSubmit={() => {
+              this.onSearchSubmit(this.searchText)
+            }}
+            showSearchbar={this.showSearchbar}
+            onSearchTextChange={ev => store.dispatch(keyPress(ev.target["value"]))}
+          />
+        </header>
+        {isShowingSuggestions && (
+          <Suggestions
+            suggestions={this.suggestions}
+            error={this.suggestionsError}
+            loading={this.suggestionsLoading}
+            onClickSuggesion={suggestion => {
+              this.onSearchSubmit(suggestion)
             }}
           />
-        </mobile-view>
+        )}
+        <Videos
+          videos={this.videos}
+          isShowingSuggestions={isShowingSuggestions}
+          onClickVideo={video => {
+            new Router(this.history).showVideoPage(video)
+          }}
+        />
       </Host>
     )
   }
