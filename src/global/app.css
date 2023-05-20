@@ -8,10 +8,14 @@
   Any global CSS variables should also be applied here.
 */
 
+:root {
+  --primary-color: #020024;
+  --secondary-color: #8c5383;
+}
 body {
   margin: 0px;
   padding: 0px;
-  background-color: #020024;
+  background-color: var(--primary-color);
   color: white;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji",
     "Segoe UI Emoji", "Segoe UI Symbol";
@@ -28,4 +32,12 @@ html {
 button {
   outline: none;
   cursor: pointer;
+}
+
+::-moz-selection {
+  background: var(--secondary-color);
+}
+
+::selection {
+  background: var(--secondary-color);
 }
