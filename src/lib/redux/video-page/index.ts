@@ -3,7 +3,8 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 const initialState = {
   shareForm: undefined as ShareFormState | undefined,
   currentTimeEnabled: false,
-  copiedLink: ""
+  copiedLink: "",
+  isCommentViewOpen: false
 }
 
 export interface ShareFormState {
@@ -28,10 +29,13 @@ export const videoPageSlice = createSlice({
     },
     setCopiedLink(state, action: PayloadAction<string>) {
       state.copiedLink = action.payload
+    },
+    setIsCommentViewOpen(state, action: PayloadAction<boolean>) {
+      state.isCommentViewOpen = action.payload
     }
   }
 })
 
-export const { setShareForm, setCurrentTimeEnabled, setCopiedLink } = videoPageSlice.actions
+export const { setShareForm, setCurrentTimeEnabled, setCopiedLink, setIsCommentViewOpen } = videoPageSlice.actions
 
 export default videoPageSlice.reducer

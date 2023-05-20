@@ -1,5 +1,7 @@
 .video-page {
-  min-height: 100vh;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 
   header {
     width: 100%;
@@ -74,4 +76,21 @@ video-player {
   .suggestion-header {
     display: none;
   }
+}
+
+.view-comments {
+  margin: auto;
+  margin-top: 16px;
+}
+@include desktop() {
+  .view-comments {
+    display: none;
+  }
+}
+
+.below-video {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }

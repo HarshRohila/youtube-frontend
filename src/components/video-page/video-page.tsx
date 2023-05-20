@@ -5,13 +5,13 @@ import { Subject, map, takeUntil } from "rxjs"
 import { IAppError, setLoading } from "../../lib/redux/global"
 import { state$, store } from "../../lib/redux"
 import { Header } from "../../lib/Header"
-import { faShare, faThumbsDown, faThumbsUp } from "@fortawesome/free-solid-svg-icons"
+import { faComment, faShare, faThumbsDown, faThumbsUp } from "@fortawesome/free-solid-svg-icons"
 import { Router } from "../../lib/Router"
 import { Videos } from "../../lib/Search"
 import { UploaderInfo } from "./Uploader"
 import { getTimeAgoFormatter } from "../../utils/TimeFormatter"
 import { getShareHandler } from "../../lib/ShareForm/ShareHandler"
-import { ShareFormState } from "../../lib/redux/video-page"
+import { ShareFormState, setIsCommentViewOpen } from "../../lib/redux/video-page"
 import Player from "video.js/dist/types/player"
 
 @Component({
@@ -148,6 +148,10 @@ export class VideoPage {
                 skipSegments={this.skipSegments}
               ></video-player>
               <h3>{this.stream.title}</h3>
+            </Fragment>
+          )}
+          {this.stream && (
+            <div class="below-video">
               <div class="video-info">{this.videoInfo}</div>
               <UploaderInfo video={this.stream} />
               <div class="actions">
@@ -156,17 +160,23 @@ export class VideoPage {
                 <icon-btn icon={faShare} onBtnClicked={this.share} label="Share"></icon-btn>
                 {this.shareForm && <share-form video={this.stream}></share-form>}
               </div>
-            </Fragment>
+              <icon-btn
+                class="view-comments"
+                size="small"
+                icon={faComment}
+                label="View Comments"
+                type="secondary"
+                onBtnClicked={() => setIsCommentViewOpen(true)}
+              ></icon-btn>
+              <h3 class="suggestion-header">You may also like</h3>
+              <Videos
+                videos={this.stream.relatedVideos}
+                isShowingSuggestions={false}
+                onClickVideo={this.handleVideoClick}
+              />
+            </div>
           )}
           {this.error && <h3>{this.error.message}</h3>}
-          {this.stream && <h3 class="suggestion-header">You may also like</h3>}
-          {this.stream && (
-            <Videos
-              videos={this.stream.relatedVideos}
-              isShowingSuggestions={false}
-              onClickVideo={this.handleVideoClick}
-            />
-          )}
         </div>
       </Host>
     )

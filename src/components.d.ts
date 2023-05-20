@@ -20,6 +20,8 @@ export namespace Components {
     }
     interface AppRoot {
     }
+    interface CommentsView {
+    }
     interface ErrorPage {
         "error": IAppError;
     }
@@ -28,6 +30,7 @@ export namespace Components {
         "icon": IconDefinition;
         "label": string;
         "size": "small" | "medium";
+        "type": "primary" | "secondary";
     }
     interface LoadingPage {
     }
@@ -83,6 +86,12 @@ declare global {
     var HTMLAppRootElement: {
         prototype: HTMLAppRootElement;
         new (): HTMLAppRootElement;
+    };
+    interface HTMLCommentsViewElement extends Components.CommentsView, HTMLStencilElement {
+    }
+    var HTMLCommentsViewElement: {
+        prototype: HTMLCommentsViewElement;
+        new (): HTMLCommentsViewElement;
     };
     interface HTMLErrorPageElement extends Components.ErrorPage, HTMLStencilElement {
     }
@@ -154,6 +163,7 @@ declare global {
         "app-home": HTMLAppHomeElement;
         "app-profile": HTMLAppProfileElement;
         "app-root": HTMLAppRootElement;
+        "comments-view": HTMLCommentsViewElement;
         "error-page": HTMLErrorPageElement;
         "icon-btn": HTMLIconBtnElement;
         "loading-page": HTMLLoadingPageElement;
@@ -176,6 +186,8 @@ declare namespace LocalJSX {
     }
     interface AppRoot {
     }
+    interface CommentsView {
+    }
     interface ErrorPage {
         "error"?: IAppError;
     }
@@ -185,6 +197,7 @@ declare namespace LocalJSX {
         "label"?: string;
         "onBtnClicked"?: (event: CustomEvent<void>) => void;
         "size"?: "small" | "medium";
+        "type"?: "primary" | "secondary";
     }
     interface LoadingPage {
     }
@@ -225,6 +238,7 @@ declare namespace LocalJSX {
         "app-home": AppHome;
         "app-profile": AppProfile;
         "app-root": AppRoot;
+        "comments-view": CommentsView;
         "error-page": ErrorPage;
         "icon-btn": IconBtn;
         "loading-page": LoadingPage;
@@ -245,6 +259,7 @@ declare module "@stencil/core" {
             "app-home": LocalJSX.AppHome & JSXBase.HTMLAttributes<HTMLAppHomeElement>;
             "app-profile": LocalJSX.AppProfile & JSXBase.HTMLAttributes<HTMLAppProfileElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
+            "comments-view": LocalJSX.CommentsView & JSXBase.HTMLAttributes<HTMLCommentsViewElement>;
             "error-page": LocalJSX.ErrorPage & JSXBase.HTMLAttributes<HTMLErrorPageElement>;
             "icon-btn": LocalJSX.IconBtn & JSXBase.HTMLAttributes<HTMLIconBtnElement>;
             "loading-page": LocalJSX.LoadingPage & JSXBase.HTMLAttributes<HTMLLoadingPageElement>;
