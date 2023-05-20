@@ -101,7 +101,11 @@ class PipedApi implements IYouTubeApi {
 
   getSkipSegments(videoId: string): Observable<number[][]> {
     return defer(() =>
-      from(axios.get(`${PipedApi.baseUrl}/sponsors/${videoId}?category=["sponsor","interaction","selfpromo"]`))
+      from(
+        axios.get(
+          `${PipedApi.baseUrl}/sponsors/${videoId}?category=["sponsor","interaction","selfpromo","music_offtopic"]`
+        )
+      )
     ).pipe(
       map(response => response.data.segments),
       map(segments => {

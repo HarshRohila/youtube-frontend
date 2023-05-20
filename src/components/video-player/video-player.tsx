@@ -67,7 +67,9 @@ export class VideoPlayer {
       loop: true,
       playbackRates: [0.5, 0.75, 1, 1.25, 1.5, 2],
       html5: {
-        limitRenditionByPlayerDimensions: false
+        vhs: {
+          useDevicePixelRatio: true
+        }
       }
     })
 
@@ -95,7 +97,7 @@ export class VideoPlayer {
         var segment = segments[i]
 
         if (currentTime >= segment[0] && currentTime < segment[1]) {
-          this.showToast("Skipped Sponsor", 1000)
+          this.showToast("Skipping Irrelevant Content", 1000)
           this.player.currentTime(segment[1])
           break
         }
