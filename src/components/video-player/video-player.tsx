@@ -95,7 +95,7 @@ export class VideoPlayer {
         var segment = segments[i]
 
         if (currentTime >= segment[0] && currentTime < segment[1]) {
-          this.showToast("Skipped Sponsor", 1000)
+          this.showToast("Skipping Irrelevant Content", 1000)
           this.player.currentTime(segment[1])
           break
         }
