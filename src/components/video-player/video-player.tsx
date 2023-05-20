@@ -67,7 +67,9 @@ export class VideoPlayer {
       loop: true,
       playbackRates: [0.5, 0.75, 1, 1.25, 1.5, 2],
       html5: {
-        limitRenditionByPlayerDimensions: false
+        vhs: {
+          useDevicePixelRatio: true
+        }
       }
     })
 
