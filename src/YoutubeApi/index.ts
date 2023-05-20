@@ -7,6 +7,11 @@ interface IYouTubeApi {
   getStream(videoId: string): Observable<Stream>
   getTrendingVideos(): Observable<SearchResult[]>
   getSkipSegments(videoId: string): Observable<number[][]>
+  getComments(videoId: string): Observable<Comment[]>
+}
+
+export interface Comment {
+  commentText: string
 }
 
 export interface Stream {
@@ -44,6 +49,21 @@ export const YouTubeApi = {
 
 class PipedApi implements IYouTubeApi {
   static baseUrl = "https://pipedapi.in.projectsegfau.lt"
+
+  getComments(videoId: string): Observable<Comment[]> {
+    return defer(() => axios.get(`${PipedApi.baseUrl}/comments/${videoId}`)).pipe(
+      map(response => response.data),
+      map(comments => {
+        if (comments.disabled) {
+          return []
+        }
+
+        return comments.map(c => ({
+          commentText: c.commentText
+        }))
+      })
+    )
+  }
 
   getStream(videoId: string): Observable<Stream> {
     const isStream = (stream: { type: string }) => stream.type === "stream"
