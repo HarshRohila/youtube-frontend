@@ -53,6 +53,7 @@ export namespace Components {
     }
     interface VideoPage {
         "history": RouterHistory;
+        "isCommentsOpen": boolean;
         "match": MatchResults;
         "shareForm": ShareFormState | undefined;
     }
@@ -220,6 +221,7 @@ declare namespace LocalJSX {
     }
     interface VideoPage {
         "history"?: RouterHistory;
+        "isCommentsOpen"?: boolean;
         "match"?: MatchResults;
         "shareForm"?: ShareFormState | undefined;
     }

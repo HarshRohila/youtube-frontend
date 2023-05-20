@@ -1,0 +1,16 @@
+:host {
+  display: block;
+}
+
+.comments-view {
+  position: relative;
+  background-color: $secondary-color;
+  height: 100%;
+
+  .close-btn {
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 10px;
+  }
+}

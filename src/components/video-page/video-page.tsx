@@ -24,6 +24,7 @@ export class VideoPage {
   @Prop() history: RouterHistory
 
   @Prop({ mutable: true }) shareForm: ShareFormState | undefined
+  @Prop({ mutable: true }) isCommentsOpen: boolean
 
   @State() stream: Stream
   @State() error: IAppError | undefined
@@ -53,6 +54,7 @@ export class VideoPage {
       )
       .subscribe(state => {
         this.shareForm = state.shareForm
+        this.isCommentsOpen = state.isCommentViewOpen
       })
 
     this.fetchVideo(videoId)
@@ -166,9 +168,10 @@ export class VideoPage {
                 icon={faComment}
                 label="View Comments"
                 type="secondary"
-                onBtnClicked={() => setIsCommentViewOpen(true)}
+                onBtnClicked={() => store.dispatch(setIsCommentViewOpen(true))}
               ></icon-btn>
               <h3 class="suggestion-header">You may also like</h3>
+              {this.isCommentsOpen && <comments-view></comments-view>}
               <Videos
                 videos={this.stream.relatedVideos}
                 isShowingSuggestions={false}
