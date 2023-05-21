@@ -23,7 +23,11 @@ export class VideoPlayer {
   @Prop() skipSegments: number[][] = []
 
   @Method()
-  async currentTime() {
+  async currentTime(newTime?: number) {
+    if (newTime) {
+      return this.player?.currentTime(newTime)
+    }
+
     return this.player?.currentTime()
   }
 

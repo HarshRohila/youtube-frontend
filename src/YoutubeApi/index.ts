@@ -28,6 +28,7 @@ export interface Stream {
   uploaderSubscriberCount: number
   views: number
   uploadDate: string
+  id: string
 }
 
 interface StreamSource {
@@ -87,7 +88,8 @@ class PipedApi implements IYouTubeApi {
           uploaderAvatar: data.uploaderAvatar,
           uploaderSubscriberCount: data.uploaderSubscriberCount,
           views: data.views,
-          uploadDate: data.uploadDate
+          uploadDate: data.uploadDate,
+          id: videoId
         }
       })
     )

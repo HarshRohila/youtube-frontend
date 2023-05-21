@@ -63,7 +63,7 @@ export namespace Components {
         "shareForm": ShareFormState | undefined;
     }
     interface VideoPlayer {
-        "currentTime": () => Promise<number>;
+        "currentTime": (newTime?: number) => Promise<number>;
         "skipSegments": number[][];
         "src": string;
     }

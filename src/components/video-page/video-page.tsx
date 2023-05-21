@@ -32,7 +32,7 @@ export class VideoPage {
 
   disconnected$ = new Subject<void>()
 
-  routeChange$ = new Subject<{ videoId: string }>()
+  routeChange$ = new Subject<{ videoId: string; time: undefined | number }>()
   videoPlayer: HTMLVideoPlayerElement
 
   get videoId() {
@@ -42,13 +42,19 @@ export class VideoPage {
   componentWillLoad() {
     const videoId = this.match.params.videoId
 
-    this.history.listen(({ pathname }: { pathname: string }) => {
+    this.history.listen(args => {
+      const { pathname, query } = args
+      const time = query?.t
       const videoId = pathname.split("/").pop()
-      this.routeChange$.next({ videoId })
+      this.routeChange$.next({ videoId, time })
     })
 
-    this.routeChange$.pipe(takeUntil(this.disconnected$)).subscribe(({ videoId }) => {
-      this.fetchVideo(videoId)
+    this.routeChange$.pipe(takeUntil(this.disconnected$)).subscribe(({ videoId, time }) => {
+      if (videoId === this.stream.id) {
+        this.videoPlayer.currentTime(time)
+      } else {
+        this.fetchVideo(videoId)
+      }
     })
 
     state$
