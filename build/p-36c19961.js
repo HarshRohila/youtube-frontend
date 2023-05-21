@@ -1,1 +1,0 @@
-import{h as o}from"./p-27ce4408.js";import{d as s}from"./p-eeaa0d64.js";function n({onClose:n},a){return o("div",{class:"modal-container"},o("div",{class:"modal"},a,n&&o("button",{class:"close-btn",onClick:n},o("x-icon",{icon:s}))))}export{n as M}
