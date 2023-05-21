@@ -20,7 +20,7 @@ export class CommentsView {
   private observer: IntersectionObserver
 
   componentWillLoad() {
-    this.observer = new IntersectionObserver(this.handleIntersection, { root: null, rootMargin: "0px", threshold: 1 })
+    this.observer = new IntersectionObserver(this.handleIntersection, { root: null, rootMargin: "0px", threshold: 0.1 })
 
     state$
       .pipe(
@@ -28,8 +28,10 @@ export class CommentsView {
         takeUntil(this.disconnected$)
       )
       .subscribe(state => {
-        this.commentsList = [...this.commentsList, ...state.comments.comments]
-        this.comments = state.comments
+        if (this.comments !== state.comments) {
+          this.comments = state.comments
+          this.commentsList = [...this.commentsList, ...state.comments.comments]
+        }
         this.commentsView = state.commentsView
         this.areCommentsLoading = state.areCommentsLoading
       })
@@ -39,7 +41,10 @@ export class CommentsView {
     const lastCommentEntry = entries[0]
 
     if (lastCommentEntry.isIntersecting) {
-      store.dispatch(setCommentView({ ...this.commentsView, nextpage: this.comments.nextpage }))
+      this.observer?.disconnect()
+      if (this.comments.nextpage) {
+        store.dispatch(setCommentView({ ...this.commentsView, nextpage: this.comments.nextpage }))
+      }
     }
   }
 

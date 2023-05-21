@@ -12,7 +12,6 @@ import { UploaderInfo } from "./Uploader"
 import { getTimeAgoFormatter } from "../../utils/TimeFormatter"
 import { getShareHandler } from "../../lib/ShareForm/ShareHandler"
 import { ShareFormState, setCommentView } from "../../lib/redux/video-page"
-import Player from "video.js/dist/types/player"
 
 @Component({
   tag: "video-page",
@@ -53,7 +52,7 @@ export class VideoPage {
 
     this.routeChange$.pipe(takeUntil(this.disconnected$)).subscribe(({ videoId, time }) => {
       if (videoId === this.stream.id) {
-        this.videoPlayer.currentTime(time)
+        this.setCurrentTime(time)
       } else {
         this.fetchVideo(videoId)
       }
@@ -135,13 +134,16 @@ export class VideoPage {
     return getTimeAgoFormatter().format(new Date(this.stream.uploadDate))
   }
 
-  private handleVideoPlayerLoaded(player: Player) {
-    const time = this.history.location.query.t
-
+  private setCurrentTime(time: number | undefined) {
     if (time) {
-      player.currentTime(time)
+      this.videoPlayer.currentTime(time)
       removeTimeFromQueryParameter()
     }
+  }
+
+  private handleVideoPlayerLoaded() {
+    const time = this.history.location.query.t
+    this.setCurrentTime(time)
   }
 
   render() {
@@ -156,8 +158,8 @@ export class VideoPage {
                 ref={el => {
                   this.videoPlayer = el
                 }}
-                onLoaded={ev => {
-                  this.handleVideoPlayerLoaded(ev.detail.player)
+                onLoaded={() => {
+                  this.handleVideoPlayerLoaded()
                 }}
                 skipSegments={this.skipSegments}
               ></video-player>

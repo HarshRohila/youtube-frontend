@@ -70,8 +70,9 @@ class PipedApi implements IYouTubeApi {
 
   getComments(videoId: string, nextpage?: string): Observable<Comments> {
     let url = `${PipedApi.baseUrl}/comments/${videoId}`
+
     if (nextpage) {
-      url += `&nextpage=${nextpage}`
+      url = `${PipedApi.baseUrl}/nextpage/comments/${videoId}?nextpage=${nextpage}`
     }
 
     return defer(() => axios.get(url)).pipe(map(response => response.data))
