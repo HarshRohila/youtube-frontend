@@ -2,12 +2,10 @@
 
 Another YouTube Frontend using [Piped API](https://docs.piped.video/docs/api-documentation/) and [RxJS](https://rxjs.dev/)
 
-Built using [Stencil.js](https://stenciljs.com/)
-
 ## How to use?
 
 - [Web App link](https://www.rohilaharsh.in/youtube-frontend)
-- **Recommmend** - Open above link in Mobile Brave/Chrome browser, click below option which says "Add to Home Screen". This will add icon in home screen to be used like any other Mobile app.
+- PWA - Open above link in Mobile Brave/Chrome browser (Brave is recommended), click below option which says "Add to Home Screen". This will add icon in home screen to be used like any other Mobile app.
 
   > This app is tested in Android only
 
@@ -42,6 +40,26 @@ Built using [Stencil.js](https://stenciljs.com/)
 
 - Share video Link with current video time.
 - If installed in Android, you can share Video from YouTube app to this app, to play video in this app.
+
+## Screeshots
+
+- Home Page
+
+  <img src="docs/images/home_page.jpg" alt="Home Page Screenshot" height="500" >
+
+- Search Page
+
+  <img src="docs/images/search.jpg" alt="Search Page Screenshot" height="500">
+
+- Video Player
+
+  <img src="docs/images/video_player.jpg" alt="Video Player Screenshot" height="500">
+
+- Comments Page
+
+  <img src="docs/images/comments.jpg" alt="Comments Page Screenshot" height="500">
+
+Built using [Stencil.js](https://stenciljs.com/)
 
 ## About Stencil.js
 
