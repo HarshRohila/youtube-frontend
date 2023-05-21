@@ -6,11 +6,28 @@
   position: relative;
   background-color: $secondary-color;
   height: 100%;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
 
   .close-btn {
     position: absolute;
     right: 0;
     top: 0;
     padding: 10px;
+  }
+}
+
+.heading {
+  padding: 10px;
+  margin: 0;
+}
+.list {
+  margin: 0;
+  list-style-type: none;
+  padding-right: 10px;
+  overflow-y: auto;
+  li ~ li {
+    margin-top: 10px;
   }
 }

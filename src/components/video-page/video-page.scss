@@ -95,6 +95,9 @@ video-player {
   flex-direction: column;
 }
 comments-view {
+  @include desktop() {
+    display: none;
+  }
   position: absolute;
   width: 100%;
   height: 100%;

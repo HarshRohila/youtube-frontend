@@ -6,10 +6,10 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { MatchResults, RouterHistory } from "@stencil-community/router";
+import { Comment, Stream } from "./YoutubeApi";
 import { IAppError } from "./lib/redux/global";
 import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import { ShareFormState } from "./lib/redux/video-page";
-import { Stream } from "./YoutubeApi";
 import { IconDefinition as IconDefinition1 } from "@fortawesome/fontawesome-svg-core";
 export namespace Components {
     interface AppHome {
@@ -21,6 +21,8 @@ export namespace Components {
     interface AppRoot {
     }
     interface CommentsView {
+        "areCommentsLoading": boolean;
+        "comments": Comment[];
     }
     interface ErrorPage {
         "error": IAppError;
@@ -188,6 +190,8 @@ declare namespace LocalJSX {
     interface AppRoot {
     }
     interface CommentsView {
+        "areCommentsLoading"?: boolean;
+        "comments"?: Comment[];
     }
     interface ErrorPage {
         "error"?: IAppError;

@@ -58,7 +58,7 @@ class PipedApi implements IYouTubeApi {
           return []
         }
 
-        return comments.map(c => ({
+        return comments.comments.map(c => ({
           commentText: c.commentText
         }))
       })

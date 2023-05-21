@@ -11,7 +11,7 @@ import { Videos } from "../../lib/Search"
 import { UploaderInfo } from "./Uploader"
 import { getTimeAgoFormatter } from "../../utils/TimeFormatter"
 import { getShareHandler } from "../../lib/ShareForm/ShareHandler"
-import { ShareFormState, setIsCommentViewOpen } from "../../lib/redux/video-page"
+import { ShareFormState, setCommentView } from "../../lib/redux/video-page"
 import Player from "video.js/dist/types/player"
 
 @Component({
@@ -35,6 +35,10 @@ export class VideoPage {
   routeChange$ = new Subject<{ videoId: string }>()
   videoPlayer: HTMLVideoPlayerElement
 
+  get videoId() {
+    return this.match.params.videoId
+  }
+
   componentWillLoad() {
     const videoId = this.match.params.videoId
 
@@ -54,7 +58,7 @@ export class VideoPage {
       )
       .subscribe(state => {
         this.shareForm = state.shareForm
-        this.isCommentsOpen = state.isCommentViewOpen
+        this.isCommentsOpen = !!state.commentsView
       })
 
     this.fetchVideo(videoId)
@@ -168,7 +172,7 @@ export class VideoPage {
                 icon={faComment}
                 label="View Comments"
                 type="secondary"
-                onBtnClicked={() => store.dispatch(setIsCommentViewOpen(true))}
+                onBtnClicked={() => store.dispatch(setCommentView({ videoId: this.videoId }))}
               ></icon-btn>
               <h3 class="suggestion-header">You may also like</h3>
               {this.isCommentsOpen && <comments-view></comments-view>}
