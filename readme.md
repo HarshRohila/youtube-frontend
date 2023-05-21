@@ -2,6 +2,8 @@
 
 Another YouTube Frontend using [Piped API](https://docs.piped.video/docs/api-documentation/) and [RxJS](https://rxjs.dev/)
 
+![Project GIF](docs/images/PipedRx.gif)
+
 ## How to use?
 
 - [Web App link](https://www.rohilaharsh.in/youtube-frontend)
