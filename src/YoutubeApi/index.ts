@@ -12,6 +12,9 @@ interface IYouTubeApi {
 
 export interface Comment {
   commentText: string
+  thumbnail: string
+  author: string
+  commentedTime: string
 }
 
 export interface Stream {
@@ -59,7 +62,10 @@ class PipedApi implements IYouTubeApi {
         }
 
         return comments.comments.map(c => ({
-          commentText: c.commentText
+          commentText: c.commentText,
+          thumbnail: c.thumbnail,
+          author: c.author,
+          commentedTime: c.commentedTime
         }))
       })
     )

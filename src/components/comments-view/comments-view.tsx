@@ -46,7 +46,9 @@ export class CommentsView {
           {!this.areCommentsLoading && (
             <ul class="list">
               {this.comments.map(c => (
-                <li innerHTML={c.commentText}></li>
+                <li>
+                  <a-comment comment={c}></a-comment>
+                </li>
               ))}
             </ul>
           )}

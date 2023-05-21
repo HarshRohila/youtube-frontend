@@ -61,7 +61,7 @@ export const {
   setAreCommentsLoading
 } = videoPageSlice.actions
 
-export const fetchCommentsEpic = (action$: Observable<Action>, state$: BehaviorSubject<RootState>) =>
+export const fetchCommentsEpic = (action$: Observable<Action>, _state$: BehaviorSubject<RootState>) =>
   action$.pipe(
     ofType(setCommentView.type),
     switchMap(action => {
