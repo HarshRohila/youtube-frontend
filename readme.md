@@ -7,7 +7,7 @@ Built using [Stencil.js](https://stenciljs.com/)
 ## How to use?
 
 - [Web App link](https://www.rohilaharsh.in/youtube-frontend)
-- **Recommmend** - Open above link in Mobile Chrome browser, click below option which says "Add to Home Screen". This will add icon in home screen to be used like any other Mobile app.
+- **Recommmend** - Open above link in Mobile Brave/Chrome browser, click below option which says "Add to Home Screen". This will add icon in home screen to be used like any other Mobile app.
 
   > This app is tested in Android only
 
@@ -17,7 +17,7 @@ Built using [Stencil.js](https://stenciljs.com/)
 
 - No ads, no tracking.
 - No sign in required to use.
-- Integration with [SponsorBlock](https://github.com/ajayyy/SponsorBlock) to automatically skip sponsors.
+- Integration with [SponsorBlock](https://github.com/ajayyy/SponsorBlock) to automatically skip sponsors and non-music parts in music videos.
 - Free and Open Source.
 
 ### UI
@@ -27,6 +27,7 @@ Built using [Stencil.js](https://stenciljs.com/)
 - Search for any YouTube video and play.
 - Shows video suggestions based on currently playing video.
 - Shows "Dislikes" count and other video info.
+- View comments on videos (mobile only).
 
 ### Video player
 
