@@ -1,9 +1,10 @@
 import { Component, Host, h, Prop, Watch, Method, Event, EventEmitter, State } from "@stencil/core"
-import { Subject, buffer, filter, fromEvent, map, takeUntil, throttleTime } from "rxjs"
+import { Subject } from "rxjs"
 import videojs from "video.js"
 import Player from "video.js/dist/types/player"
 import "videojs-landscape-fullscreen"
 import { IKeyboard, KEYS, getKeyboard } from "../../utils/keyboard"
+import { createDblClickEvent } from "../../utils/dblClick"
 
 @Component({
   tag: "video-player",
@@ -33,7 +34,8 @@ export class VideoPlayer {
 
   @Event() loaded: EventEmitter<{ player: Player }>
 
-  private handleDblClick = e => {
+  private handleDblClick = ev => {
+    const e = ev.detail.clickEvent
     const playerWidth = this.player.currentWidth()
     const playerJS = this.player
 
@@ -80,15 +82,15 @@ export class VideoPlayer {
     this.player.ready(() => {
       const video = this.player.el().querySelector(".vjs-text-track-display") as HTMLDivElement
       video.style.pointerEvents = "auto"
-      const clicks$ = fromEvent(video, "click")
 
-      const dlbClick$ = clicks$.pipe(
-        buffer(clicks$.pipe(throttleTime(250))),
-        filter(clickArray => clickArray.length > 1),
-        map(([, e]) => e)
-      )
+      const ev = createDblClickEvent(video)
+      video.addEventListener(ev.name, this.handleDblClick)
 
-      dlbClick$.pipe(takeUntil(this.disconnected$)).subscribe(this.handleDblClick)
+      this.disconnected$.subscribe({
+        complete: () => {
+          ev.remove()
+        }
+      })
 
       this.loaded.emit({ player: this.player })
     })
