@@ -36,3 +36,49 @@ video-js.video-js {
   transform: translateX(-50%);
   border-radius: 4px;
 }
+
+.action-icons {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  display: flex;
+  justify-content: space-between;
+  height: 100%;
+  width: 100%;
+  .forward,
+  .play,
+  .pause,
+  .backward {
+    visibility: hidden;
+    display: grid;
+    place-items: center;
+    height: 100%;
+    width: 33%;
+    font-size: 3rem;
+    background-color: rgba(255, 255, 255, 0.3);
+    &.show {
+      visibility: initial;
+    }
+  }
+  .forward {
+    border-top-left-radius: 50%;
+    border-bottom-left-radius: 50%;
+  }
+  .backward {
+    border-top-right-radius: 50%;
+    border-bottom-right-radius: 50%;
+  }
+  .play,
+  .pause {
+    height: calc(100vw / 3);
+    margin: auto;
+    border-radius: 50%;
+  }
+  .pause {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
