@@ -5,11 +5,11 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { Comment, Stream } from "./YoutubeApi";
+import { Comment, Comments, Stream } from "./YoutubeApi";
 import { MatchResults, RouterHistory } from "@stencil-community/router";
+import { CommentsViewProps, ShareFormState } from "./lib/redux/video-page";
 import { IAppError } from "./lib/redux/global";
 import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
-import { ShareFormState } from "./lib/redux/video-page";
 import { IconDefinition as IconDefinition1 } from "@fortawesome/fontawesome-svg-core";
 export namespace Components {
     interface AComment {
@@ -25,7 +25,8 @@ export namespace Components {
     }
     interface CommentsView {
         "areCommentsLoading": boolean;
-        "comments": Comment[];
+        "comments": Comments;
+        "commentsView": CommentsViewProps;
     }
     interface ErrorPage {
         "error": IAppError;
@@ -204,7 +205,8 @@ declare namespace LocalJSX {
     }
     interface CommentsView {
         "areCommentsLoading"?: boolean;
-        "comments"?: Comment[];
+        "comments"?: Comments;
+        "commentsView"?: CommentsViewProps;
     }
     interface ErrorPage {
         "error"?: IAppError;

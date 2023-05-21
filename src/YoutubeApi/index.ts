@@ -7,7 +7,7 @@ interface IYouTubeApi {
   getStream(videoId: string): Observable<Stream>
   getTrendingVideos(): Observable<SearchResult[]>
   getSkipSegments(videoId: string): Observable<number[][]>
-  getComments(videoId: string): Observable<Comment[]>
+  getComments(videoId: string, nextpage?: string): Observable<Comments>
 }
 
 export interface Comment {
@@ -15,6 +15,20 @@ export interface Comment {
   thumbnail: string
   author: string
   commentedTime: string
+}
+
+export interface Comments {
+  comments: Comment[]
+  nextpage: string
+  disabled: boolean
+}
+
+export function newComments(): Comments {
+  return {
+    comments: [],
+    nextpage: "",
+    disabled: false
+  }
 }
 
 export interface Stream {
@@ -54,22 +68,13 @@ export const YouTubeApi = {
 class PipedApi implements IYouTubeApi {
   static baseUrl = "https://pipedapi.in.projectsegfau.lt"
 
-  getComments(videoId: string): Observable<Comment[]> {
-    return defer(() => axios.get(`${PipedApi.baseUrl}/comments/${videoId}`)).pipe(
-      map(response => response.data),
-      map(comments => {
-        if (comments.disabled) {
-          return []
-        }
+  getComments(videoId: string, nextpage?: string): Observable<Comments> {
+    let url = `${PipedApi.baseUrl}/comments/${videoId}`
+    if (nextpage) {
+      url += `&nextpage=${nextpage}`
+    }
 
-        return comments.comments.map(c => ({
-          commentText: c.commentText,
-          thumbnail: c.thumbnail,
-          author: c.author,
-          commentedTime: c.commentedTime
-        }))
-      })
-    )
+    return defer(() => axios.get(url)).pipe(map(response => response.data))
   }
 
   getStream(videoId: string): Observable<Stream> {

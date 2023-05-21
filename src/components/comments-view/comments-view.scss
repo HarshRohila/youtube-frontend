@@ -6,7 +6,8 @@
   position: relative;
   background-color: $secondary-color;
   height: 100%;
-  border-radius: 15px;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
   display: flex;
   flex-direction: column;
 

@@ -40,6 +40,8 @@ export class VideoPage {
   }
 
   componentWillLoad() {
+    store.dispatch(setCommentView(undefined))
+
     const videoId = this.match.params.videoId
 
     this.history.listen(args => {
