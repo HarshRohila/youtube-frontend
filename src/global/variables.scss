@@ -1,5 +1,7 @@
 $header-height: 56px;
+$z-index-overlay: 5;
 $z-index-loader: 10;
 $z-index-error: 15;
 $max-width: 480px;
-$primary-color: #020024;
+$primary-color: var(--primary-color);
+$secondary-color: var(--secondary-color);

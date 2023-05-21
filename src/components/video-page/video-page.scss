@@ -1,5 +1,7 @@
 .video-page {
-  min-height: 100vh;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 
   header {
     width: 100%;
@@ -74,4 +76,35 @@ video-player {
   .suggestion-header {
     display: none;
   }
+}
+
+.view-comments {
+  margin: auto;
+  margin-top: 16px;
+}
+@include desktop() {
+  .view-comments {
+    display: none;
+  }
+}
+
+.below-video {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  @include desktop() {
+    overflow-y: initial;
+  }
+}
+comments-view {
+  @include desktop() {
+    display: none;
+  }
+  position: absolute;
+  width: 100%;
+  height: -webkit-fill-available;
+  z-index: $z-index-overlay;
 }

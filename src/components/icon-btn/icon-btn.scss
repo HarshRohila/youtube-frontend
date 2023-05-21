@@ -1,5 +1,6 @@
 :host {
   display: block;
+  width: fit-content;
 }
 button {
   background: transparent;
@@ -14,6 +15,9 @@ x-icon {
 label {
   display: grid;
   place-items: center;
+  &.secondary {
+    background-color: $secondary-color;
+  }
   span {
     padding-top: 3px;
     font-size: 0.8rem;
@@ -23,5 +27,8 @@ label {
     x-icon {
       font-size: 1rem;
     }
+    padding: 4px 15px;
+    width: fit-content;
+    border-radius: 10px;
   }
 }

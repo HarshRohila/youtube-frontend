@@ -7,6 +7,28 @@ interface IYouTubeApi {
   getStream(videoId: string): Observable<Stream>
   getTrendingVideos(): Observable<SearchResult[]>
   getSkipSegments(videoId: string): Observable<number[][]>
+  getComments(videoId: string, nextpage?: string): Observable<Comments>
+}
+
+export interface Comment {
+  commentText: string
+  thumbnail: string
+  author: string
+  commentedTime: string
+}
+
+export interface Comments {
+  comments: Comment[]
+  nextpage: string
+  disabled: boolean
+}
+
+export function newComments(): Comments {
+  return {
+    comments: [],
+    nextpage: "",
+    disabled: false
+  }
 }
 
 export interface Stream {
@@ -20,6 +42,7 @@ export interface Stream {
   uploaderSubscriberCount: number
   views: number
   uploadDate: string
+  id: string
 }
 
 interface StreamSource {
@@ -45,6 +68,16 @@ export const YouTubeApi = {
 class PipedApi implements IYouTubeApi {
   static baseUrl = "https://pipedapi.in.projectsegfau.lt"
 
+  getComments(videoId: string, nextpage?: string): Observable<Comments> {
+    let url = `${PipedApi.baseUrl}/comments/${videoId}`
+
+    if (nextpage) {
+      url = `${PipedApi.baseUrl}/nextpage/comments/${videoId}?nextpage=${nextpage}`
+    }
+
+    return defer(() => axios.get(url)).pipe(map(response => response.data))
+  }
+
   getStream(videoId: string): Observable<Stream> {
     const isStream = (stream: { type: string }) => stream.type === "stream"
 
@@ -61,7 +94,8 @@ class PipedApi implements IYouTubeApi {
           uploaderAvatar: data.uploaderAvatar,
           uploaderSubscriberCount: data.uploaderSubscriberCount,
           views: data.views,
-          uploadDate: data.uploadDate
+          uploadDate: data.uploadDate,
+          id: videoId
         }
       })
     )

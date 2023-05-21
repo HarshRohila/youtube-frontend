@@ -11,13 +11,14 @@ export class IconBtn {
   @Prop() label: string
   @Prop() disabled = false
   @Prop() size: "small" | "medium" = "medium"
+  @Prop() type: "primary" | "secondary" = "primary"
 
   @Event() btnClicked: EventEmitter<void>
 
   render() {
     return (
       <Host>
-        <label class={`${this.size}`}>
+        <label class={`${this.size} ${this.type}`}>
           <button
             onClick={() => {
               this.btnClicked.emit()

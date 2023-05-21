@@ -5,13 +5,16 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { Comment, Comments, Stream } from "./YoutubeApi";
 import { MatchResults, RouterHistory } from "@stencil-community/router";
+import { CommentsViewProps, ShareFormState } from "./lib/redux/video-page";
 import { IAppError } from "./lib/redux/global";
 import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
-import { ShareFormState } from "./lib/redux/video-page";
-import { Stream } from "./YoutubeApi";
 import { IconDefinition as IconDefinition1 } from "@fortawesome/fontawesome-svg-core";
 export namespace Components {
+    interface AComment {
+        "comment": Comment;
+    }
     interface AppHome {
         "history": RouterHistory;
     }
@@ -19,6 +22,11 @@ export namespace Components {
         "match": MatchResults;
     }
     interface AppRoot {
+    }
+    interface CommentsView {
+        "areCommentsLoading": boolean;
+        "comments": Comments;
+        "commentsView": CommentsViewProps;
     }
     interface ErrorPage {
         "error": IAppError;
@@ -28,6 +36,7 @@ export namespace Components {
         "icon": IconDefinition;
         "label": string;
         "size": "small" | "medium";
+        "type": "primary" | "secondary";
     }
     interface LoadingPage {
     }
@@ -50,11 +59,12 @@ export namespace Components {
     }
     interface VideoPage {
         "history": RouterHistory;
+        "isCommentsOpen": boolean;
         "match": MatchResults;
         "shareForm": ShareFormState | undefined;
     }
     interface VideoPlayer {
-        "currentTime": () => Promise<number>;
+        "currentTime": (newTime?: number) => Promise<number>;
         "skipSegments": number[][];
         "src": string;
     }
@@ -66,6 +76,12 @@ export namespace Components {
     }
 }
 declare global {
+    interface HTMLACommentElement extends Components.AComment, HTMLStencilElement {
+    }
+    var HTMLACommentElement: {
+        prototype: HTMLACommentElement;
+        new (): HTMLACommentElement;
+    };
     interface HTMLAppHomeElement extends Components.AppHome, HTMLStencilElement {
     }
     var HTMLAppHomeElement: {
@@ -83,6 +99,12 @@ declare global {
     var HTMLAppRootElement: {
         prototype: HTMLAppRootElement;
         new (): HTMLAppRootElement;
+    };
+    interface HTMLCommentsViewElement extends Components.CommentsView, HTMLStencilElement {
+    }
+    var HTMLCommentsViewElement: {
+        prototype: HTMLCommentsViewElement;
+        new (): HTMLCommentsViewElement;
     };
     interface HTMLErrorPageElement extends Components.ErrorPage, HTMLStencilElement {
     }
@@ -151,9 +173,11 @@ declare global {
         new (): HTMLXIconElement;
     };
     interface HTMLElementTagNameMap {
+        "a-comment": HTMLACommentElement;
         "app-home": HTMLAppHomeElement;
         "app-profile": HTMLAppProfileElement;
         "app-root": HTMLAppRootElement;
+        "comments-view": HTMLCommentsViewElement;
         "error-page": HTMLErrorPageElement;
         "icon-btn": HTMLIconBtnElement;
         "loading-page": HTMLLoadingPageElement;
@@ -168,6 +192,9 @@ declare global {
     }
 }
 declare namespace LocalJSX {
+    interface AComment {
+        "comment"?: Comment;
+    }
     interface AppHome {
         "history"?: RouterHistory;
     }
@@ -175,6 +202,11 @@ declare namespace LocalJSX {
         "match"?: MatchResults;
     }
     interface AppRoot {
+    }
+    interface CommentsView {
+        "areCommentsLoading"?: boolean;
+        "comments"?: Comments;
+        "commentsView"?: CommentsViewProps;
     }
     interface ErrorPage {
         "error"?: IAppError;
@@ -185,6 +217,7 @@ declare namespace LocalJSX {
         "label"?: string;
         "onBtnClicked"?: (event: CustomEvent<void>) => void;
         "size"?: "small" | "medium";
+        "type"?: "primary" | "secondary";
     }
     interface LoadingPage {
     }
@@ -207,6 +240,7 @@ declare namespace LocalJSX {
     }
     interface VideoPage {
         "history"?: RouterHistory;
+        "isCommentsOpen"?: boolean;
         "match"?: MatchResults;
         "shareForm"?: ShareFormState | undefined;
     }
@@ -222,9 +256,11 @@ declare namespace LocalJSX {
         "spin"?: boolean;
     }
     interface IntrinsicElements {
+        "a-comment": AComment;
         "app-home": AppHome;
         "app-profile": AppProfile;
         "app-root": AppRoot;
+        "comments-view": CommentsView;
         "error-page": ErrorPage;
         "icon-btn": IconBtn;
         "loading-page": LoadingPage;
@@ -242,9 +278,11 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "a-comment": LocalJSX.AComment & JSXBase.HTMLAttributes<HTMLACommentElement>;
             "app-home": LocalJSX.AppHome & JSXBase.HTMLAttributes<HTMLAppHomeElement>;
             "app-profile": LocalJSX.AppProfile & JSXBase.HTMLAttributes<HTMLAppProfileElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
+            "comments-view": LocalJSX.CommentsView & JSXBase.HTMLAttributes<HTMLCommentsViewElement>;
             "error-page": LocalJSX.ErrorPage & JSXBase.HTMLAttributes<HTMLErrorPageElement>;
             "icon-btn": LocalJSX.IconBtn & JSXBase.HTMLAttributes<HTMLIconBtnElement>;
             "loading-page": LocalJSX.LoadingPage & JSXBase.HTMLAttributes<HTMLLoadingPageElement>;

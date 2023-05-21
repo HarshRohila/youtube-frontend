@@ -1,9 +1,11 @@
-import { Component, Host, h, Prop, Watch, Method, Event, EventEmitter, State } from "@stencil/core"
-import { Subject, buffer, filter, fromEvent, map, takeUntil, throttleTime } from "rxjs"
+import { Component, Host, h, Prop, Watch, Method, Event, EventEmitter, State, Element } from "@stencil/core"
+import { Subject } from "rxjs"
 import videojs from "video.js"
 import Player from "video.js/dist/types/player"
 import "videojs-landscape-fullscreen"
 import { IKeyboard, KEYS, getKeyboard } from "../../utils/keyboard"
+import { createDblClickEvent } from "../../utils/dblClick"
+import { faBackward, faForward, faPause, faPlay } from "@fortawesome/free-solid-svg-icons"
 
 @Component({
   tag: "video-player",
@@ -22,27 +24,30 @@ export class VideoPlayer {
 
   @Prop() skipSegments: number[][] = []
 
+  @Element() el!: HTMLVideoPlayerElement
+
   @Method()
-  async currentTime() {
+  async currentTime(newTime?: number) {
+    if (newTime) {
+      return this.player?.currentTime(newTime)
+    }
+
     return this.player?.currentTime()
   }
 
   @Event() loaded: EventEmitter<{ player: Player }>
 
-  private handleDblClick = e => {
+  private handleDblClick = ev => {
+    const e = ev.detail.clickEvent
     const playerWidth = this.player.currentWidth()
     const playerJS = this.player
 
     if (0.66 * playerWidth < e.offsetX) {
-      forward(playerJS)
+      forward(playerJS, this.el)
     } else if (e.offsetX < 0.33 * playerWidth) {
-      rewind(playerJS)
+      rewind(playerJS, this.el)
     } else {
-      if (playerJS.paused()) {
-        playerJS.play()
-      } else {
-        playerJS.pause()
-      }
+      togglePlayPause(playerJS, this.el)
     }
   }
 
@@ -76,15 +81,15 @@ export class VideoPlayer {
     this.player.ready(() => {
       const video = this.player.el().querySelector(".vjs-text-track-display") as HTMLDivElement
       video.style.pointerEvents = "auto"
-      const clicks$ = fromEvent(video, "click")
 
-      const dlbClick$ = clicks$.pipe(
-        buffer(clicks$.pipe(throttleTime(250))),
-        filter(clickArray => clickArray.length > 1),
-        map(([, e]) => e)
-      )
+      const ev = createDblClickEvent(video)
+      video.addEventListener(ev.name, this.handleDblClick)
 
-      dlbClick$.pipe(takeUntil(this.disconnected$)).subscribe(this.handleDblClick)
+      this.disconnected$.subscribe({
+        complete: () => {
+          ev.remove()
+        }
+      })
 
       this.loaded.emit({ player: this.player })
     })
@@ -124,23 +129,19 @@ export class VideoPlayer {
 
     if (!this.player.isReady_) return
 
-    if (this.player.paused()) {
-      this.player.play()
-    } else {
-      this.player.pause()
-    }
+    togglePlayPause(this.player, this.el)
   }
 
   private handleRight = () => {
     if (!this.player.isReady_) return
 
-    forward(this.player)
+    forward(this.player, this.el)
   }
 
   private handleLeft = () => {
     if (!this.player.isReady_) return
 
-    rewind(this.player)
+    rewind(this.player, this.el)
   }
 
   private setupKeyboard() {
@@ -173,16 +174,55 @@ export class VideoPlayer {
             <source src={this.src} />
           </video-js>
           {this.isShowingToast && <span class="toast">{this.toastMessage}</span>}
+          <div class="action-icons">
+            <div class="backward">
+              <x-icon icon={faBackward}></x-icon>
+            </div>
+            <div class="play">
+              <x-icon icon={faPlay}></x-icon>
+            </div>
+            <div class="pause">
+              <x-icon icon={faPause}></x-icon>
+            </div>
+            <div class="forward">
+              <x-icon icon={faForward}></x-icon>
+            </div>
+          </div>
         </div>
       </Host>
     )
   }
 }
 
-function forward(player: Player) {
+function forward(player: Player, el: HTMLVideoPlayerElement) {
+  const fwd = el.querySelector(".forward")
+  briflyShowElement(fwd)
+
   player.currentTime(player.currentTime() + 10)
 }
 
-function rewind(player: Player) {
+function rewind(player: Player, el: HTMLVideoPlayerElement) {
+  const bk = el.querySelector(".backward")
+  briflyShowElement(bk)
+
   player.currentTime(player.currentTime() - 10 < 0 ? 0 : player.currentTime() - 10)
+}
+
+function togglePlayPause(player: Player, el: HTMLVideoPlayerElement) {
+  if (player.paused()) {
+    const play = el.querySelector(".play")
+    briflyShowElement(play)
+    player.play()
+  } else {
+    const pause = el.querySelector(".pause")
+    briflyShowElement(pause)
+    player.pause()
+  }
+}
+
+function briflyShowElement(el: Element) {
+  el.classList.add("show")
+  setTimeout(() => {
+    el.classList.remove("show")
+  }, 300)
 }

@@ -5,14 +5,13 @@ import { Subject, map, takeUntil } from "rxjs"
 import { IAppError, setLoading } from "../../lib/redux/global"
 import { state$, store } from "../../lib/redux"
 import { Header } from "../../lib/Header"
-import { faShare, faThumbsDown, faThumbsUp } from "@fortawesome/free-solid-svg-icons"
+import { faComment, faShare, faThumbsDown, faThumbsUp } from "@fortawesome/free-solid-svg-icons"
 import { Router } from "../../lib/Router"
 import { Videos } from "../../lib/Search"
 import { UploaderInfo } from "./Uploader"
 import { getTimeAgoFormatter } from "../../utils/TimeFormatter"
 import { getShareHandler } from "../../lib/ShareForm/ShareHandler"
-import { ShareFormState } from "../../lib/redux/video-page"
-import Player from "video.js/dist/types/player"
+import { ShareFormState, setCommentView } from "../../lib/redux/video-page"
 
 @Component({
   tag: "video-page",
@@ -24,6 +23,7 @@ export class VideoPage {
   @Prop() history: RouterHistory
 
   @Prop({ mutable: true }) shareForm: ShareFormState | undefined
+  @Prop({ mutable: true }) isCommentsOpen: boolean
 
   @State() stream: Stream
   @State() error: IAppError | undefined
@@ -31,19 +31,31 @@ export class VideoPage {
 
   disconnected$ = new Subject<void>()
 
-  routeChange$ = new Subject<{ videoId: string }>()
+  routeChange$ = new Subject<{ videoId: string; time: undefined | number }>()
   videoPlayer: HTMLVideoPlayerElement
 
+  get videoId() {
+    return this.match.params.videoId
+  }
+
   componentWillLoad() {
+    store.dispatch(setCommentView(undefined))
+
     const videoId = this.match.params.videoId
 
-    this.history.listen(({ pathname }: { pathname: string }) => {
+    this.history.listen(args => {
+      const { pathname, query } = args
+      const time = query?.t
       const videoId = pathname.split("/").pop()
-      this.routeChange$.next({ videoId })
+      this.routeChange$.next({ videoId, time })
     })
 
-    this.routeChange$.pipe(takeUntil(this.disconnected$)).subscribe(({ videoId }) => {
-      this.fetchVideo(videoId)
+    this.routeChange$.pipe(takeUntil(this.disconnected$)).subscribe(({ videoId, time }) => {
+      if (videoId === this.stream.id) {
+        this.setCurrentTime(time)
+      } else {
+        this.fetchVideo(videoId)
+      }
     })
 
     state$
@@ -53,6 +65,7 @@ export class VideoPage {
       )
       .subscribe(state => {
         this.shareForm = state.shareForm
+        this.isCommentsOpen = !!state.commentsView
       })
 
     this.fetchVideo(videoId)
@@ -121,13 +134,16 @@ export class VideoPage {
     return getTimeAgoFormatter().format(new Date(this.stream.uploadDate))
   }
 
-  private handleVideoPlayerLoaded(player: Player) {
-    const time = this.history.location.query.t
-
+  private setCurrentTime(time: number | undefined) {
     if (time) {
-      player.currentTime(time)
+      this.videoPlayer.currentTime(time)
       removeTimeFromQueryParameter()
     }
+  }
+
+  private handleVideoPlayerLoaded() {
+    const time = this.history.location.query.t
+    this.setCurrentTime(time)
   }
 
   render() {
@@ -142,12 +158,16 @@ export class VideoPage {
                 ref={el => {
                   this.videoPlayer = el
                 }}
-                onLoaded={ev => {
-                  this.handleVideoPlayerLoaded(ev.detail.player)
+                onLoaded={() => {
+                  this.handleVideoPlayerLoaded()
                 }}
                 skipSegments={this.skipSegments}
               ></video-player>
               <h3>{this.stream.title}</h3>
+            </Fragment>
+          )}
+          {this.stream && (
+            <div class="below-video">
               <div class="video-info">{this.videoInfo}</div>
               <UploaderInfo video={this.stream} />
               <div class="actions">
@@ -156,17 +176,24 @@ export class VideoPage {
                 <icon-btn icon={faShare} onBtnClicked={this.share} label="Share"></icon-btn>
                 {this.shareForm && <share-form video={this.stream}></share-form>}
               </div>
-            </Fragment>
+              <icon-btn
+                class="view-comments"
+                size="small"
+                icon={faComment}
+                label="View Comments"
+                type="secondary"
+                onBtnClicked={() => store.dispatch(setCommentView({ videoId: this.videoId }))}
+              ></icon-btn>
+              <h3 class="suggestion-header">You may also like</h3>
+              {this.isCommentsOpen && <comments-view></comments-view>}
+              <Videos
+                videos={this.stream.relatedVideos}
+                isShowingSuggestions={false}
+                onClickVideo={this.handleVideoClick}
+              />
+            </div>
           )}
           {this.error && <h3>{this.error.message}</h3>}
-          {this.stream && <h3 class="suggestion-header">You may also like</h3>}
-          {this.stream && (
-            <Videos
-              videos={this.stream.relatedVideos}
-              isShowingSuggestions={false}
-              onClickVideo={this.handleVideoClick}
-            />
-          )}
         </div>
       </Host>
     )
