@@ -46,7 +46,7 @@ export class AppHome {
         takeUntil(this.disconnected$)
       )
       .subscribe(results => {
-        this.searchResults = results
+        this.searchResults = results.results
         this.showSuggestions = false
       })
   }

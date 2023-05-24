@@ -12,7 +12,7 @@ import {
   switchMap,
   takeUntil
 } from "rxjs"
-import { SearchResult, YouTubeApi } from "../../../YoutubeApi"
+import { SearchResponse, YouTubeApi } from "../../../YoutubeApi"
 import { RootState } from ".."
 import { IAppError, setError, setLoading } from "../global"
 
@@ -20,9 +20,16 @@ const initialState = {
   showSearchBar: false,
   searchText: "",
   suggestions: [] as string[],
-  searchResults: [] as SearchResult[],
+  searchResponse: newSearchResponse(),
   suggestionsError: undefined as IAppError | undefined,
   suggestionsLoading: false
+}
+
+export function newSearchResponse(): SearchResponse {
+  return {
+    nextpage: "",
+    results: []
+  }
 }
 
 export const searchSlice = createSlice({
@@ -44,8 +51,8 @@ export const searchSlice = createSlice({
       }
       state.suggestions = []
     },
-    setSearchResult: (state, action: PayloadAction<SearchResult[]>) => {
-      state.searchResults = action.payload
+    setSearchResult: (state, action: PayloadAction<SearchResponse>) => {
+      state.searchResponse = action.payload
 
       if (state.showSearchBar) {
         setStateAfterToggleSearchBar(state)
@@ -85,7 +92,7 @@ export const fetchTrendingEpic = (action$: Observable<Action>) =>
       const api$ = YouTubeApi.getApi()
         .getTrendingVideos()
         .pipe(
-          map(results => setSearchResult(results)),
+          map(results => setSearchResult({ results, nextpage: "" })),
           catchError(() =>
             of(setError({ message: "Failed to get response from the Server. Please try again after some time." }))
           )

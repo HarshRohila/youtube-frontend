@@ -1,27 +1,8 @@
 import { Observable, catchError, defer, map, from, of } from "rxjs"
 import axios from "axios"
+import { Comments, IYouTubeApi, SearchResponse, SearchResult, Stream } from "./IYouTubeApi"
 
-interface IYouTubeApi {
-  getSuggestions(query: string): Observable<string[]>
-  getSearchResults(query: string): Observable<SearchResult[]>
-  getStream(videoId: string): Observable<Stream>
-  getTrendingVideos(): Observable<SearchResult[]>
-  getSkipSegments(videoId: string): Observable<number[][]>
-  getComments(videoId: string, nextpage?: string): Observable<Comments>
-}
-
-export interface Comment {
-  commentText: string
-  thumbnail: string
-  author: string
-  commentedTime: string
-}
-
-export interface Comments {
-  comments: Comment[]
-  nextpage: string
-  disabled: boolean
-}
+export * from "./IYouTubeApi"
 
 export function newComments(): Comments {
   return {
@@ -29,34 +10,6 @@ export function newComments(): Comments {
     nextpage: "",
     disabled: false
   }
-}
-
-export interface Stream {
-  sources: StreamSource[]
-  title: string
-  relatedVideos: SearchResult[]
-  likes: number
-  dislikes: number
-  uploader: string
-  uploaderAvatar: string
-  uploaderSubscriberCount: number
-  views: number
-  uploadDate: string
-  id: string
-}
-
-interface StreamSource {
-  url: string
-}
-
-export interface SearchResult {
-  thumbnail: string
-  videoId: string
-  title: string
-  uploaderAvatar: string
-  uploaderName: string
-  uploadedDate: string
-  views: number
 }
 
 export const YouTubeApi = {
@@ -115,7 +68,7 @@ class PipedApi implements IYouTubeApi {
     return defer(() => axios.get(`${PipedApi.baseUrl}/suggestions?query=${query}`)).pipe(map(response => response.data))
   }
 
-  getSearchResults(query: string): Observable<SearchResult[]> {
+  getSearchResults(query: string): Observable<SearchResponse> {
     // Filter types
     // R.id.chip_all -> "all"
     // R.id.chip_videos -> "videos"
@@ -126,9 +79,12 @@ class PipedApi implements IYouTubeApi {
     // R.id.chip_music_albums -> "music_albums"
     // R.id.chip_music_playlists -> "music_playlists"
     return defer(() => axios.get(`${PipedApi.baseUrl}/search?q=${query}&filter=videos`)).pipe(
-      map(response => response.data.items),
-      map(items => {
-        return items.map(createApiMapFunc())
+      map(response => response.data),
+      map(data => {
+        return {
+          results: data.items,
+          nextpage: data.nextpage
+        }
       })
     )
   }
