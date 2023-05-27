@@ -52,7 +52,7 @@ class PipedApi implements IYouTubeApi {
       map(response => response.data),
       map(data => {
         return {
-          results: data.items,
+          results: data.items.map(createApiMapFunc()),
           nextpage: data.nextpage
         }
       })

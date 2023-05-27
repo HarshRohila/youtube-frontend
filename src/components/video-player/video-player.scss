@@ -20,6 +20,12 @@ video-js.video-js {
   .vjs-duration {
     display: none;
   }
+
+  &.video-cover {
+    video {
+      object-fit: cover;
+    }
+  }
 }
 
 .video-js .vjs-time-control {
