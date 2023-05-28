@@ -76,6 +76,7 @@ class PipedApi implements IYouTubeApi {
           uploaderSubscriberCount: data.uploaderSubscriberCount,
           views: data.views,
           uploadDate: data.uploadDate,
+          thumbnail: data.thumbnailUrl,
           id: videoId
         }
       })

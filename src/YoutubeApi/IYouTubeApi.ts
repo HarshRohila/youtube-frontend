@@ -48,8 +48,9 @@ export interface Stream {
   uploaderSubscriberCount: number
   views: number
   uploadDate: string
+  thumbnail: string
   id: string
 }
-interface StreamSource {
+export interface StreamSource {
   url: string
 }

@@ -1,17 +1,18 @@
 import { MatchResults, RouterHistory } from "@stencil-community/router"
 import { Component, Host, Prop, h, State, Fragment } from "@stencil/core"
 import { SearchResult, Stream, YouTubeApi } from "../../YoutubeApi"
-import { Subject, map, takeUntil } from "rxjs"
+import { Subject, map, take, takeUntil } from "rxjs"
 import { IAppError, setLoading } from "../../lib/redux/global"
 import { state$, store } from "../../lib/redux"
 import { Header } from "../../lib/Header"
-import { faComment, faShare, faThumbsDown, faThumbsUp } from "@fortawesome/free-solid-svg-icons"
+import { faComment, faPlus, faShare, faThumbsDown, faThumbsUp } from "@fortawesome/free-solid-svg-icons"
 import { Router } from "../../lib/Router"
 import { Videos } from "../../lib/Search"
 import { UploaderInfo } from "./Uploader"
 import { getTimeAgoFormatter } from "../../utils/TimeFormatter"
 import { getShareHandler } from "../../lib/ShareForm/ShareHandler"
 import { ShareFormState, setCommentView } from "../../lib/redux/video-page"
+import { addItemInPlaylist } from "../../playlist"
 
 @Component({
   tag: "video-page",
@@ -146,6 +147,19 @@ export class VideoPage {
     this.setCurrentTime(time)
   }
 
+  private handleAddPlaylist = () => {
+    addItemInPlaylist({
+      thumbnail: this.stream.thumbnail,
+      title: this.stream.title,
+      uploadedDate: this.stream.uploadDate,
+      uploaderAvatar: this.stream.uploaderAvatar,
+      uploaderName: this.stream.uploader,
+      videoId: this.stream.id
+    })
+      .pipe(take(1))
+      .subscribe()
+  }
+
   render() {
     return (
       <Host>
@@ -173,6 +187,7 @@ export class VideoPage {
               <div class="actions">
                 <icon-btn icon={faThumbsUp} label={formatter.format(this.stream.likes)} disabled></icon-btn>
                 <icon-btn icon={faThumbsDown} label={formatter.format(this.stream.dislikes)} disabled></icon-btn>
+                <icon-btn icon={faPlus} label="Add to Playlist" onBtnClicked={this.handleAddPlaylist}></icon-btn>
                 <icon-btn icon={faShare} onBtnClicked={this.share} label="Share"></icon-btn>
                 {this.shareForm && <share-form video={this.stream}></share-form>}
               </div>

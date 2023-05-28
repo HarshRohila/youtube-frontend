@@ -25,6 +25,9 @@ dependencies:
   axios:
     specifier: ^1.4.0
     version: 1.4.0
+  dexie:
+    specifier: ^3.2.3
+    version: 3.2.3
   hotkeys-js:
     specifier: ^3.10.2
     version: 3.10.2
@@ -1622,6 +1625,11 @@ packages:
   /devtools-protocol@0.0.883894:
     resolution: {integrity: sha512-33idhm54QJzf3Q7QofMgCvIVSd2o9H3kQPWaKT/fhoZh+digc+WSiMhbkeG3iN79WY4Hwr9G05NpbhEVrsOYAg==}
     dev: true
+
+  /dexie@3.2.3:
+    resolution: {integrity: sha512-iHayBd4UYryDCVUNa3PMsJMEnd8yjyh5p7a+RFeC8i8n476BC9wMhVvqiImq5zJZJf5Tuer+s4SSj+AA3x+ZbQ==}
+    engines: {node: '>=6.0'}
+    dev: false
 
   /diff-sequences@27.5.1:
     resolution: {integrity: sha512-k1gCAXAsNgLwEL+Y8Wvl+M6oEFj5bgazfZULpS5CneoPPXRaCCW7dm+q21Ky2VEE5X+VeRDBVg1Pcvvsr4TtNQ==}

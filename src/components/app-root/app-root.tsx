@@ -1,9 +1,10 @@
 import { Component, h, Element, State } from "@stencil/core"
 import { AppRoute } from "../../utils/AppRoute"
-import { Subject, map } from "rxjs"
+import { Subject, forkJoin, map } from "rxjs"
 import { state$ } from "../../lib/redux"
 import { untilDestroyed } from "@ngneat/until-destroy"
 import { IAppError } from "../../lib/redux/global"
+import { initDatbase } from "../../playlist/database/Database"
 
 @Component({
   tag: "app-root",
@@ -18,8 +19,11 @@ export class AppRoot {
   @State() private error: IAppError
 
   componentWillLoad() {
-    state$
+    const initDb$ = initDatbase()
+
+    forkJoin([initDb$, state$])
       .pipe(
+        map(([, state]) => state),
         map(state => state.global),
         untilDestroyed(this, "disconnectedCallback")
       )
