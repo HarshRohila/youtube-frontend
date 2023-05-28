@@ -39,7 +39,7 @@ export class TrendingPage {
       .subscribe(state => {
         this.showSearchbar = state.showSearchBar
         this.searchText = state.searchText
-        this.videos = state.searchResults
+        this.videos = state.searchResponse.results
         this.suggestions = state.suggestions
         this.suggestionsError = state.suggestionsError
         this.suggestionsLoading = state.suggestionsLoading

@@ -37,6 +37,7 @@ Another YouTube Frontend using [Piped API](https://docs.piped.video/docs/api-doc
 - Picture-in-picture mode.
 - Loop video by default.
 - Play in Background.
+- Right click or tap and hold to cover video on screen.
 
 ### Sharing Options
 

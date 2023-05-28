@@ -42,11 +42,11 @@ export class AppHome {
     this.searchSubmit$
       .pipe(
         map(() => this.searchText),
-        switchMap(api.getSearchResults),
+        switchMap(searchText => api.getSearchResults(searchText)),
         takeUntil(this.disconnected$)
       )
       .subscribe(results => {
-        this.searchResults = results
+        this.searchResults = results.results
         this.showSuggestions = false
       })
   }
