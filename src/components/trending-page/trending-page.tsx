@@ -9,6 +9,7 @@ import { SearchBar, Suggestions, Videos } from "../../lib/Search"
 import { keyPress, loadTrending, toggleSearchBar } from "../../lib/redux/search"
 import { IAppError } from "../../lib/redux/global"
 import { APP_NAME } from "../../utils/constants"
+import { faList } from "@fortawesome/free-solid-svg-icons"
 
 @Component({
   tag: "trending-page",
@@ -52,6 +53,10 @@ export class TrendingPage {
     new Router(this.history).showSearchPage(searchText)
   }
 
+  private onClickPlaylistBtn = () => {
+    new Router(this.history).showPlaylistPage()
+  }
+
   get headerClass() {
     return this.showSearchbar ? "search-active" : ""
   }
@@ -61,6 +66,11 @@ export class TrendingPage {
     return (
       <Host>
         <header class={this.headerClass + " home"}>
+          {!this.showSearchbar && (
+            <button class="playlist-btn" onClick={this.onClickPlaylistBtn}>
+              <x-icon icon={faList}></x-icon>
+            </button>
+          )}
           {!this.showSearchbar && <h1>{APP_NAME}</h1>}
           <SearchBar
             searchText={this.searchText}

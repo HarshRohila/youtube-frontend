@@ -29,6 +29,7 @@ export function SearchBar({
           <x-icon icon={faArrowLeftLong}></x-icon>
         </button>
       )}
+
       <form
         class={"search-form " + (showSearchbar ? "" : "hide")}
         onSubmit={ev => {

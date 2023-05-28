@@ -55,3 +55,11 @@ $shadow: 0px 1px 12px 5px rgba(2, 0, 36, 1);
   left: 50%;
   transform: translateX(-50%);
 }
+
+@mixin header-icon-btn() {
+  background: transparent;
+  border: 0;
+  color: white;
+  font-size: 1.5em;
+  padding: 10px 18px;
+}

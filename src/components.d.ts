@@ -15,6 +15,8 @@ export namespace Components {
     interface AComment {
         "comment": Comment;
     }
+    interface APlaylist {
+    }
     interface AppHome {
         "history": RouterHistory;
     }
@@ -81,6 +83,12 @@ declare global {
     var HTMLACommentElement: {
         prototype: HTMLACommentElement;
         new (): HTMLACommentElement;
+    };
+    interface HTMLAPlaylistElement extends Components.APlaylist, HTMLStencilElement {
+    }
+    var HTMLAPlaylistElement: {
+        prototype: HTMLAPlaylistElement;
+        new (): HTMLAPlaylistElement;
     };
     interface HTMLAppHomeElement extends Components.AppHome, HTMLStencilElement {
     }
@@ -174,6 +182,7 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "a-comment": HTMLACommentElement;
+        "a-playlist": HTMLAPlaylistElement;
         "app-home": HTMLAppHomeElement;
         "app-profile": HTMLAppProfileElement;
         "app-root": HTMLAppRootElement;
@@ -194,6 +203,8 @@ declare global {
 declare namespace LocalJSX {
     interface AComment {
         "comment"?: Comment;
+    }
+    interface APlaylist {
     }
     interface AppHome {
         "history"?: RouterHistory;
@@ -257,6 +268,7 @@ declare namespace LocalJSX {
     }
     interface IntrinsicElements {
         "a-comment": AComment;
+        "a-playlist": APlaylist;
         "app-home": AppHome;
         "app-profile": AppProfile;
         "app-root": AppRoot;
@@ -279,6 +291,7 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "a-comment": LocalJSX.AComment & JSXBase.HTMLAttributes<HTMLACommentElement>;
+            "a-playlist": LocalJSX.APlaylist & JSXBase.HTMLAttributes<HTMLAPlaylistElement>;
             "app-home": LocalJSX.AppHome & JSXBase.HTMLAttributes<HTMLAppHomeElement>;
             "app-profile": LocalJSX.AppProfile & JSXBase.HTMLAttributes<HTMLAppProfileElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
