@@ -16,7 +16,7 @@ export function initDatbase() {
   return getDbInstance().pipe(
     switchMap(db => {
       const playlistRepo = db.getRepo("playlists") as IPlaylistRepo
-      return playlistRepo.upsert({ name: DEFAULT_PLAYLIST }).pipe(map(() => db))
+      return playlistRepo.upsert(DEFAULT_PLAYLIST).pipe(map(() => db))
     })
   )
 }

@@ -16,9 +16,9 @@ export class DexieDatabase extends Dexie implements IDatabase {
 
   constructor() {
     super("myDatabase")
-    this.version(1).stores({
+    this.version(2).stores({
       playlists: "++id, name",
-      playlistItems: "&[playlistId+videoId]"
+      playlistItems: "[playlistId+videoId]"
     })
   }
 

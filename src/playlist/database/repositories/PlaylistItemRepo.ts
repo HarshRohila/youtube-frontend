@@ -1,4 +1,4 @@
-import { Observable, defer, iif, of, switchMap, tap } from "rxjs"
+import { Observable, defer } from "rxjs"
 import { PlaylistItem } from "../models"
 import { IRepository } from "./IRepository"
 import { Table } from "dexie"
@@ -12,19 +12,12 @@ export class DexiePlaylistItemRepo implements IPlaylistItemRepo {
   constructor(private playlistItems: Table<PlaylistItem>) {}
 
   upsert(playlistItem: PlaylistItem) {
-    const count = defer(() =>
-      this.playlistItems.where({ playlistId: playlistItem.playlistId, videoId: playlistItem.videoId }).count()
-    )
-
     const add$ = defer(async () => {
       console.log("adding", playlistItem)
       await this.playlistItems.put(playlistItem)
     })
 
-    return count.pipe(
-      tap(console.log),
-      switchMap(exists => iif(() => !!exists, of(undefined), add$))
-    )
+    return add$
   }
 
   query({ playlistId }: Partial<PlaylistItem>): Observable<PlaylistItem[]> {
