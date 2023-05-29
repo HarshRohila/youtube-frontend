@@ -16,6 +16,10 @@ export namespace Components {
         "comment": Comment;
     }
     interface APlaylist {
+        "history": RouterHistory;
+    }
+    interface AppHeader {
+        "history": RouterHistory;
     }
     interface AppHome {
         "history": RouterHistory;
@@ -89,6 +93,12 @@ declare global {
     var HTMLAPlaylistElement: {
         prototype: HTMLAPlaylistElement;
         new (): HTMLAPlaylistElement;
+    };
+    interface HTMLAppHeaderElement extends Components.AppHeader, HTMLStencilElement {
+    }
+    var HTMLAppHeaderElement: {
+        prototype: HTMLAppHeaderElement;
+        new (): HTMLAppHeaderElement;
     };
     interface HTMLAppHomeElement extends Components.AppHome, HTMLStencilElement {
     }
@@ -183,6 +193,7 @@ declare global {
     interface HTMLElementTagNameMap {
         "a-comment": HTMLACommentElement;
         "a-playlist": HTMLAPlaylistElement;
+        "app-header": HTMLAppHeaderElement;
         "app-home": HTMLAppHomeElement;
         "app-profile": HTMLAppProfileElement;
         "app-root": HTMLAppRootElement;
@@ -205,6 +216,10 @@ declare namespace LocalJSX {
         "comment"?: Comment;
     }
     interface APlaylist {
+        "history"?: RouterHistory;
+    }
+    interface AppHeader {
+        "history"?: RouterHistory;
     }
     interface AppHome {
         "history"?: RouterHistory;
@@ -269,6 +284,7 @@ declare namespace LocalJSX {
     interface IntrinsicElements {
         "a-comment": AComment;
         "a-playlist": APlaylist;
+        "app-header": AppHeader;
         "app-home": AppHome;
         "app-profile": AppProfile;
         "app-root": AppRoot;
@@ -292,6 +308,7 @@ declare module "@stencil/core" {
         interface IntrinsicElements {
             "a-comment": LocalJSX.AComment & JSXBase.HTMLAttributes<HTMLACommentElement>;
             "a-playlist": LocalJSX.APlaylist & JSXBase.HTMLAttributes<HTMLAPlaylistElement>;
+            "app-header": LocalJSX.AppHeader & JSXBase.HTMLAttributes<HTMLAppHeaderElement>;
             "app-home": LocalJSX.AppHome & JSXBase.HTMLAttributes<HTMLAppHomeElement>;
             "app-profile": LocalJSX.AppProfile & JSXBase.HTMLAttributes<HTMLAppProfileElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;

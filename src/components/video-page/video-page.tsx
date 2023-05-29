@@ -4,7 +4,6 @@ import { SearchResult, Stream, YouTubeApi } from "../../YoutubeApi"
 import { Subject, map, take, takeUntil } from "rxjs"
 import { IAppError, setLoading } from "../../lib/redux/global"
 import { state$, store } from "../../lib/redux"
-import { Header } from "../../lib/Header"
 import { faComment, faPlus, faShare, faThumbsDown, faThumbsUp } from "@fortawesome/free-solid-svg-icons"
 import { Router } from "../../lib/Router"
 import { Videos } from "../../lib/Search"
@@ -115,10 +114,6 @@ export class VideoPage {
     getShareHandler().share(this.stream, { currentTime: time })
   }
 
-  private handleHeaderClick = () => {
-    new Router(this.history).showTrendingPage()
-  }
-
   private handleVideoClick = (video: SearchResult) => {
     new Router(this.history).showVideoPage(video)
   }
@@ -164,7 +159,7 @@ export class VideoPage {
     return (
       <Host>
         <div class="video-page">
-          <Header onHeaderClick={this.handleHeaderClick} />
+          <app-header history={this.history}></app-header>
           {this.stream && (
             <Fragment>
               <video-player

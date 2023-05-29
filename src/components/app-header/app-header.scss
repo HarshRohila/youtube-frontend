@@ -1,0 +1,13 @@
+:host {
+  display: block;
+}
+
+header {
+  h1 {
+    margin: 0;
+    font-size: 2.5rem;
+  }
+  @include app-header();
+  display: grid;
+  place-items: center;
+}
