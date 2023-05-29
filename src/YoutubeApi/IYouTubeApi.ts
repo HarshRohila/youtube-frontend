@@ -21,7 +21,7 @@ export interface SearchResult {
   uploaderAvatar: string
   uploaderName: string
   uploadedDate: string
-  views: number
+  views?: number
 }
 
 export interface Comment {

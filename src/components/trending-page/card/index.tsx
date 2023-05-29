@@ -8,7 +8,11 @@ interface CardProps {
 const formatter = Intl.NumberFormat("en", { notation: "compact" })
 
 export function Card({ video }: CardProps) {
-  const subDescription = [video.uploaderName, formatter.format(video.views), video.uploadedDate].join(" ‧ ")
+  const subDescription = [
+    video.uploaderName,
+    ...(video.views ? [formatter.format(video.views)] : []),
+    video.uploadedDate
+  ].join(" ‧ ")
 
   return (
     <div class="card">
