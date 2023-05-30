@@ -13,7 +13,6 @@ export class DexiePlaylistItemRepo implements IPlaylistItemRepo {
 
   upsert(playlistItem: PlaylistItem) {
     const add$ = defer(async () => {
-      console.log("adding", playlistItem)
       await this.playlistItems.put(playlistItem)
     })
 

@@ -12,6 +12,7 @@ import { getTimeAgoFormatter } from "../../utils/TimeFormatter"
 import { getShareHandler } from "../../lib/ShareForm/ShareHandler"
 import { ShareFormState, setCommentView } from "../../lib/redux/video-page"
 import { addItemInPlaylist } from "../../playlist"
+import { getNotifier } from "../../lib/notifier"
 
 @Component({
   tag: "video-page",
@@ -142,6 +143,10 @@ export class VideoPage {
     this.setCurrentTime(time)
   }
 
+  private handleViewPlaylist = () => {
+    new Router(this.history).showPlaylistPage()
+  }
+
   private handleAddPlaylist = () => {
     addItemInPlaylist({
       thumbnail: this.stream.thumbnail,
@@ -153,6 +158,13 @@ export class VideoPage {
     })
       .pipe(take(1))
       .subscribe()
+
+    getNotifier().notify("Added in Watch Later", [
+      {
+        text: "View",
+        clickHandler: this.handleViewPlaylist
+      }
+    ])
   }
 
   render() {

@@ -7,6 +7,7 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { Comment, Comments, Stream } from "./YoutubeApi";
 import { MatchResults, RouterHistory } from "@stencil-community/router";
+import { NotificationModel } from "./lib/notifier";
 import { CommentsViewProps, ShareFormState } from "./lib/redux/video-page";
 import { IAppError } from "./lib/redux/global";
 import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
@@ -28,6 +29,7 @@ export namespace Components {
         "match": MatchResults;
     }
     interface AppRoot {
+        "notification": NotificationModel;
     }
     interface CommentsView {
         "areCommentsLoading": boolean;
@@ -79,6 +81,9 @@ export namespace Components {
         "mask"?: IconDefinition;
         "size"?: string;
         "spin": boolean;
+    }
+    interface XNotification {
+        "data": NotificationModel;
     }
 }
 declare global {
@@ -190,6 +195,12 @@ declare global {
         prototype: HTMLXIconElement;
         new (): HTMLXIconElement;
     };
+    interface HTMLXNotificationElement extends Components.XNotification, HTMLStencilElement {
+    }
+    var HTMLXNotificationElement: {
+        prototype: HTMLXNotificationElement;
+        new (): HTMLXNotificationElement;
+    };
     interface HTMLElementTagNameMap {
         "a-comment": HTMLACommentElement;
         "a-playlist": HTMLAPlaylistElement;
@@ -209,6 +220,7 @@ declare global {
         "video-page": HTMLVideoPageElement;
         "video-player": HTMLVideoPlayerElement;
         "x-icon": HTMLXIconElement;
+        "x-notification": HTMLXNotificationElement;
     }
 }
 declare namespace LocalJSX {
@@ -228,6 +240,7 @@ declare namespace LocalJSX {
         "match"?: MatchResults;
     }
     interface AppRoot {
+        "notification"?: NotificationModel;
     }
     interface CommentsView {
         "areCommentsLoading"?: boolean;
@@ -281,6 +294,10 @@ declare namespace LocalJSX {
         "size"?: string;
         "spin"?: boolean;
     }
+    interface XNotification {
+        "data"?: NotificationModel;
+        "onTimedOut"?: (event: CustomEvent<void>) => void;
+    }
     interface IntrinsicElements {
         "a-comment": AComment;
         "a-playlist": APlaylist;
@@ -300,6 +317,7 @@ declare namespace LocalJSX {
         "video-page": VideoPage;
         "video-player": VideoPlayer;
         "x-icon": XIcon;
+        "x-notification": XNotification;
     }
 }
 export { LocalJSX as JSX };
@@ -324,6 +342,7 @@ declare module "@stencil/core" {
             "video-page": LocalJSX.VideoPage & JSXBase.HTMLAttributes<HTMLVideoPageElement>;
             "video-player": LocalJSX.VideoPlayer & JSXBase.HTMLAttributes<HTMLVideoPlayerElement>;
             "x-icon": LocalJSX.XIcon & JSXBase.HTMLAttributes<HTMLXIconElement>;
+            "x-notification": LocalJSX.XNotification & JSXBase.HTMLAttributes<HTMLXNotificationElement>;
         }
     }
 }

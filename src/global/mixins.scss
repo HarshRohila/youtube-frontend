@@ -12,10 +12,10 @@ $shadow: 0px 1px 12px 5px rgba(2, 0, 36, 1);
   animation: gradient 1.5s ease-in-out infinite;
 }
 
-@mixin glass-ui() {
-  box-shadow: $shadow;
-  background: rgb(2, 0, 36);
-  background: linear-gradient(171deg, rgba(2, 0, 36, 1) 15%, rgba(255, 255, 255, 0) 100%);
+@mixin glass-ui($color: $primary-color) {
+  box-shadow: 0px 1px 12px 5px rgba($color, 1);
+  background: $color;
+  background: linear-gradient(171deg, rgba($color, 1) 15%, rgba(255, 255, 255, 0) 100%);
 }
 
 @keyframes gradient {

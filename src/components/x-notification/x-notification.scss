@@ -1,0 +1,41 @@
+:host {
+  display: block;
+}
+.notification {
+  $radius: 10px;
+
+  position: fixed;
+  @include horizontal-center();
+  bottom: 30vh;
+  z-index: $z-index-notification;
+  @include glass-ui();
+  background-color: $secondary-color;
+  border-radius: $radius;
+  padding: 8px 20px;
+
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+
+  transition: opacity 0.5s;
+  transform: translate(-50%, 100%);
+  transition-property: opacity, transform;
+  opacity: 0;
+  &.loaded {
+    opacity: 1;
+    transform: translate(-50%, 0%);
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    padding-left: 8px;
+    a {
+      background-color: $primary-color;
+      padding: 6px 10px;
+      height: 100%;
+      border-radius: $radius;
+    }
+  }
+}

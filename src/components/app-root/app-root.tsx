@@ -1,10 +1,12 @@
-import { Component, h, Element, State } from "@stencil/core"
+import { Component, h, Element, State, Prop } from "@stencil/core"
 import { AppRoute } from "../../utils/AppRoute"
 import { Subject, forkJoin, map } from "rxjs"
 import { state$ } from "../../lib/redux"
 import { untilDestroyed } from "@ngneat/until-destroy"
 import { IAppError } from "../../lib/redux/global"
 import { initDatbase } from "../../playlist/database/Database"
+import { NotificationModel } from "../../lib/notifier"
+import { notifcationState$ } from "../../lib/facades/notifier"
 
 @Component({
   tag: "app-root",
@@ -17,6 +19,8 @@ export class AppRoot {
   @Element() el: HTMLElement
   @State() private isLoading: boolean
   @State() private error: IAppError
+
+  @Prop({ mutable: true }) notification: NotificationModel
 
   componentWillLoad() {
     const initDb$ = initDatbase()
@@ -31,6 +35,10 @@ export class AppRoot {
         this.error = state.error
         this.isLoading = state.isLoading
       })
+
+    notifcationState$.pipe(untilDestroyed(this, "disconnectedCallback")).subscribe(s => {
+      this.notification = s
+    })
   }
 
   disconnectedCallback() {}
@@ -51,6 +59,7 @@ export class AppRoot {
         </main>
         {this.isLoading && <loading-page></loading-page>}
         {this.error && <error-page error={this.error}></error-page>}
+        {this.notification && <x-notification data={this.notification}></x-notification>}
       </div>
     )
   }
