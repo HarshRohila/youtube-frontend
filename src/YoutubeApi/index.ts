@@ -19,7 +19,7 @@ export const YouTubeApi = {
 }
 
 class PipedApi implements IYouTubeApi {
-  static baseUrl = "https://pipedapi.in.projectsegfau.lt"
+  static baseUrl = "https://pipedapi.kavin.rocks"
 
   getComments(videoId: string, nextpage?: string): Observable<Comments> {
     let url = `${PipedApi.baseUrl}/comments/${videoId}`
