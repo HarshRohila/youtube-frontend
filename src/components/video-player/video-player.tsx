@@ -179,22 +179,22 @@ export class VideoPlayer {
         <div class="container">
           <video-js ref={this.setVideoElement}>
             <source src={this.src} />
-            <div class="action-icons">
-              <div class="backward">
-                <x-icon icon={faBackward}></x-icon>
-              </div>
-              <div class="play">
-                <x-icon icon={faPlay}></x-icon>
-              </div>
-              <div class="pause">
-                <x-icon icon={faPause}></x-icon>
-              </div>
-              <div class="forward">
-                <x-icon icon={faForward}></x-icon>
-              </div>
-            </div>
           </video-js>
           {this.isShowingToast && <span class="toast">{this.toastMessage}</span>}
+          <div class="action-icons">
+            <div class="backward">
+              <x-icon icon={faBackward}></x-icon>
+            </div>
+            <div class="play">
+              <x-icon icon={faPlay}></x-icon>
+            </div>
+            <div class="pause">
+              <x-icon icon={faPause}></x-icon>
+            </div>
+            <div class="forward">
+              <x-icon icon={faForward}></x-icon>
+            </div>
+          </div>
         </div>
       </Host>
     )
