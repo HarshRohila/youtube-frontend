@@ -99,10 +99,6 @@ export class VideoPage {
       })
   }
 
-  get url() {
-    return this.stream.sources[0].url
-  }
-
   disconnectedCallback() {
     this.disconnected$.next()
     this.disconnected$.complete()
@@ -154,7 +150,7 @@ export class VideoPage {
           {this.stream && (
             <Fragment>
               <video-player
-                src={this.url}
+                sources={this.stream.sources}
                 ref={el => {
                   this.videoPlayer = el
                 }}

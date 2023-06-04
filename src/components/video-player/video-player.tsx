@@ -7,6 +7,12 @@ import { IKeyboard, KEYS, getKeyboard } from "../../utils/keyboard"
 import { createDblClickEvent } from "../../utils/dblClick"
 import { faBackward, faForward, faPause, faPlay } from "@fortawesome/free-solid-svg-icons"
 
+interface Source {
+  url: string
+  format?: string
+  mime?: string
+}
+
 @Component({
   tag: "video-player",
   styleUrl: "video-player.scss",
@@ -16,10 +22,15 @@ export class VideoPlayer {
   videoElement!: HTMLElement
   private player: Player
 
-  @Prop() src: string
-  @Watch("src")
+  @Watch("sources")
   onSrcChange() {
     this.player.src({ src: this.src })
+  }
+
+  @Prop() sources: Source[]
+
+  get src() {
+    return this.sources.filter(s => !!s.url)[0].url
   }
 
   @Prop() skipSegments: number[][] = []
@@ -173,12 +184,18 @@ export class VideoPlayer {
     this.videoElement = el
   }
 
+  get workingSources() {
+    return this.sources.filter(s => !!s.url).filter(s => s.format === "MPEG_4")
+  }
+
   render() {
     return (
       <Host>
         <div class="container">
           <video-js ref={this.setVideoElement}>
-            <source src={this.src} />
+            {this.sources.map(s => (
+              <source src={s.url} type={s.mime ? s.mime : "video/mp4"} />
+            ))}
           </video-js>
           {this.isShowingToast && <span class="toast">{this.toastMessage}</span>}
           <div class="action-icons">

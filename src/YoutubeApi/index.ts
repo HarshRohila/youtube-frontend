@@ -66,7 +66,7 @@ class PipedApi implements IYouTubeApi {
       map(response => response.data),
       map(data => {
         return {
-          sources: [{ url: data.hls }],
+          sources: [{ url: data.hls, mime: "application/x-mpegURL" }, ...data.videoStreams],
           title: data.title,
           relatedVideos: data.relatedStreams.filter(isStream).map(createApiMapFunc()),
           likes: data.likes,
