@@ -1,6 +1,6 @@
 import { Observable, catchError, defer, map, from, of } from "rxjs"
 import axios from "axios"
-import { Comments, IYouTubeApi, SearchResponse, SearchResult, Stream } from "./IYouTubeApi"
+import { Comments, IYouTubeApi, SearchResponse, SearchResult, Source, Stream } from "./IYouTubeApi"
 
 export * from "./IYouTubeApi"
 
@@ -52,7 +52,7 @@ class PipedApi implements IYouTubeApi {
       map(response => response.data),
       map(data => {
         return {
-          results: data.items.map(createApiMapFunc()),
+          results: data.items.map(createSearchResultMapFunc()),
           nextpage: data.nextpage
         }
       })
@@ -62,13 +62,28 @@ class PipedApi implements IYouTubeApi {
   getStream(videoId: string): Observable<Stream> {
     const isStream = (stream: { type: string }) => stream.type === "stream"
 
+    const createHlsSource = ({ url }): Source => {
+      return { url, mime: "application/x-mpegURL", quality: "Auto" }
+    }
+
+    const isVideoStreamWorking = (stream): boolean => {
+      return stream.contentLength !== -1 && stream.mimeType === "video/mp4" && !!stream.url
+    }
+
+    const toStreamSource = (stream): Source => {
+      return { ...stream, mime: stream.mimeType }
+    }
+
     return defer(() => axios.get(`${PipedApi.baseUrl}/streams/${videoId}`)).pipe(
       map(response => response.data),
       map(data => {
         return {
-          sources: [{ url: data.hls, mime: "application/x-mpegURL" }, ...data.videoStreams],
+          sources: [
+            ...(data.hls ? [createHlsSource({ url: data.hls })] : []),
+            ...data.videoStreams.filter(isVideoStreamWorking).map(toStreamSource)
+          ] as Source[],
           title: data.title,
-          relatedVideos: data.relatedStreams.filter(isStream).map(createApiMapFunc()),
+          relatedVideos: data.relatedStreams.filter(isStream).map(createSearchResultMapFunc()),
           likes: data.likes,
           dislikes: data.dislikes,
           uploader: data.uploader,
@@ -87,7 +102,7 @@ class PipedApi implements IYouTubeApi {
     return defer(() => axios.get(`${PipedApi.baseUrl}/trending?region=${region}`)).pipe(
       map(response => response.data),
       map(videos => {
-        return videos.map(createApiMapFunc())
+        return videos.map(createSearchResultMapFunc())
       })
     )
   }
@@ -114,7 +129,7 @@ class PipedApi implements IYouTubeApi {
     )
   }
 }
-function createApiMapFunc(): any {
+function createSearchResultMapFunc(): any {
   return v => ({
     videoId: v.url.split("/watch?v=")[1],
     thumbnail: v.thumbnail,

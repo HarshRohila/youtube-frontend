@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { Comment, Comments, Stream } from "./YoutubeApi";
+import { Comment, Comments, Source, Stream } from "./YoutubeApi";
 import { MatchResults, RouterHistory } from "@stencil-community/router";
 import { CommentsViewProps, ShareFormState } from "./lib/redux/video-page";
 import { IAppError } from "./lib/redux/global";
