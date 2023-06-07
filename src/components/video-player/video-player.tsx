@@ -21,7 +21,7 @@ export class VideoPlayer {
 
   @Watch("sources")
   onSrcChange() {
-    this.player.src({ src: this.src })
+    this.player.src({ src: this.src.url, type: this.src.mime })
     this.qualityCtrlBtn?.dispose()
     this.qualityCtrlBtn = setupVideoQualityControl(this.player, () => this.sources)
   }
@@ -29,7 +29,7 @@ export class VideoPlayer {
   @Prop() sources: Source[]
 
   get src() {
-    return this.sources[0].url
+    return this.sources[0]
   }
 
   @Prop() skipSegments: number[][] = []
