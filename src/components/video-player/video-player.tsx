@@ -6,12 +6,9 @@ import "videojs-landscape-fullscreen"
 import { IKeyboard, KEYS, getKeyboard } from "../../utils/keyboard"
 import { createDblClickEvent } from "../../utils/dblClick"
 import { faBackward, faForward, faPause, faPlay } from "@fortawesome/free-solid-svg-icons"
-
-interface Source {
-  url: string
-  format?: string
-  mime?: string
-}
+import { setupVideoQualityControl } from "./video-quality-controls"
+import { Source } from "../../YoutubeApi"
+import { QualityMenuButton } from "./video-quality-control/QualityMenuButton"
 
 @Component({
   tag: "video-player",
@@ -25,12 +22,14 @@ export class VideoPlayer {
   @Watch("sources")
   onSrcChange() {
     this.player.src({ src: this.src })
+    this.qualityCtrlBtn?.dispose()
+    this.qualityCtrlBtn = setupVideoQualityControl(this.player, () => this.sources)
   }
 
   @Prop() sources: Source[]
 
   get src() {
-    return this.sources.filter(s => !!s.url)[0].url
+    return this.sources[0].url
   }
 
   @Prop() skipSegments: number[][] = []
@@ -109,6 +108,8 @@ export class VideoPlayer {
         }
       })
 
+      this.onSrcChange()
+
       this.loaded.emit({ player: this.player })
     })
 
@@ -139,6 +140,8 @@ export class VideoPlayer {
 
     this.keyboard = this.setupKeyboard()
   }
+
+  private qualityCtrlBtn: QualityMenuButton
 
   private keyboard: IKeyboard
 
@@ -184,17 +187,13 @@ export class VideoPlayer {
     this.videoElement = el
   }
 
-  get workingSources() {
-    return this.sources.filter(s => !!s.url).filter(s => s.format === "MPEG_4")
-  }
-
   render() {
     return (
       <Host>
         <div class="container">
           <video-js ref={this.setVideoElement}>
             {this.sources.map(s => (
-              <source src={s.url} type={s.mime ? s.mime : "video/mp4"} />
+              <source src={s.url} type={s.mime} />
             ))}
           </video-js>
           {this.isShowingToast && <span class="toast">{this.toastMessage}</span>}

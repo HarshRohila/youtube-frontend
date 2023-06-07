@@ -6,7 +6,6 @@ export function createDblClickEvent(element: HTMLElement) {
   element.addEventListener("click", handleClick)
 
   function handleClick(ev) {
-    console.log("clicked")
     if (doubleClickTimeout) {
       clearTimeout(doubleClickTimeout)
       setNewTimeout()

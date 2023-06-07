@@ -180,8 +180,8 @@ export class VideoPage {
                 type="secondary"
                 onBtnClicked={() => store.dispatch(setCommentView({ videoId: this.videoId }))}
               ></icon-btn>
-              <h3 class="suggestion-header">You may also like</h3>
               {this.isCommentsOpen && <comments-view></comments-view>}
+              {!!this.stream.relatedVideos?.length && <h3 class="suggestion-header">You may also like</h3>}
               <Videos
                 videos={this.stream.relatedVideos}
                 isShowingSuggestions={false}
