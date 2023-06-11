@@ -9,6 +9,7 @@ import { faBackward, faForward, faPause, faPlay } from "@fortawesome/free-solid-
 import { setupVideoQualityControl } from "./video-quality-controls"
 import { Source } from "../../YoutubeApi"
 import { QualityMenuButton } from "./video-quality-control/QualityMenuButton"
+import "videojs-contrib-quality-levels"
 
 @Component({
   tag: "video-player",
@@ -23,7 +24,6 @@ export class VideoPlayer {
   onSrcChange() {
     this.player.src({ src: this.src.url, type: this.src.mime })
     this.qualityCtrlBtn?.dispose()
-    this.qualityCtrlBtn = setupVideoQualityControl(this.player, () => this.sources)
   }
 
   @Prop() sources: Source[]
@@ -126,6 +126,13 @@ export class VideoPlayer {
           break
         }
       }
+    })
+
+    this.player.on("loadedmetadata", () => {
+      // @ts-ignore
+      const qualityLevels = this.player.qualityLevels()
+      console.log(qualityLevels)
+      this.qualityCtrlBtn = setupVideoQualityControl(this.player)
     })
 
     // @ts-ignore

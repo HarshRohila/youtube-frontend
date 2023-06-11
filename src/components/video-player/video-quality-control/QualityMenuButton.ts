@@ -1,6 +1,6 @@
 import videojs from "video.js"
 import "./QualityMenuItem"
-import { Source } from "../../../YoutubeApi"
+import { DEFAULT_QUALITY_LABEL } from "../../../utils/constants"
 
 var MenuButton = videojs.getComponent("MenuButton")
 var Component = videojs.getComponent("Component")
@@ -25,11 +25,6 @@ export class QualityMenuButton extends MenuButton {
     this.labelEl.textContent = selectedSrc.quality
   }
 
-  get sources() {
-    // @ts-ignore
-    return this.options().getSources() as Source[]
-  }
-
   createEl() {
     const el = super.createEl()
 
@@ -38,7 +33,7 @@ export class QualityMenuButton extends MenuButton {
     this.labelEl = videojs.dom.createEl("div", {
       className: "vjs-video-quality-value",
       id,
-      textContent: "Auto"
+      textContent: DEFAULT_QUALITY_LABEL
     })
 
     el.appendChild(this.labelEl)
@@ -50,11 +45,14 @@ export class QualityMenuButton extends MenuButton {
     const items = []
 
     // @ts-ignore
-    const sources = this.sources
-    for (let i = 0; i <= sources.length - 1; i++) {
+    const qualties = this.player().qualityLevels()
+    for (let i = 0; i <= qualties.length - 1; i++) {
       // @ts-ignore
-      items.push(new QualityMenuItem(this.player(), { source: sources[i] }))
+      items.push(new QualityMenuItem(this.player(), { quality: qualties[i] }))
     }
+
+    // @ts-ignore
+    items.push(new QualityMenuItem(this.player(), { quality: undefined }))
 
     return items
   }

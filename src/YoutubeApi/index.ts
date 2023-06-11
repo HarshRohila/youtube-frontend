@@ -4,6 +4,8 @@ import { Comments, IYouTubeApi, SearchResponse, SearchResult, Source, Stream } f
 
 export * from "./IYouTubeApi"
 
+const hlsMimeType = "application/x-mpegURL"
+
 export function newComments(): Comments {
   return {
     comments: [],
@@ -19,7 +21,7 @@ export const YouTubeApi = {
 }
 
 class PipedApi implements IYouTubeApi {
-  static baseUrl = "https://api.piped.projectsegfau.lt"
+  static baseUrl = "https://pipedapi.in.projectsegfau.lt"
 
   getComments(videoId: string, nextpage?: string): Observable<Comments> {
     let url = `${PipedApi.baseUrl}/comments/${videoId}`
@@ -63,11 +65,11 @@ class PipedApi implements IYouTubeApi {
     const isStream = (stream: { type: string }) => stream.type === "stream"
 
     const createHlsSource = ({ url }): Source => {
-      return { url, mime: "application/x-mpegURL", quality: "Auto" }
+      return { url, mime: hlsMimeType, quality: "Auto" }
     }
 
     const isVideoStreamWorking = (stream): boolean => {
-      return stream.contentLength !== -1 && stream.mimeType === "video/mp4" && !!stream.url
+      return stream.contentLength !== -1 && stream.mimeType === "video/webm" && !!stream.url
     }
 
     const toStreamSource = (stream): Source => {
