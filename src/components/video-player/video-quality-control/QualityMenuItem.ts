@@ -43,7 +43,7 @@ class QualityMenuItem extends MenuItem {
     super(player, options)
 
     // @ts-ignore
-    player.qualityLevels().on("change", e => this.update(e))
+    player.qualityLevels().on("change", e => this.update(e, player))
   }
 
   get vPlayer(): Player {
@@ -91,9 +91,12 @@ class QualityMenuItem extends MenuItem {
     }
   }
 
-  update(_event) {
-    // @ts-ignore
-    this.selected(isSelectedQuality(this.options().label, this.player()))
+  update(_event, player) {
+    if (!player) return
+    try {
+      // @ts-ignore
+      this.selected(isSelectedQuality(this.options().label, player))
+    } catch {}
   }
 }
 

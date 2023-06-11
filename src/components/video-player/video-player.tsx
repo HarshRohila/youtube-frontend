@@ -131,7 +131,6 @@ export class VideoPlayer {
     this.player.on("loadedmetadata", () => {
       // @ts-ignore
       const qualityLevels = this.player.qualityLevels()
-      console.log(qualityLevels)
       this.qualityCtrlBtn = setupVideoQualityControl(this.player)
     })
 

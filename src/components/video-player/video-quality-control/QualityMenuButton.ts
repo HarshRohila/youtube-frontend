@@ -1,6 +1,7 @@
 import videojs from "video.js"
 import "./QualityMenuItem"
 import { DEFAULT_QUALITY_LABEL } from "../../../utils/constants"
+import Player from "video.js/dist/types/player"
 
 var MenuButton = videojs.getComponent("MenuButton")
 var Component = videojs.getComponent("Component")
@@ -14,15 +15,27 @@ export class QualityMenuButton extends MenuButton {
     super(player, options)
 
     // @ts-ignore
-    this.on(player, "sourceset", _e => {
-      this.updateLabel()
-    })
+    player.qualityLevels().on("change", () => this.updateLabel())
   }
 
   updateLabel() {
+    if (!this.vPlayer) return
+
     // @ts-ignore
-    const selectedSrc = this.sources.find(q => q.url === this.player().currentSrc())
-    this.labelEl.textContent = selectedSrc.quality
+    const qualityLevels = this.vPlayer.qualityLevels()
+
+    if (qualityLevels.selectedIndex_ === -1) {
+      this.labelEl.textContent = DEFAULT_QUALITY_LABEL
+      return
+    }
+
+    const quality = qualityLevels[qualityLevels.selectedIndex_]
+    this.labelEl.textContent = quality.height + "p"
+  }
+
+  get vPlayer(): Player {
+    // @ts-ignore
+    return this.player() as Player
   }
 
   createEl() {
