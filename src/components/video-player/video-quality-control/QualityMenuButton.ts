@@ -1,6 +1,7 @@
 import videojs from "video.js"
 import "./QualityMenuItem"
-import { Source } from "../../../YoutubeApi"
+import { DEFAULT_QUALITY_LABEL } from "../../../utils/constants"
+import Player from "video.js/dist/types/player"
 
 var MenuButton = videojs.getComponent("MenuButton")
 var Component = videojs.getComponent("Component")
@@ -14,20 +15,27 @@ export class QualityMenuButton extends MenuButton {
     super(player, options)
 
     // @ts-ignore
-    this.on(player, "sourceset", _e => {
-      this.updateLabel()
-    })
+    player.qualityLevels().on("change", () => this.updateLabel())
   }
 
   updateLabel() {
+    if (!this.vPlayer) return
+
     // @ts-ignore
-    const selectedSrc = this.sources.find(q => q.url === this.player().currentSrc())
-    this.labelEl.textContent = selectedSrc.quality
+    const qualityLevels = this.vPlayer.qualityLevels()
+
+    if (qualityLevels.selectedIndex_ === -1) {
+      this.labelEl.textContent = DEFAULT_QUALITY_LABEL
+      return
+    }
+
+    const quality = qualityLevels[qualityLevels.selectedIndex_]
+    this.labelEl.textContent = quality.height + "p"
   }
 
-  get sources() {
+  get vPlayer(): Player {
     // @ts-ignore
-    return this.options().getSources() as Source[]
+    return this.player() as Player
   }
 
   createEl() {
@@ -38,7 +46,7 @@ export class QualityMenuButton extends MenuButton {
     this.labelEl = videojs.dom.createEl("div", {
       className: "vjs-video-quality-value",
       id,
-      textContent: "Auto"
+      textContent: DEFAULT_QUALITY_LABEL
     })
 
     el.appendChild(this.labelEl)
@@ -50,11 +58,14 @@ export class QualityMenuButton extends MenuButton {
     const items = []
 
     // @ts-ignore
-    const sources = this.sources
-    for (let i = 0; i <= sources.length - 1; i++) {
+    const qualties = this.player().qualityLevels()
+    for (let i = 0; i <= qualties.length - 1; i++) {
       // @ts-ignore
-      items.push(new QualityMenuItem(this.player(), { source: sources[i] }))
+      items.push(new QualityMenuItem(this.player(), { quality: qualties[i] }))
     }
+
+    // @ts-ignore
+    items.push(new QualityMenuItem(this.player(), { quality: undefined }))
 
     return items
   }

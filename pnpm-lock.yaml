@@ -37,6 +37,9 @@ dependencies:
   rxjs:
     specifier: ^7.8.1
     version: 7.8.1
+  videojs-contrib-quality-levels:
+    specifier: ^4.0.0
+    version: 4.0.0(video.js@8.3.0)
   videojs-landscape-fullscreen:
     specifier: ^11.1111.0
     version: 11.1111.0(video.js@8.3.0)
@@ -3833,6 +3836,16 @@ packages:
     dependencies:
       global: 4.4.0
       video.js: 8.3.0
+
+  /videojs-contrib-quality-levels@4.0.0(video.js@8.3.0):
+    resolution: {integrity: sha512-u5rmd8BjLwANp7XwuQ0Q/me34bMe6zg9PQdHfTS7aXgiVRbNTb4djcmfG7aeSrkpZjg+XCLezFNenlJaCjBHKw==}
+    engines: {node: '>=14', npm: '>=6'}
+    peerDependencies:
+      video.js: ^8
+    dependencies:
+      global: 4.4.0
+      video.js: 8.3.0
+    dev: false
 
   /videojs-font@4.1.0:
     resolution: {integrity: sha512-X1LuPfLZPisPLrANIAKCknZbZu5obVM/ylfd1CN+SsCmPZQ3UMDPcvLTpPBJxcBuTpHQq2MO1QCFt7p8spnZ/w==}
