@@ -46,6 +46,9 @@ export class VideoPage {
 
     this.history.listen(args => {
       const { pathname, query } = args
+
+      if (!pathname.includes("videos")) return
+
       const time = query?.t
       const videoId = pathname.split("/").pop()
       this.routeChange$.next({ videoId, time })
