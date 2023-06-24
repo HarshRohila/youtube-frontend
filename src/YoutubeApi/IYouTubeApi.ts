@@ -14,6 +14,12 @@ export interface SearchResponse {
   nextpage: string
 }
 
+export interface Source {
+  url: string
+  mime: string
+  quality: string
+}
+
 export interface SearchResult {
   thumbnail: string
   videoId: string
@@ -38,7 +44,7 @@ export interface Comments {
 }
 
 export interface Stream {
-  sources: StreamSource[]
+  sources: Source[]
   title: string
   relatedVideos: SearchResult[]
   likes: number

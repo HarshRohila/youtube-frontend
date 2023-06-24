@@ -21,6 +21,9 @@ export class Router {
   showPlaylistPage() {
     this.history.push(AppRoute.getPath(`/playlists/1`))
   }
+  showSettingsPage() {
+    this.history.push(AppRoute.getPath(`/settings`))
+  }
 }
 
 interface IHistory {

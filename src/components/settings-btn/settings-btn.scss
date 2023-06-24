@@ -1,0 +1,15 @@
+:host {
+  display: block;
+}
+.settings-btn {
+  @include glass-ui();
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: $z-index-overlay;
+  height: $header-height;
+  display: grid;
+  place-items: center;
+  border-bottom-left-radius: $header-border-radius;
+  padding: 0 10px;
+}

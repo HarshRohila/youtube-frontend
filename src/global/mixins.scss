@@ -41,6 +41,15 @@ $shadow: 0px 1px 12px 5px rgba(2, 0, 36, 1);
   color: white;
   z-index: 2;
   @include glass-ui();
+  h1 {
+    @include ellipsis();
+    font-weight: 500;
+    color: #fff;
+    padding: 0 12px;
+    font-family: "Rancho";
+    font-size: 2rem;
+    margin: 0;
+  }
 }
 
 @mixin uploader-avatar($dimention: 35px) {

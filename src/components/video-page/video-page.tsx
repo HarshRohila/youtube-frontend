@@ -94,14 +94,10 @@ export class VideoPage {
           store.dispatch(setLoading(false))
         },
         error: () => {
-          this.error = { message: "Failed to load video. Please try refreshing" }
+          this.error = { message: "Failed to load video. Please try changing server from settings(in home page)" }
           store.dispatch(setLoading(false))
         }
       })
-  }
-
-  get url() {
-    return this.stream.sources[0].url
   }
 
   disconnectedCallback() {
@@ -171,11 +167,11 @@ export class VideoPage {
     return (
       <Host>
         <div class="video-page">
-          <app-header history={this.history}></app-header>
+          <page-header history={this.history} />
           {this.stream && (
             <Fragment>
               <video-player
-                src={this.url}
+                sources={this.stream.sources}
                 ref={el => {
                   this.videoPlayer = el
                 }}
@@ -206,8 +202,8 @@ export class VideoPage {
                 type="secondary"
                 onBtnClicked={() => store.dispatch(setCommentView({ videoId: this.videoId }))}
               ></icon-btn>
-              <h3 class="suggestion-header">You may also like</h3>
               {this.isCommentsOpen && <comments-view></comments-view>}
+              {!!this.stream.relatedVideos?.length && <h3 class="suggestion-header">You may also like</h3>}
               <Videos
                 videos={this.stream.relatedVideos}
                 isShowingSuggestions={false}

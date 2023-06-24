@@ -6,6 +6,10 @@ import "videojs-landscape-fullscreen"
 import { IKeyboard, KEYS, getKeyboard } from "../../utils/keyboard"
 import { createDblClickEvent } from "../../utils/dblClick"
 import { faBackward, faForward, faPause, faPlay } from "@fortawesome/free-solid-svg-icons"
+import { setupVideoQualityControl } from "./video-quality-controls"
+import { Source } from "../../YoutubeApi"
+import { QualityMenuButton } from "./video-quality-control/QualityMenuButton"
+import "videojs-contrib-quality-levels"
 
 @Component({
   tag: "video-player",
@@ -16,10 +20,16 @@ export class VideoPlayer {
   videoElement!: HTMLElement
   private player: Player
 
-  @Prop() src: string
-  @Watch("src")
+  @Watch("sources")
   onSrcChange() {
-    this.player.src({ src: this.src })
+    this.player.src({ src: this.src.url, type: this.src.mime })
+    this.qualityCtrlBtn?.dispose()
+  }
+
+  @Prop() sources: Source[]
+
+  get src() {
+    return this.sources[0]
   }
 
   @Prop() skipSegments: number[][] = []
@@ -98,6 +108,8 @@ export class VideoPlayer {
         }
       })
 
+      this.onSrcChange()
+
       this.loaded.emit({ player: this.player })
     })
 
@@ -116,6 +128,12 @@ export class VideoPlayer {
       }
     })
 
+    this.player.on("loadedmetadata", () => {
+      // @ts-ignore
+      const qualityLevels = this.player.qualityLevels()
+      this.qualityCtrlBtn = setupVideoQualityControl(this.player)
+    })
+
     // @ts-ignore
     this.player.landscapeFullscreen({
       fullscreen: {
@@ -128,6 +146,8 @@ export class VideoPlayer {
 
     this.keyboard = this.setupKeyboard()
   }
+
+  private qualityCtrlBtn: QualityMenuButton
 
   private keyboard: IKeyboard
 
@@ -178,23 +198,25 @@ export class VideoPlayer {
       <Host>
         <div class="container">
           <video-js ref={this.setVideoElement}>
-            <source src={this.src} />
-            <div class="action-icons">
-              <div class="backward">
-                <x-icon icon={faBackward}></x-icon>
-              </div>
-              <div class="play">
-                <x-icon icon={faPlay}></x-icon>
-              </div>
-              <div class="pause">
-                <x-icon icon={faPause}></x-icon>
-              </div>
-              <div class="forward">
-                <x-icon icon={faForward}></x-icon>
-              </div>
-            </div>
+            {this.sources.map(s => (
+              <source src={s.url} type={s.mime} />
+            ))}
           </video-js>
           {this.isShowingToast && <span class="toast">{this.toastMessage}</span>}
+          <div class="action-icons">
+            <div class="backward">
+              <x-icon icon={faBackward}></x-icon>
+            </div>
+            <div class="play">
+              <x-icon icon={faPlay}></x-icon>
+            </div>
+            <div class="pause">
+              <x-icon icon={faPause}></x-icon>
+            </div>
+            <div class="forward">
+              <x-icon icon={faForward}></x-icon>
+            </div>
+          </div>
         </div>
       </Host>
     )

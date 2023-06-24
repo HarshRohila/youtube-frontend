@@ -88,3 +88,21 @@ video-js.video-js {
     transform: translate(-50%, -50%);
   }
 }
+
+.vjs-quality-selector {
+  .vjs-video-quality-value {
+    height: 100%;
+    display: grid;
+    place-items: center;
+  }
+  > button {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+  }
+}
+.vjs-menu li {
+  text-transform: unset;
+}

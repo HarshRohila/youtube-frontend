@@ -62,9 +62,6 @@ header {
   }
 }
 
-h1 {
-  @include app-header();
-}
 .suggestions-container {
   padding-top: $header-height;
   width: 100%;
