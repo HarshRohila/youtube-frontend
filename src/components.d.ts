@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { Comment, Comments, Source, Stream } from "./YoutubeApi";
+import { Comment, Comments, SearchResult, Source, Stream } from "./YoutubeApi";
 import { MatchResults, RouterHistory } from "@stencil-community/router";
 import { NotificationModel } from "./lib/notifier";
 import { CommentsViewProps, ShareFormState } from "./lib/redux/video-page";
@@ -25,6 +25,9 @@ export namespace Components {
     }
     interface AppRoot {
         "notification": NotificationModel;
+    }
+    interface CardVideo {
+        "video": SearchResult;
     }
     interface CommentsView {
         "areCommentsLoading": boolean;
@@ -120,6 +123,12 @@ declare global {
     var HTMLAppRootElement: {
         prototype: HTMLAppRootElement;
         new (): HTMLAppRootElement;
+    };
+    interface HTMLCardVideoElement extends Components.CardVideo, HTMLStencilElement {
+    }
+    var HTMLCardVideoElement: {
+        prototype: HTMLCardVideoElement;
+        new (): HTMLCardVideoElement;
     };
     interface HTMLCommentsViewElement extends Components.CommentsView, HTMLStencilElement {
     }
@@ -234,6 +243,7 @@ declare global {
         "a-playlist": HTMLAPlaylistElement;
         "app-header": HTMLAppHeaderElement;
         "app-root": HTMLAppRootElement;
+        "card-video": HTMLCardVideoElement;
         "comments-view": HTMLCommentsViewElement;
         "dropdown-server": HTMLDropdownServerElement;
         "error-page": HTMLErrorPageElement;
@@ -266,6 +276,9 @@ declare namespace LocalJSX {
     }
     interface AppRoot {
         "notification"?: NotificationModel;
+    }
+    interface CardVideo {
+        "video"?: SearchResult;
     }
     interface CommentsView {
         "areCommentsLoading"?: boolean;
@@ -343,6 +356,7 @@ declare namespace LocalJSX {
         "a-playlist": APlaylist;
         "app-header": AppHeader;
         "app-root": AppRoot;
+        "card-video": CardVideo;
         "comments-view": CommentsView;
         "dropdown-server": DropdownServer;
         "error-page": ErrorPage;
@@ -371,6 +385,7 @@ declare module "@stencil/core" {
             "a-playlist": LocalJSX.APlaylist & JSXBase.HTMLAttributes<HTMLAPlaylistElement>;
             "app-header": LocalJSX.AppHeader & JSXBase.HTMLAttributes<HTMLAppHeaderElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
+            "card-video": LocalJSX.CardVideo & JSXBase.HTMLAttributes<HTMLCardVideoElement>;
             "comments-view": LocalJSX.CommentsView & JSXBase.HTMLAttributes<HTMLCommentsViewElement>;
             "dropdown-server": LocalJSX.DropdownServer & JSXBase.HTMLAttributes<HTMLDropdownServerElement>;
             "error-page": LocalJSX.ErrorPage & JSXBase.HTMLAttributes<HTMLErrorPageElement>;
