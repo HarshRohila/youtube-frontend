@@ -12,7 +12,6 @@ import { CommentsViewProps, ShareFormState } from "./lib/redux/video-page";
 import { ServerInstance } from "./server-instance/serverInstanceApi";
 import { IAppError } from "./lib/redux/global";
 import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
-import { Event } from "@stencil/core";
 import { IconDefinition as IconDefinition1 } from "@fortawesome/fontawesome-svg-core";
 export namespace Components {
     interface AComment {
@@ -298,7 +297,7 @@ declare namespace LocalJSX {
         "disabled"?: boolean;
         "icon"?: IconDefinition;
         "label"?: string;
-        "onBtnClicked"?: (event: CustomEvent<Event>) => void;
+        "onBtnClicked"?: (event: CustomEvent<any>) => void;
         "size"?: "small" | "medium";
         "type"?: "primary" | "secondary";
     }

@@ -13,7 +13,7 @@ export class IconBtn {
   @Prop() size: "small" | "medium" = "medium"
   @Prop() type: "primary" | "secondary" = "primary"
 
-  @Event() btnClicked: EventEmitter<Event>
+  @Event() btnClicked: EventEmitter<any>
 
   render() {
     return (

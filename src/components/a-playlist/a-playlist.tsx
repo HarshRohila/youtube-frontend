@@ -59,7 +59,7 @@ export class APlaylist {
               ></icon-btn>
             </Modal>
           )}
-          <app-header history={this.history}></app-header>
+          <page-header history={this.history}></page-header>
           <h3 class="playlist-name">{DEFAULT_PLAYLIST.name}</h3>
           {this.playlistItems && (
             <Videos

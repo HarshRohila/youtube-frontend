@@ -1,4 +1,4 @@
-import { Component, Event, EventEmitter, Host, Prop, h } from "@stencil/core"
+import { Component, Host, Prop, h } from "@stencil/core"
 import { SearchResult } from "../../YoutubeApi"
 import { faTrash } from "@fortawesome/free-solid-svg-icons"
 
@@ -35,6 +35,7 @@ export class CardVideo {
             </span>
             {this.deleteCallback && (
               <icon-btn
+                class="delete-btn"
                 icon={faTrash}
                 onClick={ev => {
                   ev.stopPropagation()

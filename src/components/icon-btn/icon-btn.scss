@@ -13,6 +13,7 @@ x-icon {
 }
 
 label {
+  padding: var(--padding);
   display: grid;
   place-items: center;
   &.secondary {
