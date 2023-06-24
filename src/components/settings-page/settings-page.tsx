@@ -1,5 +1,5 @@
 import { Component, Host, State, h } from "@stencil/core"
-import { ServerInstance, getServerInstances } from "../../serverInstanceApi"
+import { ServerInstance, getServerInstances } from "../../server-instance/serverInstanceApi"
 import { take } from "rxjs"
 
 @Component({

@@ -9,7 +9,7 @@ import { Comment, Comments, Source, Stream } from "./YoutubeApi";
 import { CommentsViewProps, ShareFormState } from "./lib/redux/video-page";
 import { IAppError } from "./lib/redux/global";
 import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
-import { ServerInstance } from "./serverInstanceApi";
+import { ServerInstance } from "./server-instance/serverInstanceApi";
 import { MatchResults, RouterHistory } from "@stencil-community/router";
 import { IconDefinition as IconDefinition1 } from "@fortawesome/fontawesome-svg-core";
 export namespace Components {

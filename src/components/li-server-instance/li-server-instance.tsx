@@ -1,5 +1,5 @@
 import { Component, Host, Prop, h } from "@stencil/core"
-import { ServerInstance } from "../../serverInstanceApi"
+import { ServerInstance } from "../../server-instance/serverInstanceApi"
 
 @Component({
   tag: "li-server-instance",

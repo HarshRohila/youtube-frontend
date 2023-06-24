@@ -1,6 +1,7 @@
 import { Observable, catchError, defer, map, from, of } from "rxjs"
 import axios from "axios"
 import { Comments, IYouTubeApi, SearchResponse, SearchResult, Source, Stream } from "./IYouTubeApi"
+import { CurrentServerInstance } from "../server-instance/currentServerInstance"
 
 export * from "./IYouTubeApi"
 
@@ -21,7 +22,7 @@ export const YouTubeApi = {
 }
 
 class PipedApi implements IYouTubeApi {
-  static baseUrl = "https://pipedapi.in.projectsegfau.lt"
+  static baseUrl = CurrentServerInstance.get().apiUrl
 
   getComments(videoId: string, nextpage?: string): Observable<Comments> {
     let url = `${PipedApi.baseUrl}/comments/${videoId}`

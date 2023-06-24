@@ -17,7 +17,7 @@ export function getServerInstances(): Observable<ServerInstance[]> {
   )
 }
 
-export interface ServerInstance {
+export interface ServerInstance extends Record<string, unknown> {
   name: string
   apiUrl: string
   locations: string
