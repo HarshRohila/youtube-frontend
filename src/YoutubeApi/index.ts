@@ -22,13 +22,15 @@ export const YouTubeApi = {
 }
 
 class PipedApi implements IYouTubeApi {
-  static baseUrl = CurrentServerInstance.get().apiUrl
+  private getBaseUrl() {
+    return CurrentServerInstance.get().apiUrl
+  }
 
   getComments(videoId: string, nextpage?: string): Observable<Comments> {
-    let url = `${PipedApi.baseUrl}/comments/${videoId}`
+    let url = `${this.getBaseUrl()}/comments/${videoId}`
 
     if (nextpage) {
-      url = `${PipedApi.baseUrl}/nextpage/comments/${videoId}?nextpage=${nextpage}`
+      url = `${this.getBaseUrl()}/nextpage/comments/${videoId}?nextpage=${nextpage}`
     }
 
     return defer(() => axios.get(url)).pipe(map(response => response.data))
@@ -45,10 +47,10 @@ class PipedApi implements IYouTubeApi {
     // R.id.chip_music_albums -> "music_albums"
     // R.id.chip_music_playlists -> "music_playlists"
 
-    let url = `${PipedApi.baseUrl}/search?q=${query}&filter=videos`
+    let url = `${this.getBaseUrl()}/search?q=${query}&filter=videos`
 
     if (nextpage) {
-      url = `${PipedApi.baseUrl}/nextpage/search?q=${query}&filter=videos&nextpage=${nextpage}`
+      url = `${this.getBaseUrl()}/nextpage/search?q=${query}&filter=videos&nextpage=${nextpage}`
     }
 
     return defer(() => axios.get(url)).pipe(
@@ -77,7 +79,7 @@ class PipedApi implements IYouTubeApi {
       return { ...stream, mime: stream.mimeType }
     }
 
-    return defer(() => axios.get(`${PipedApi.baseUrl}/streams/${videoId}`)).pipe(
+    return defer(() => axios.get(`${this.getBaseUrl()}/streams/${videoId}`)).pipe(
       map(response => response.data),
       map(data => {
         return {
@@ -102,7 +104,7 @@ class PipedApi implements IYouTubeApi {
 
   getTrendingVideos(): Observable<SearchResult[]> {
     const region = "IN"
-    return defer(() => axios.get(`${PipedApi.baseUrl}/trending?region=${region}`)).pipe(
+    return defer(() => axios.get(`${this.getBaseUrl()}/trending?region=${region}`)).pipe(
       map(response => response.data),
       map(videos => {
         return videos.map(createSearchResultMapFunc())
@@ -111,14 +113,16 @@ class PipedApi implements IYouTubeApi {
   }
 
   getSuggestions(query: string): Observable<string[]> {
-    return defer(() => axios.get(`${PipedApi.baseUrl}/suggestions?query=${query}`)).pipe(map(response => response.data))
+    return defer(() => axios.get(`${this.getBaseUrl()}/suggestions?query=${query}`)).pipe(
+      map(response => response.data)
+    )
   }
 
   getSkipSegments(videoId: string): Observable<number[][]> {
     return defer(() =>
       from(
         axios.get(
-          `${PipedApi.baseUrl}/sponsors/${videoId}?category=["sponsor","interaction","selfpromo","music_offtopic"]`
+          `${this.getBaseUrl()}/sponsors/${videoId}?category=["sponsor","interaction","selfpromo","music_offtopic"]`
         )
       )
     ).pipe(

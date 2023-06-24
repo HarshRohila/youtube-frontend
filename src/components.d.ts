@@ -49,6 +49,9 @@ export namespace Components {
     interface SearchPage {
         "history": RouterHistory;
     }
+    interface SettingsBtn {
+        "history": RouterHistory;
+    }
     interface SettingsPage {
         "history": RouterHistory;
     }
@@ -149,6 +152,12 @@ declare global {
         prototype: HTMLSearchPageElement;
         new (): HTMLSearchPageElement;
     };
+    interface HTMLSettingsBtnElement extends Components.SettingsBtn, HTMLStencilElement {
+    }
+    var HTMLSettingsBtnElement: {
+        prototype: HTMLSettingsBtnElement;
+        new (): HTMLSettingsBtnElement;
+    };
     interface HTMLSettingsPageElement extends Components.SettingsPage, HTMLStencilElement {
     }
     var HTMLSettingsPageElement: {
@@ -203,6 +212,7 @@ declare global {
         "mobile-view": HTMLMobileViewElement;
         "page-header": HTMLPageHeaderElement;
         "search-page": HTMLSearchPageElement;
+        "settings-btn": HTMLSettingsBtnElement;
         "settings-page": HTMLSettingsPageElement;
         "share-form": HTMLShareFormElement;
         "shared-content-receiver": HTMLSharedContentReceiverElement;
@@ -250,6 +260,9 @@ declare namespace LocalJSX {
     interface SearchPage {
         "history"?: RouterHistory;
     }
+    interface SettingsBtn {
+        "history"?: RouterHistory;
+    }
     interface SettingsPage {
         "history"?: RouterHistory;
     }
@@ -294,6 +307,7 @@ declare namespace LocalJSX {
         "mobile-view": MobileView;
         "page-header": PageHeader;
         "search-page": SearchPage;
+        "settings-btn": SettingsBtn;
         "settings-page": SettingsPage;
         "share-form": ShareForm;
         "shared-content-receiver": SharedContentReceiver;
@@ -318,6 +332,7 @@ declare module "@stencil/core" {
             "mobile-view": LocalJSX.MobileView & JSXBase.HTMLAttributes<HTMLMobileViewElement>;
             "page-header": LocalJSX.PageHeader & JSXBase.HTMLAttributes<HTMLPageHeaderElement>;
             "search-page": LocalJSX.SearchPage & JSXBase.HTMLAttributes<HTMLSearchPageElement>;
+            "settings-btn": LocalJSX.SettingsBtn & JSXBase.HTMLAttributes<HTMLSettingsBtnElement>;
             "settings-page": LocalJSX.SettingsPage & JSXBase.HTMLAttributes<HTMLSettingsPageElement>;
             "share-form": LocalJSX.ShareForm & JSXBase.HTMLAttributes<HTMLShareFormElement>;
             "shared-content-receiver": LocalJSX.SharedContentReceiver & JSXBase.HTMLAttributes<HTMLSharedContentReceiverElement>;
