@@ -12,10 +12,10 @@ $shadow: 0px 1px 12px 5px rgba(2, 0, 36, 1);
   animation: gradient 1.5s ease-in-out infinite;
 }
 
-@mixin glass-ui() {
-  box-shadow: $shadow;
-  background: rgb(2, 0, 36);
-  background: linear-gradient(171deg, rgba(2, 0, 36, 1) 15%, rgba(255, 255, 255, 0) 100%);
+@mixin glass-ui($color: $primary-color) {
+  box-shadow: 0px 1px 12px 5px rgba($color, 1);
+  background: $color;
+  background: linear-gradient(171deg, rgba($color, 1) 15%, rgba(255, 255, 255, 0) 100%);
 }
 
 @keyframes gradient {
@@ -63,4 +63,22 @@ $shadow: 0px 1px 12px 5px rgba(2, 0, 36, 1);
 @mixin horizontal-center() {
   left: 50%;
   transform: translateX(-50%);
+}
+
+@mixin header-icon-btn() {
+  background: transparent;
+  border: 0;
+  color: white;
+  font-size: 1.5em;
+  padding: 10px 18px;
+}
+
+@mixin app-header() {
+  @include ellipsis();
+  font-weight: 500;
+  color: #fff;
+  padding: 0 12px;
+  font-family: "Rancho";
+  font-size: 2rem;
+  margin: 0;
 }

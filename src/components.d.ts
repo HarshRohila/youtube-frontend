@@ -5,18 +5,30 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { Comment, Comments, Source, Stream } from "./YoutubeApi";
+import { Comment, Comments, SearchResult, Source, Stream } from "./YoutubeApi";
+import { MatchResults, RouterHistory } from "@stencil-community/router";
+import { NotificationModel } from "./lib/notifier";
 import { CommentsViewProps, ShareFormState } from "./lib/redux/video-page";
 import { ServerInstance } from "./server-instance/serverInstanceApi";
 import { IAppError } from "./lib/redux/global";
 import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
-import { MatchResults, RouterHistory } from "@stencil-community/router";
 import { IconDefinition as IconDefinition1 } from "@fortawesome/fontawesome-svg-core";
 export namespace Components {
     interface AComment {
         "comment": Comment;
     }
+    interface APlaylist {
+        "history": RouterHistory;
+    }
+    interface AppHeader {
+        "history": RouterHistory;
+    }
     interface AppRoot {
+        "notification": NotificationModel;
+    }
+    interface CardVideo {
+        "deleteCallback"?: (video: SearchResult) => void;
+        "video": SearchResult;
     }
     interface CommentsView {
         "areCommentsLoading": boolean;
@@ -84,6 +96,9 @@ export namespace Components {
         "size"?: string;
         "spin": boolean;
     }
+    interface XNotification {
+        "data": NotificationModel;
+    }
 }
 declare global {
     interface HTMLACommentElement extends Components.AComment, HTMLStencilElement {
@@ -92,11 +107,29 @@ declare global {
         prototype: HTMLACommentElement;
         new (): HTMLACommentElement;
     };
+    interface HTMLAPlaylistElement extends Components.APlaylist, HTMLStencilElement {
+    }
+    var HTMLAPlaylistElement: {
+        prototype: HTMLAPlaylistElement;
+        new (): HTMLAPlaylistElement;
+    };
+    interface HTMLAppHeaderElement extends Components.AppHeader, HTMLStencilElement {
+    }
+    var HTMLAppHeaderElement: {
+        prototype: HTMLAppHeaderElement;
+        new (): HTMLAppHeaderElement;
+    };
     interface HTMLAppRootElement extends Components.AppRoot, HTMLStencilElement {
     }
     var HTMLAppRootElement: {
         prototype: HTMLAppRootElement;
         new (): HTMLAppRootElement;
+    };
+    interface HTMLCardVideoElement extends Components.CardVideo, HTMLStencilElement {
+    }
+    var HTMLCardVideoElement: {
+        prototype: HTMLCardVideoElement;
+        new (): HTMLCardVideoElement;
     };
     interface HTMLCommentsViewElement extends Components.CommentsView, HTMLStencilElement {
     }
@@ -200,9 +233,18 @@ declare global {
         prototype: HTMLXIconElement;
         new (): HTMLXIconElement;
     };
+    interface HTMLXNotificationElement extends Components.XNotification, HTMLStencilElement {
+    }
+    var HTMLXNotificationElement: {
+        prototype: HTMLXNotificationElement;
+        new (): HTMLXNotificationElement;
+    };
     interface HTMLElementTagNameMap {
         "a-comment": HTMLACommentElement;
+        "a-playlist": HTMLAPlaylistElement;
+        "app-header": HTMLAppHeaderElement;
         "app-root": HTMLAppRootElement;
+        "card-video": HTMLCardVideoElement;
         "comments-view": HTMLCommentsViewElement;
         "dropdown-server": HTMLDropdownServerElement;
         "error-page": HTMLErrorPageElement;
@@ -220,13 +262,25 @@ declare global {
         "video-page": HTMLVideoPageElement;
         "video-player": HTMLVideoPlayerElement;
         "x-icon": HTMLXIconElement;
+        "x-notification": HTMLXNotificationElement;
     }
 }
 declare namespace LocalJSX {
     interface AComment {
         "comment"?: Comment;
     }
+    interface APlaylist {
+        "history"?: RouterHistory;
+    }
+    interface AppHeader {
+        "history"?: RouterHistory;
+    }
     interface AppRoot {
+        "notification"?: NotificationModel;
+    }
+    interface CardVideo {
+        "deleteCallback"?: (video: SearchResult) => void;
+        "video"?: SearchResult;
     }
     interface CommentsView {
         "areCommentsLoading"?: boolean;
@@ -243,7 +297,7 @@ declare namespace LocalJSX {
         "disabled"?: boolean;
         "icon"?: IconDefinition;
         "label"?: string;
-        "onBtnClicked"?: (event: CustomEvent<void>) => void;
+        "onBtnClicked"?: (event: CustomEvent<any>) => void;
         "size"?: "small" | "medium";
         "type"?: "primary" | "secondary";
     }
@@ -295,9 +349,16 @@ declare namespace LocalJSX {
         "size"?: string;
         "spin"?: boolean;
     }
+    interface XNotification {
+        "data"?: NotificationModel;
+        "onTimedOut"?: (event: CustomEvent<void>) => void;
+    }
     interface IntrinsicElements {
         "a-comment": AComment;
+        "a-playlist": APlaylist;
+        "app-header": AppHeader;
         "app-root": AppRoot;
+        "card-video": CardVideo;
         "comments-view": CommentsView;
         "dropdown-server": DropdownServer;
         "error-page": ErrorPage;
@@ -315,6 +376,7 @@ declare namespace LocalJSX {
         "video-page": VideoPage;
         "video-player": VideoPlayer;
         "x-icon": XIcon;
+        "x-notification": XNotification;
     }
 }
 export { LocalJSX as JSX };
@@ -322,7 +384,10 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "a-comment": LocalJSX.AComment & JSXBase.HTMLAttributes<HTMLACommentElement>;
+            "a-playlist": LocalJSX.APlaylist & JSXBase.HTMLAttributes<HTMLAPlaylistElement>;
+            "app-header": LocalJSX.AppHeader & JSXBase.HTMLAttributes<HTMLAppHeaderElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
+            "card-video": LocalJSX.CardVideo & JSXBase.HTMLAttributes<HTMLCardVideoElement>;
             "comments-view": LocalJSX.CommentsView & JSXBase.HTMLAttributes<HTMLCommentsViewElement>;
             "dropdown-server": LocalJSX.DropdownServer & JSXBase.HTMLAttributes<HTMLDropdownServerElement>;
             "error-page": LocalJSX.ErrorPage & JSXBase.HTMLAttributes<HTMLErrorPageElement>;
@@ -340,6 +405,7 @@ declare module "@stencil/core" {
             "video-page": LocalJSX.VideoPage & JSXBase.HTMLAttributes<HTMLVideoPageElement>;
             "video-player": LocalJSX.VideoPlayer & JSXBase.HTMLAttributes<HTMLVideoPlayerElement>;
             "x-icon": LocalJSX.XIcon & JSXBase.HTMLAttributes<HTMLXIconElement>;
+            "x-notification": LocalJSX.XNotification & JSXBase.HTMLAttributes<HTMLXNotificationElement>;
         }
     }
 }

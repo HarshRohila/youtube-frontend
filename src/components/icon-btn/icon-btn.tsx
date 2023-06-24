@@ -13,15 +13,15 @@ export class IconBtn {
   @Prop() size: "small" | "medium" = "medium"
   @Prop() type: "primary" | "secondary" = "primary"
 
-  @Event() btnClicked: EventEmitter<void>
+  @Event() btnClicked: EventEmitter<any>
 
   render() {
     return (
       <Host>
         <label class={`${this.size} ${this.type}`}>
           <button
-            onClick={() => {
-              this.btnClicked.emit()
+            onClick={ev => {
+              this.btnClicked.emit(ev)
             }}
             disabled={this.disabled}
           >

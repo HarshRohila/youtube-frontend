@@ -27,7 +27,7 @@ export interface SearchResult {
   uploaderAvatar: string
   uploaderName: string
   uploadedDate: string
-  views: number
+  views?: number
 }
 
 export interface Comment {
@@ -54,5 +54,9 @@ export interface Stream {
   uploaderSubscriberCount: number
   views: number
   uploadDate: string
+  thumbnail: string
   id: string
+}
+export interface StreamSource {
+  url: string
 }

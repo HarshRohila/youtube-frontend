@@ -1,0 +1,22 @@
+:host {
+  display: block;
+}
+.playlist-name {
+  margin: 0;
+  padding: 10px;
+  padding-top: 0;
+}
+.playlist-page {
+  width: 100%;
+  height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+ul.trending {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}

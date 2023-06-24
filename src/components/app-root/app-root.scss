@@ -1,5 +1,11 @@
 @import "../../lib/Modal/styles.scss";
 
+$header-border-radius: 20px;
+
+.playlist-btn {
+  @include header-icon-btn();
+}
+
 header {
   @include header();
   display: flex;
@@ -10,11 +16,11 @@ header {
   transition-property: width;
   transition: width 0.1s;
 
-  width: 155px;
+  width: 210px;
   &.home,
   &.search-active {
     @include desktop() {
-      width: 170px;
+      width: 224px;
       max-width: $max-width;
     }
   }
@@ -27,11 +33,7 @@ header {
     display: flex;
     align-items: center;
     button {
-      background: transparent;
-      border: 0;
-      color: white;
-      font-size: 1.5em;
-      padding: 10px 18px;
+      @include header-icon-btn();
     }
 
     form {

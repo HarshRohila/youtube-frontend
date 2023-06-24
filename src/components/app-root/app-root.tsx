@@ -1,9 +1,12 @@
-import { Component, h, Element, State } from "@stencil/core"
+import { Component, h, Element, State, Prop } from "@stencil/core"
 import { AppRoute } from "../../utils/AppRoute"
-import { Subject, map } from "rxjs"
+import { Subject, forkJoin, map } from "rxjs"
 import { state$ } from "../../lib/redux"
 import { untilDestroyed } from "@ngneat/until-destroy"
 import { IAppError } from "../../lib/redux/global"
+import { initDatbase } from "../../playlist/database/Database"
+import { NotificationModel } from "../../lib/notifier"
+import { notifcationState$ } from "../../lib/facades/notifier"
 
 @Component({
   tag: "app-root",
@@ -17,9 +20,14 @@ export class AppRoot {
   @State() private isLoading: boolean
   @State() private error: IAppError
 
+  @Prop({ mutable: true }) notification: NotificationModel
+
   componentWillLoad() {
-    state$
+    const initDb$ = initDatbase()
+
+    forkJoin([initDb$, state$])
       .pipe(
+        map(([, state]) => state),
         map(state => state.global),
         untilDestroyed(this, "disconnectedCallback")
       )
@@ -27,6 +35,10 @@ export class AppRoot {
         this.error = state.error
         this.isLoading = state.isLoading
       })
+
+    notifcationState$.pipe(untilDestroyed(this, "disconnectedCallback")).subscribe(s => {
+      this.notification = s
+    })
   }
 
   disconnectedCallback() {}
@@ -41,12 +53,14 @@ export class AppRoot {
               <stencil-route url={AppRoute.getPath("/videos/:videoId")} component="video-page" exact />
               <stencil-route url={AppRoute.getPath("/search")} component="search-page" exact />
               <stencil-route url={AppRoute.getPath("/shared-content-receiver")} component="shared-content-receiver" />
+              <stencil-route url={AppRoute.getPath("/playlists/:playlistId")} component="a-playlist" />
               <stencil-route url={AppRoute.getPath("/settings")} component="settings-page" />
             </stencil-route-switch>
           </stencil-router>
         </main>
         {this.isLoading && <loading-page></loading-page>}
         {this.error && <error-page error={this.error}></error-page>}
+        {this.notification && <x-notification data={this.notification}></x-notification>}
       </div>
     )
   }
