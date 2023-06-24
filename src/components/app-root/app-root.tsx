@@ -1,6 +1,6 @@
 import { Component, h, Element, State, Prop } from "@stencil/core"
 import { AppRoute } from "../../utils/AppRoute"
-import { Subject, forkJoin, map } from "rxjs"
+import { Subject, combineLatest, map } from "rxjs"
 import { state$ } from "../../lib/redux"
 import { untilDestroyed } from "@ngneat/until-destroy"
 import { IAppError } from "../../lib/redux/global"
@@ -25,10 +25,9 @@ export class AppRoot {
   componentWillLoad() {
     const initDb$ = initDatbase()
 
-    forkJoin([initDb$, state$])
+    combineLatest([initDb$, state$])
       .pipe(
-        map(([, state]) => state),
-        map(state => state.global),
+        map(([, state]) => state.global),
         untilDestroyed(this, "disconnectedCallback")
       )
       .subscribe(state => {
