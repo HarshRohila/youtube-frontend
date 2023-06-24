@@ -1,0 +1,1 @@
+const t={getJson(t){const e=localStorage.getItem(t);return e?JSON.parse(e):null},setJson(t,e){localStorage.setItem(t,JSON.stringify(e))}},e={apiUrl:"https://pipedapi.in.projectsegfau.lt",hasCdn:!1,locations:"",name:"projectsegfau.lt in"},s="s-instance",a={set(e){t.setJson(s,e)},get:()=>t.getJson(s)||e};export{a as C}
