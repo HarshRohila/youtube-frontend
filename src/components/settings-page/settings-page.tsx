@@ -2,6 +2,8 @@ import { Component, Host, Prop, State, h } from "@stencil/core"
 import { ServerInstance, getServerInstances } from "../../server-instance/serverInstanceApi"
 import { take } from "rxjs"
 import { RouterHistory } from "@stencil-community/router"
+import { store } from "../../lib/redux"
+import { setLoading } from "../../lib/redux/global"
 
 @Component({
   tag: "settings-page",
@@ -13,10 +15,20 @@ export class SettingsPage {
   @Prop() history: RouterHistory
 
   componentWillLoad() {
+    store.dispatch(setLoading(true))
+
+    const done = () => {
+      store.dispatch(setLoading(false))
+    }
+
     getServerInstances()
       .pipe(take(1))
-      .subscribe(s => {
-        this.serverInstances = s
+      .subscribe({
+        next: s => {
+          this.serverInstances = s
+        },
+        error: done,
+        complete: done
       })
   }
 
