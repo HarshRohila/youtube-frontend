@@ -94,7 +94,12 @@ export const fetchTrendingEpic = (action$: Observable<Action>) =>
         .pipe(
           map(results => setSearchResult({ results, nextpage: "" })),
           catchError(() =>
-            of(setError({ message: "Failed to get response from the Server. Please try again after some time." }))
+            of(
+              setError({
+                message:
+                  "Failed to get response from the Server. Please try changing server from settings(in home page)"
+              })
+            )
           )
         )
 
@@ -150,7 +155,12 @@ export const doSearchEpic = (action$: Observable<Action>, state$: BehaviorSubjec
         .pipe(
           map(results => setSearchResult(results)),
           catchError(() =>
-            of(setError({ message: "Failed to get response from the Server. Please try again after some time." }))
+            of(
+              setError({
+                message:
+                  "Failed to get response from the Server. Please try changing server from settings(in home page)"
+              })
+            )
           )
         )
 

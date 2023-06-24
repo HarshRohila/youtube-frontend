@@ -6,20 +6,15 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { Comment, Comments, Source, Stream } from "./YoutubeApi";
-import { MatchResults, RouterHistory } from "@stencil-community/router";
 import { CommentsViewProps, ShareFormState } from "./lib/redux/video-page";
+import { ServerInstance } from "./server-instance/serverInstanceApi";
 import { IAppError } from "./lib/redux/global";
 import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
+import { MatchResults, RouterHistory } from "@stencil-community/router";
 import { IconDefinition as IconDefinition1 } from "@fortawesome/fontawesome-svg-core";
 export namespace Components {
     interface AComment {
         "comment": Comment;
-    }
-    interface AppHome {
-        "history": RouterHistory;
-    }
-    interface AppProfile {
-        "match": MatchResults;
     }
     interface AppRoot {
     }
@@ -27,6 +22,9 @@ export namespace Components {
         "areCommentsLoading": boolean;
         "comments": Comments;
         "commentsView": CommentsViewProps;
+    }
+    interface DropdownServer {
+        "serverInstances": ServerInstance[];
     }
     interface ErrorPage {
         "error": IAppError;
@@ -38,11 +36,23 @@ export namespace Components {
         "size": "small" | "medium";
         "type": "primary" | "secondary";
     }
+    interface LiServerInstance {
+        "serverInsance": ServerInstance;
+    }
     interface LoadingPage {
     }
     interface MobileView {
     }
+    interface PageHeader {
+        "history": RouterHistory;
+    }
     interface SearchPage {
+        "history": RouterHistory;
+    }
+    interface SettingsBtn {
+        "history": RouterHistory;
+    }
+    interface SettingsPage {
         "history": RouterHistory;
     }
     interface ShareForm {
@@ -82,18 +92,6 @@ declare global {
         prototype: HTMLACommentElement;
         new (): HTMLACommentElement;
     };
-    interface HTMLAppHomeElement extends Components.AppHome, HTMLStencilElement {
-    }
-    var HTMLAppHomeElement: {
-        prototype: HTMLAppHomeElement;
-        new (): HTMLAppHomeElement;
-    };
-    interface HTMLAppProfileElement extends Components.AppProfile, HTMLStencilElement {
-    }
-    var HTMLAppProfileElement: {
-        prototype: HTMLAppProfileElement;
-        new (): HTMLAppProfileElement;
-    };
     interface HTMLAppRootElement extends Components.AppRoot, HTMLStencilElement {
     }
     var HTMLAppRootElement: {
@@ -105,6 +103,12 @@ declare global {
     var HTMLCommentsViewElement: {
         prototype: HTMLCommentsViewElement;
         new (): HTMLCommentsViewElement;
+    };
+    interface HTMLDropdownServerElement extends Components.DropdownServer, HTMLStencilElement {
+    }
+    var HTMLDropdownServerElement: {
+        prototype: HTMLDropdownServerElement;
+        new (): HTMLDropdownServerElement;
     };
     interface HTMLErrorPageElement extends Components.ErrorPage, HTMLStencilElement {
     }
@@ -118,6 +122,12 @@ declare global {
         prototype: HTMLIconBtnElement;
         new (): HTMLIconBtnElement;
     };
+    interface HTMLLiServerInstanceElement extends Components.LiServerInstance, HTMLStencilElement {
+    }
+    var HTMLLiServerInstanceElement: {
+        prototype: HTMLLiServerInstanceElement;
+        new (): HTMLLiServerInstanceElement;
+    };
     interface HTMLLoadingPageElement extends Components.LoadingPage, HTMLStencilElement {
     }
     var HTMLLoadingPageElement: {
@@ -130,11 +140,29 @@ declare global {
         prototype: HTMLMobileViewElement;
         new (): HTMLMobileViewElement;
     };
+    interface HTMLPageHeaderElement extends Components.PageHeader, HTMLStencilElement {
+    }
+    var HTMLPageHeaderElement: {
+        prototype: HTMLPageHeaderElement;
+        new (): HTMLPageHeaderElement;
+    };
     interface HTMLSearchPageElement extends Components.SearchPage, HTMLStencilElement {
     }
     var HTMLSearchPageElement: {
         prototype: HTMLSearchPageElement;
         new (): HTMLSearchPageElement;
+    };
+    interface HTMLSettingsBtnElement extends Components.SettingsBtn, HTMLStencilElement {
+    }
+    var HTMLSettingsBtnElement: {
+        prototype: HTMLSettingsBtnElement;
+        new (): HTMLSettingsBtnElement;
+    };
+    interface HTMLSettingsPageElement extends Components.SettingsPage, HTMLStencilElement {
+    }
+    var HTMLSettingsPageElement: {
+        prototype: HTMLSettingsPageElement;
+        new (): HTMLSettingsPageElement;
     };
     interface HTMLShareFormElement extends Components.ShareForm, HTMLStencilElement {
     }
@@ -174,15 +202,18 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "a-comment": HTMLACommentElement;
-        "app-home": HTMLAppHomeElement;
-        "app-profile": HTMLAppProfileElement;
         "app-root": HTMLAppRootElement;
         "comments-view": HTMLCommentsViewElement;
+        "dropdown-server": HTMLDropdownServerElement;
         "error-page": HTMLErrorPageElement;
         "icon-btn": HTMLIconBtnElement;
+        "li-server-instance": HTMLLiServerInstanceElement;
         "loading-page": HTMLLoadingPageElement;
         "mobile-view": HTMLMobileViewElement;
+        "page-header": HTMLPageHeaderElement;
         "search-page": HTMLSearchPageElement;
+        "settings-btn": HTMLSettingsBtnElement;
+        "settings-page": HTMLSettingsPageElement;
         "share-form": HTMLShareFormElement;
         "shared-content-receiver": HTMLSharedContentReceiverElement;
         "trending-page": HTMLTrendingPageElement;
@@ -195,18 +226,15 @@ declare namespace LocalJSX {
     interface AComment {
         "comment"?: Comment;
     }
-    interface AppHome {
-        "history"?: RouterHistory;
-    }
-    interface AppProfile {
-        "match"?: MatchResults;
-    }
     interface AppRoot {
     }
     interface CommentsView {
         "areCommentsLoading"?: boolean;
         "comments"?: Comments;
         "commentsView"?: CommentsViewProps;
+    }
+    interface DropdownServer {
+        "serverInstances"?: ServerInstance[];
     }
     interface ErrorPage {
         "error"?: IAppError;
@@ -219,11 +247,23 @@ declare namespace LocalJSX {
         "size"?: "small" | "medium";
         "type"?: "primary" | "secondary";
     }
+    interface LiServerInstance {
+        "serverInsance"?: ServerInstance;
+    }
     interface LoadingPage {
     }
     interface MobileView {
     }
+    interface PageHeader {
+        "history"?: RouterHistory;
+    }
     interface SearchPage {
+        "history"?: RouterHistory;
+    }
+    interface SettingsBtn {
+        "history"?: RouterHistory;
+    }
+    interface SettingsPage {
         "history"?: RouterHistory;
     }
     interface ShareForm {
@@ -257,15 +297,18 @@ declare namespace LocalJSX {
     }
     interface IntrinsicElements {
         "a-comment": AComment;
-        "app-home": AppHome;
-        "app-profile": AppProfile;
         "app-root": AppRoot;
         "comments-view": CommentsView;
+        "dropdown-server": DropdownServer;
         "error-page": ErrorPage;
         "icon-btn": IconBtn;
+        "li-server-instance": LiServerInstance;
         "loading-page": LoadingPage;
         "mobile-view": MobileView;
+        "page-header": PageHeader;
         "search-page": SearchPage;
+        "settings-btn": SettingsBtn;
+        "settings-page": SettingsPage;
         "share-form": ShareForm;
         "shared-content-receiver": SharedContentReceiver;
         "trending-page": TrendingPage;
@@ -279,15 +322,18 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "a-comment": LocalJSX.AComment & JSXBase.HTMLAttributes<HTMLACommentElement>;
-            "app-home": LocalJSX.AppHome & JSXBase.HTMLAttributes<HTMLAppHomeElement>;
-            "app-profile": LocalJSX.AppProfile & JSXBase.HTMLAttributes<HTMLAppProfileElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
             "comments-view": LocalJSX.CommentsView & JSXBase.HTMLAttributes<HTMLCommentsViewElement>;
+            "dropdown-server": LocalJSX.DropdownServer & JSXBase.HTMLAttributes<HTMLDropdownServerElement>;
             "error-page": LocalJSX.ErrorPage & JSXBase.HTMLAttributes<HTMLErrorPageElement>;
             "icon-btn": LocalJSX.IconBtn & JSXBase.HTMLAttributes<HTMLIconBtnElement>;
+            "li-server-instance": LocalJSX.LiServerInstance & JSXBase.HTMLAttributes<HTMLLiServerInstanceElement>;
             "loading-page": LocalJSX.LoadingPage & JSXBase.HTMLAttributes<HTMLLoadingPageElement>;
             "mobile-view": LocalJSX.MobileView & JSXBase.HTMLAttributes<HTMLMobileViewElement>;
+            "page-header": LocalJSX.PageHeader & JSXBase.HTMLAttributes<HTMLPageHeaderElement>;
             "search-page": LocalJSX.SearchPage & JSXBase.HTMLAttributes<HTMLSearchPageElement>;
+            "settings-btn": LocalJSX.SettingsBtn & JSXBase.HTMLAttributes<HTMLSettingsBtnElement>;
+            "settings-page": LocalJSX.SettingsPage & JSXBase.HTMLAttributes<HTMLSettingsPageElement>;
             "share-form": LocalJSX.ShareForm & JSXBase.HTMLAttributes<HTMLShareFormElement>;
             "shared-content-receiver": LocalJSX.SharedContentReceiver & JSXBase.HTMLAttributes<HTMLSharedContentReceiverElement>;
             "trending-page": LocalJSX.TrendingPage & JSXBase.HTMLAttributes<HTMLTrendingPageElement>;

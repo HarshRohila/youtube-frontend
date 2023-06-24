@@ -1,0 +1,10 @@
+@mixin row() {
+  display: flex;
+  * {
+    flex: 1;
+  }
+  .has-cdn {
+    flex: 0.3;
+    text-align: center;
+  }
+}

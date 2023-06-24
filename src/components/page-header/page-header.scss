@@ -1,0 +1,19 @@
+:host {
+  display: block;
+}
+
+header.page-header {
+  @include header();
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: static;
+  box-shadow: none;
+  h1 {
+    height: 100%;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+  }
+}

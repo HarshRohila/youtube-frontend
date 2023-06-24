@@ -4,7 +4,6 @@ import { SearchResult, Stream, YouTubeApi } from "../../YoutubeApi"
 import { Subject, map, takeUntil } from "rxjs"
 import { IAppError, setLoading } from "../../lib/redux/global"
 import { state$, store } from "../../lib/redux"
-import { Header } from "../../lib/Header"
 import { faComment, faShare, faThumbsDown, faThumbsUp } from "@fortawesome/free-solid-svg-icons"
 import { Router } from "../../lib/Router"
 import { Videos } from "../../lib/Search"
@@ -93,7 +92,7 @@ export class VideoPage {
           store.dispatch(setLoading(false))
         },
         error: () => {
-          this.error = { message: "Failed to load video. Please try refreshing" }
+          this.error = { message: "Failed to load video. Please try changing server from settings(in home page)" }
           store.dispatch(setLoading(false))
         }
       })
@@ -108,10 +107,6 @@ export class VideoPage {
     const time = (await this.videoPlayer.currentTime()) ?? 0
 
     getShareHandler().share(this.stream, { currentTime: time })
-  }
-
-  private handleHeaderClick = () => {
-    new Router(this.history).showTrendingPage()
   }
 
   private handleVideoClick = (video: SearchResult) => {
@@ -146,7 +141,7 @@ export class VideoPage {
     return (
       <Host>
         <div class="video-page">
-          <Header onHeaderClick={this.handleHeaderClick} />
+          <page-header history={this.history} />
           {this.stream && (
             <Fragment>
               <video-player

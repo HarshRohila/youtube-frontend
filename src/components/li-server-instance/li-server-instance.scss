@@ -1,0 +1,9 @@
+@import "./utils.scss";
+
+:host {
+  display: block;
+}
+
+.instance {
+  @include row();
+}

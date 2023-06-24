@@ -1,7 +1,5 @@
 @import "../../lib/Modal/styles.scss";
 
-$header-border-radius: 20px;
-
 header {
   @include header();
   display: flex;
@@ -62,15 +60,6 @@ header {
   }
 }
 
-h1 {
-  @include ellipsis();
-  font-weight: 500;
-  color: #fff;
-  padding: 0 12px;
-  font-family: "Rancho";
-  font-size: 2rem;
-  margin: 0;
-}
 .suggestions-container {
   padding-top: $header-height;
   width: 100%;
