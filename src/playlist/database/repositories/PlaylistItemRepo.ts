@@ -22,7 +22,6 @@ export class DexiePlaylistItemRepo implements IPlaylistItemRepo {
 
   delete(playlistItem: PlaylistItem) {
     const delete$ = defer(async () => {
-      console.log("here", playlistItem)
       await this.playlistItems.delete([playlistItem.playlistId, playlistItem.videoId])
     })
 

@@ -33,6 +33,11 @@ export class APlaylist {
     this.toBeDeletedPlaylistItem = playlistItem
   }
 
+  private deletePlaylistItem = (playlistItem: PlaylistItem) => {
+    deleteItemInPlaylist(playlistItem).pipe(take(1)).subscribe()
+    this.playlistItems = this.playlistItems.filter(i => i.videoId !== playlistItem.videoId)
+  }
+
   render() {
     return (
       <Host>
@@ -48,7 +53,7 @@ export class APlaylist {
                 icon={faCheck}
                 label="Yes"
                 onBtnClicked={() => {
-                  deleteItemInPlaylist(this.toBeDeletedPlaylistItem).pipe(take(1)).subscribe()
+                  this.deletePlaylistItem(this.toBeDeletedPlaylistItem)
                   this.toBeDeletedPlaylistItem = undefined
                 }}
               ></icon-btn>
