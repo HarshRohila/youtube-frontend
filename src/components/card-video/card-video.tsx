@@ -1,5 +1,6 @@
-import { Component, Host, Prop, h } from "@stencil/core"
+import { Component, Event, EventEmitter, Host, Prop, h } from "@stencil/core"
 import { SearchResult } from "../../YoutubeApi"
+import { faTrash } from "@fortawesome/free-solid-svg-icons"
 
 const formatter = Intl.NumberFormat("en", { notation: "compact" })
 
@@ -10,6 +11,8 @@ const formatter = Intl.NumberFormat("en", { notation: "compact" })
 })
 export class CardVideo {
   @Prop() video: SearchResult
+
+  @Prop() deleteCallback?: (video: SearchResult) => void
 
   get subDescription() {
     const { video } = this
@@ -30,6 +33,17 @@ export class CardVideo {
               <h3>{video.title}</h3>
               <p>{subDescription}</p>
             </span>
+            {this.deleteCallback && (
+              <icon-btn
+                icon={faTrash}
+                onClick={ev => {
+                  ev.stopPropagation()
+                }}
+                onBtnClicked={() => {
+                  this.deleteCallback(video)
+                }}
+              ></icon-btn>
+            )}
           </div>
         </div>
       </Host>

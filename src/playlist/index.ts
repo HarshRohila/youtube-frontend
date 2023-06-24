@@ -14,6 +14,16 @@ export function addItemInPlaylist(item: PlaylistItem) {
   )
 }
 
+export function deleteItemInPlaylist(item: PlaylistItem) {
+  return getDbInstance().pipe(
+    switchMap(db => {
+      const playlistItemRepo = db.getRepo("playlistsItems") as IPlaylistItemRepo
+      item.playlistId = DEFAULT_PLAYLIST.id
+      return playlistItemRepo.delete(item)
+    })
+  )
+}
+
 export function listItems() {
   const db = getDbInstance()
 

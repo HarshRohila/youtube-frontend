@@ -6,6 +6,7 @@ import { Table } from "dexie"
 export interface IPlaylistItemRepo extends IRepository {
   upsert(record: PlaylistItem): Observable<void>
   query({ playlistId }: Partial<PlaylistItem>): Observable<PlaylistItem[]>
+  delete(record: PlaylistItem): Observable<void>
 }
 
 export class DexiePlaylistItemRepo implements IPlaylistItemRepo {
@@ -17,6 +18,15 @@ export class DexiePlaylistItemRepo implements IPlaylistItemRepo {
     })
 
     return add$
+  }
+
+  delete(playlistItem: PlaylistItem) {
+    const delete$ = defer(async () => {
+      console.log("here", playlistItem)
+      await this.playlistItems.delete([playlistItem.playlistId, playlistItem.videoId])
+    })
+
+    return delete$
   }
 
   query({ playlistId }: Partial<PlaylistItem>): Observable<PlaylistItem[]> {

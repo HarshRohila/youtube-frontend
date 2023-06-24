@@ -12,6 +12,7 @@ import { CommentsViewProps, ShareFormState } from "./lib/redux/video-page";
 import { ServerInstance } from "./server-instance/serverInstanceApi";
 import { IAppError } from "./lib/redux/global";
 import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
+import { Event } from "@stencil/core";
 import { IconDefinition as IconDefinition1 } from "@fortawesome/fontawesome-svg-core";
 export namespace Components {
     interface AComment {
@@ -27,6 +28,7 @@ export namespace Components {
         "notification": NotificationModel;
     }
     interface CardVideo {
+        "deleteCallback"?: (video: SearchResult) => void;
         "video": SearchResult;
     }
     interface CommentsView {
@@ -278,6 +280,7 @@ declare namespace LocalJSX {
         "notification"?: NotificationModel;
     }
     interface CardVideo {
+        "deleteCallback"?: (video: SearchResult) => void;
         "video"?: SearchResult;
     }
     interface CommentsView {
@@ -295,7 +298,7 @@ declare namespace LocalJSX {
         "disabled"?: boolean;
         "icon"?: IconDefinition;
         "label"?: string;
-        "onBtnClicked"?: (event: CustomEvent<void>) => void;
+        "onBtnClicked"?: (event: CustomEvent<Event>) => void;
         "size"?: "small" | "medium";
         "type"?: "primary" | "secondary";
     }
