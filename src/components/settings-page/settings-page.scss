@@ -5,6 +5,11 @@
 }
 
 .server-instances {
+  height: calc(100vh - 56px);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+
   li ~ li {
     padding-top: 10px;
   }
