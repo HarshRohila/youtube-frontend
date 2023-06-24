@@ -1,14 +1,16 @@
-import { Component, Host, State, h } from "@stencil/core"
+import { Component, Host, Prop, State, h } from "@stencil/core"
 import { ServerInstance, getServerInstances } from "../../server-instance/serverInstanceApi"
 import { take } from "rxjs"
+import { RouterHistory } from "@stencil-community/router"
 
 @Component({
   tag: "settings-page",
   styleUrl: "settings-page.scss",
-  shadow: true
+  shadow: false
 })
 export class SettingsPage {
   @State() serverInstances: ServerInstance[] = []
+  @Prop() history: RouterHistory
 
   componentWillLoad() {
     getServerInstances()
@@ -22,8 +24,10 @@ export class SettingsPage {
     return (
       <Host>
         <mobile-view>
+          <page-header history={this.history} />
           {this.serverInstances.length && (
             <div class="server-instances">
+              <dropdown-server serverInstances={this.serverInstances}></dropdown-server>
               <h3>Server Instances</h3>
               <h4 class="head">
                 <span>Name</span>

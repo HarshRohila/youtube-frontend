@@ -13,4 +13,9 @@
     @include row();
     margin-bottom: 0;
   }
+
+  ul {
+    overflow-y: auto;
+    flex: 1;
+  }
 }
