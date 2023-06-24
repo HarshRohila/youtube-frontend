@@ -71,6 +71,11 @@ export class APlaylist {
               onDeleteVideo={this.handleDelete}
             ></Videos>
           )}
+          {!this.playlistItems?.length && (
+            <h5 class="empty-msg">
+              Nothing here. <br /> To add videos in Watch later click "Add to Playlist" while watching a video.
+            </h5>
+          )}
         </div>
       </Host>
     )
