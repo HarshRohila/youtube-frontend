@@ -4,6 +4,10 @@
   display: block;
 }
 
+.settings-page {
+  padding: 0 10px;
+}
+
 .server-instances {
   height: calc(100vh - $header-height);
   display: flex;
@@ -13,8 +17,9 @@
   li ~ li {
     padding-top: 10px;
   }
+  $left-padding: 20px;
   .head {
-    padding-left: 40px;
+    padding-left: $left-padding;
     @include row();
     margin-bottom: 0;
   }
@@ -22,5 +27,6 @@
   ul {
     overflow-y: auto;
     flex: 1;
+    padding-left: $left-padding;
   }
 }

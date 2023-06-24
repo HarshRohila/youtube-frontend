@@ -80,7 +80,7 @@ export class TrendingPage {
             onSearchTextChange={ev => store.dispatch(keyPress(ev.target["value"]))}
           />
         </header>
-        <settings-btn history={this.history}></settings-btn>
+        {!this.showSearchbar && <settings-btn history={this.history}></settings-btn>}
         {isShowingSuggestions && (
           <Suggestions
             suggestions={this.suggestions}

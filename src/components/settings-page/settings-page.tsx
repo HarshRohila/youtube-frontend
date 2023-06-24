@@ -24,25 +24,27 @@ export class SettingsPage {
     return (
       <Host>
         <mobile-view>
-          <page-header history={this.history} />
-          {this.serverInstances.length && (
-            <div class="server-instances">
-              <dropdown-server serverInstances={this.serverInstances}></dropdown-server>
-              <h3>Server Instances</h3>
-              <h4 class="head">
-                <span>Name</span>
-                <span>Locations</span>
-                <span class="has-cdn">CDN?</span>
-              </h4>
-              <ul>
-                {this.serverInstances.map(s => (
-                  <li key={s.apiUrl}>
-                    <li-server-instance serverInsance={s}></li-server-instance>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+          <div class="settings-page">
+            <page-header history={this.history} />
+            {this.serverInstances.length && (
+              <div class="server-instances">
+                <dropdown-server serverInstances={this.serverInstances}></dropdown-server>
+                <h3>Server Instances</h3>
+                <h4 class="head">
+                  <span>Name</span>
+                  <span>Locations</span>
+                  <span class="has-cdn">CDN?</span>
+                </h4>
+                <ul>
+                  {this.serverInstances.map(s => (
+                    <li key={s.apiUrl}>
+                      <li-server-instance serverInsance={s}></li-server-instance>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
         </mobile-view>
       </Host>
     )
