@@ -1,0 +1,16 @@
+@import "../li-server-instance/utils.scss";
+
+:host {
+  display: block;
+}
+
+.server-instances {
+  li ~ li {
+    padding-top: 10px;
+  }
+  .head {
+    padding-left: 40px;
+    @include row();
+    margin-bottom: 0;
+  }
+}
