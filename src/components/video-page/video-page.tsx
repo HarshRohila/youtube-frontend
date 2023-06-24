@@ -92,7 +92,7 @@ export class VideoPage {
           store.dispatch(setLoading(false))
         },
         error: () => {
-          this.error = { message: "Failed to load video. Please try refreshing" }
+          this.error = { message: "Failed to load video. Please try changing server from settings(in home page)" }
           store.dispatch(setLoading(false))
         }
       })
