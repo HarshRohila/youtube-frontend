@@ -27,7 +27,7 @@ self.addEventListener('message', (event) => {
 self.__precacheManifest = [
   {
     "url": "index.html",
-    "revision": "b1464d5175af905c442c639a47cefcfe"
+    "revision": "a1bce4d5a4cff2affb71e1b88c48bdfb"
   },
   {
     "url": "share.html",
@@ -143,10 +143,10 @@ self.__precacheManifest = [
     "url": "build/p-9eb0ae11.entry.js"
   },
   {
-    "url": "build/p-a7bd2695.entry.js"
+    "url": "build/p-a3b1b7f4.entry.js"
   },
   {
-    "url": "build/p-b2504b03.entry.js"
+    "url": "build/p-a7bd2695.entry.js"
   },
   {
     "url": "build/p-c10ac30b.js"
