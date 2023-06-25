@@ -52,6 +52,7 @@ export class SearchPage {
   }
 
   private onSearchSubmit = (searchText: string) => {
+    window.scrollTo({ top: 0 })
     store.dispatch(submitSearch(searchText))
     new Router(this.history).showSearchPage(searchText, { replace: true })
   }
