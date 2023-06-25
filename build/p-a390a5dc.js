@@ -1,0 +1,1 @@
+import{h as e}from"./p-27ce4408.js";function i({videos:i,isShowingSuggestions:o,onClickVideo:n,onDeleteVideo:s}){return e("ul",{class:"trending "+(o?"suggestions-active":"")},i&&i.map((i=>e("li",{onClick:()=>n(i),key:i.videoId},e("card-video",{video:i,deleteCallback:s})))))}export{i as V}
