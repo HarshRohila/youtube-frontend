@@ -13,7 +13,7 @@ export function Videos({ videos, isShowingSuggestions, onClickVideo, onDeleteVid
     <ul class={"trending " + `${isShowingSuggestions ? "suggestions-active" : ""}`}>
       {videos &&
         videos.map(r => (
-          <li onClick={() => onClickVideo(r)}>
+          <li onClick={() => onClickVideo(r)} key={r.videoId}>
             <card-video video={r} deleteCallback={onDeleteVideo} />
           </li>
         ))}

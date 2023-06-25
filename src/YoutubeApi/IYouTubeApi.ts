@@ -35,6 +35,7 @@ export interface Comment {
   thumbnail: string
   author: string
   commentedTime: string
+  commentId: string
 }
 
 export interface Comments {

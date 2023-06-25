@@ -70,7 +70,7 @@ export class CommentsView {
             {comments.map((c, index) => {
               if (index === comments.length - 1) {
                 return (
-                  <li ref={el => el && this.observer.observe(el)}>
+                  <li ref={el => el && this.observer.observe(el)} key={c.commentId}>
                     <a-comment comment={c}></a-comment>
                   </li>
                 )

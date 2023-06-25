@@ -199,7 +199,7 @@ export class VideoPlayer {
         <div class="container">
           <video-js ref={this.setVideoElement}>
             {this.sources.map(s => (
-              <source src={s.url} type={s.mime} />
+              <source src={s.url} type={s.mime} key={s.url} />
             ))}
           </video-js>
           {this.isShowingToast && <span class="toast">{this.toastMessage}</span>}

@@ -69,7 +69,13 @@ export function Suggestions({ suggestions, onClickSuggesion, error, loading }: S
         </div>
       )}
       <ul class="suggestions">
-        {!loading && !error && suggestions.map(s => <li onClick={() => onClickSuggesion(s)}>{s}</li>)}
+        {!loading &&
+          !error &&
+          suggestions.map(s => (
+            <li key={s} onClick={() => onClickSuggesion(s)}>
+              {s}
+            </li>
+          ))}
       </ul>
     </div>
   )

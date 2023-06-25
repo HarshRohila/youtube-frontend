@@ -32,7 +32,7 @@ export class DropdownServer {
         <label htmlFor={DROPDOWN_ID}>Select Server:</label>
         <select name="server-instance" id={DROPDOWN_ID} onChange={this.onChange}>
           {this.serverInstances.map(s => (
-            <option value={s.apiUrl} selected={this.selected.apiUrl === s.apiUrl}>
+            <option value={s.apiUrl} selected={this.selected.apiUrl === s.apiUrl} key={s.apiUrl}>
               {s.name}
             </option>
           ))}

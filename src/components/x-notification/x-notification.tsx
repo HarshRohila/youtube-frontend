@@ -31,7 +31,7 @@ export class XNotification {
           <span class="text">{this.data.text}</span>
           <ul>
             {this.data.buttons.map(b => (
-              <li>
+              <li key={b.text}>
                 <a onClick={b.clickHandler}>{b.text}</a>
               </li>
             ))}
