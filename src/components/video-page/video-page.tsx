@@ -208,6 +208,7 @@ export class VideoPage {
               {this.isCommentsOpen && <comments-view></comments-view>}
               {!!this.stream.relatedVideos?.length && <h3 class="suggestion-header">You may also like</h3>}
               <Videos
+                preloadStream
                 videos={this.stream.relatedVideos}
                 isShowingSuggestions={false}
                 onClickVideo={this.handleVideoClick}

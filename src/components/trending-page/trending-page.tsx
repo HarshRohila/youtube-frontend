@@ -102,6 +102,7 @@ export class TrendingPage {
           />
         )}
         <Videos
+          preloadStream
           videos={this.videos}
           isShowingSuggestions={isShowingSuggestions}
           onClickVideo={video => {

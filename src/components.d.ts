@@ -28,6 +28,7 @@ export namespace Components {
     }
     interface CardVideo {
         "deleteCallback"?: (video: SearchResult) => void;
+        "preloadStream": boolean;
         "video": SearchResult;
     }
     interface CommentsView {
@@ -280,6 +281,7 @@ declare namespace LocalJSX {
     }
     interface CardVideo {
         "deleteCallback"?: (video: SearchResult) => void;
+        "preloadStream"?: boolean;
         "video"?: SearchResult;
     }
     interface CommentsView {

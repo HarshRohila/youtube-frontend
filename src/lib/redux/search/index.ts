@@ -116,6 +116,7 @@ export const fetchSuggestionsEpic = (action$: Observable<Action>, state$: Behavi
     ofType(keyPress.type),
     map(() => state$.value.search.searchText),
     filter(text => !!text.length),
+    debounceTime(300),
     switchMap(text => {
       const resetError = of(setSuggestionsError(undefined))
 
