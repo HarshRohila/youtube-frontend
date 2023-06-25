@@ -1,0 +1,1 @@
+import{h as e}from"./p-27ce4408.js";function o({videos:o,isShowingSuggestions:i,onClickVideo:t,onDeleteVideo:l,preloadStream:n}){return e("ul",{class:"trending "+(i?"suggestions-active":"")},o&&o.map((o=>e("li",{onClick:()=>t(o),key:o.videoId},e("card-video",{video:o,deleteCallback:l,preloadStream:n})))))}export{o as V}
