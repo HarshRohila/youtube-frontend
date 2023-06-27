@@ -13,6 +13,7 @@ import { getShareHandler } from "../../lib/ShareForm/ShareHandler"
 import { ShareFormState, setCommentView } from "../../lib/redux/video-page"
 import { addItemInPlaylist } from "../../playlist"
 import { getNotifier } from "../../lib/notifier"
+import { clearNotification } from "../../lib/facades/notifier"
 
 @Component({
   tag: "video-page",
@@ -143,6 +144,7 @@ export class VideoPage {
   }
 
   private handleViewPlaylist = () => {
+    clearNotification()
     new Router(this.history).showPlaylistPage()
   }
 

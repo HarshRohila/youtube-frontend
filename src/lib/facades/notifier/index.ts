@@ -3,11 +3,18 @@ import { NotificationModel } from "../../notifier"
 
 const state$ = new BehaviorSubject<NotificationModel | undefined>(undefined)
 
+let timer
+
 export function createNotification(notification: NotificationModel) {
   state$.next(notification)
-  setTimeout(() => {
-    state$.next(undefined)
+  timer = setTimeout(() => {
+    clearNotification()
   }, 2000)
+}
+
+export function clearNotification() {
+  clearTimeout(timer)
+  state$.next(undefined)
 }
 
 export const notifcationState$ = state$
