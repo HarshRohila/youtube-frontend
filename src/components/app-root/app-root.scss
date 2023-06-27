@@ -176,15 +176,15 @@ ul.trending {
 
   ul.trending {
     display: grid;
-    grid-template-columns: repeat(auto-fill, 350px);
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, 300px);
+    gap: 40px;
     justify-content: center;
     margin-top: 20px;
     li {
       transition: transform 0.5s;
       transition-property: transform box-shadow;
       &:hover {
-        transform: scale(1.15);
+        transform: scale(1.1);
         box-shadow: $shadow;
         z-index: 1;
       }
