@@ -14,6 +14,7 @@ import { ShareFormState, setCommentView } from "../../lib/redux/video-page"
 import { addItemInPlaylist } from "../../playlist"
 import { getNotifier } from "../../lib/notifier"
 import { clearNotification } from "../../lib/facades/notifier"
+import { PlaylistFormState, playlistFormState$, showPlaylistForm } from "../form-playlist/facade"
 
 @Component({
   tag: "video-page",
@@ -102,7 +103,13 @@ export class VideoPage {
           store.dispatch(setLoading(false))
         }
       })
+
+    playlistFormState$.subscribe(s => {
+      this.playlistFormState = s
+    })
   }
+
+  @State() private playlistFormState: PlaylistFormState
 
   disconnectedCallback() {
     this.disconnected$.next()
@@ -148,7 +155,9 @@ export class VideoPage {
     new Router(this.history).showPlaylistPage()
   }
 
-  private handleChangePlaylist = () => {}
+  private handleChangePlaylist = () => {
+    showPlaylistForm()
+  }
 
   private handleAddPlaylist = () => {
     addItemInPlaylist({
@@ -178,6 +187,7 @@ export class VideoPage {
     return (
       <Host>
         <div class="video-page">
+          {this.playlistFormState.showForm && <form-playlist></form-playlist>}
           <page-header history={this.history} />
           {this.stream && (
             <Fragment>

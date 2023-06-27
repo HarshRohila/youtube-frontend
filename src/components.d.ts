@@ -42,6 +42,8 @@ export namespace Components {
     interface ErrorPage {
         "error": IAppError;
     }
+    interface FormPlaylist {
+    }
     interface IconBtn {
         "disabled": boolean;
         "icon": IconDefinition;
@@ -150,6 +152,12 @@ declare global {
         prototype: HTMLErrorPageElement;
         new (): HTMLErrorPageElement;
     };
+    interface HTMLFormPlaylistElement extends Components.FormPlaylist, HTMLStencilElement {
+    }
+    var HTMLFormPlaylistElement: {
+        prototype: HTMLFormPlaylistElement;
+        new (): HTMLFormPlaylistElement;
+    };
     interface HTMLIconBtnElement extends Components.IconBtn, HTMLStencilElement {
     }
     var HTMLIconBtnElement: {
@@ -249,6 +257,7 @@ declare global {
         "comments-view": HTMLCommentsViewElement;
         "dropdown-server": HTMLDropdownServerElement;
         "error-page": HTMLErrorPageElement;
+        "form-playlist": HTMLFormPlaylistElement;
         "icon-btn": HTMLIconBtnElement;
         "li-server-instance": HTMLLiServerInstanceElement;
         "loading-page": HTMLLoadingPageElement;
@@ -294,6 +303,8 @@ declare namespace LocalJSX {
     }
     interface ErrorPage {
         "error"?: IAppError;
+    }
+    interface FormPlaylist {
     }
     interface IconBtn {
         "disabled"?: boolean;
@@ -364,6 +375,7 @@ declare namespace LocalJSX {
         "comments-view": CommentsView;
         "dropdown-server": DropdownServer;
         "error-page": ErrorPage;
+        "form-playlist": FormPlaylist;
         "icon-btn": IconBtn;
         "li-server-instance": LiServerInstance;
         "loading-page": LoadingPage;
@@ -393,6 +405,7 @@ declare module "@stencil/core" {
             "comments-view": LocalJSX.CommentsView & JSXBase.HTMLAttributes<HTMLCommentsViewElement>;
             "dropdown-server": LocalJSX.DropdownServer & JSXBase.HTMLAttributes<HTMLDropdownServerElement>;
             "error-page": LocalJSX.ErrorPage & JSXBase.HTMLAttributes<HTMLErrorPageElement>;
+            "form-playlist": LocalJSX.FormPlaylist & JSXBase.HTMLAttributes<HTMLFormPlaylistElement>;
             "icon-btn": LocalJSX.IconBtn & JSXBase.HTMLAttributes<HTMLIconBtnElement>;
             "li-server-instance": LocalJSX.LiServerInstance & JSXBase.HTMLAttributes<HTMLLiServerInstanceElement>;
             "loading-page": LocalJSX.LoadingPage & JSXBase.HTMLAttributes<HTMLLoadingPageElement>;
