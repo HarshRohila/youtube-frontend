@@ -3,6 +3,7 @@
 }
 .notification {
   $radius: 10px;
+  text-wrap: nowrap;
 
   position: fixed;
   @include horizontal-center();
@@ -11,7 +12,7 @@
   @include glass-ui();
   background-color: $secondary-color;
   border-radius: $radius;
-  padding: 8px 20px;
+  padding: 12px 12px;
 
   display: flex;
   align-items: center;
@@ -36,6 +37,9 @@
       padding: 6px 10px;
       height: 100%;
       border-radius: $radius;
+    }
+    li ~ li {
+      padding-left: 8px;
     }
   }
 }

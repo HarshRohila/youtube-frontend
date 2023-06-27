@@ -148,6 +148,8 @@ export class VideoPage {
     new Router(this.history).showPlaylistPage()
   }
 
+  private handleChangePlaylist = () => {}
+
   private handleAddPlaylist = () => {
     addItemInPlaylist({
       thumbnail: this.stream.thumbnail,
@@ -164,6 +166,10 @@ export class VideoPage {
       {
         text: "View",
         clickHandler: this.handleViewPlaylist
+      },
+      {
+        text: "Change",
+        clickHandler: this.handleChangePlaylist
       }
     ])
   }
