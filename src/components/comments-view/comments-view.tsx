@@ -39,7 +39,7 @@ export class CommentsView {
     fromEvent(this.commentList, "scroll")
       .pipe(
         filter(() => isScrolledToBottom(this.commentList)),
-        throttleTime(500),
+        throttleTime(200),
         takeUntil(this.disconnected$)
       )
       .subscribe(() => {

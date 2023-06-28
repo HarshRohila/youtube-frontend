@@ -10,9 +10,10 @@ import { Videos } from "../../lib/Search"
 import { UploaderInfo } from "./Uploader"
 import { getTimeAgoFormatter } from "../../utils/TimeFormatter"
 import { getShareHandler } from "../../lib/ShareForm/ShareHandler"
-import { CommentsViewProps, ShareFormState, setCommentView } from "../../lib/redux/video-page"
+import { CommentsViewProps, ShareFormState } from "../../lib/redux/video-page"
 import { addItemInPlaylist } from "../../playlist"
 import { getNotifier } from "../../lib/notifier"
+import { Comments } from "./comments"
 
 @Component({
   tag: "video-page",
@@ -41,8 +42,6 @@ export class VideoPage {
   @State() commentsView: CommentsViewProps
 
   componentWillLoad() {
-    store.dispatch(setCommentView(undefined))
-
     const videoId = this.match.params.videoId
 
     this.history.listen(args => {
@@ -81,6 +80,8 @@ export class VideoPage {
   }
 
   private fetchVideo(videoId: string) {
+    Comments.close()
+
     if (!videoId) return
 
     store.dispatch(setLoading(true))
@@ -177,10 +178,10 @@ export class VideoPage {
   }
 
   private handleViewComments = () => {
-    if (this.isCommentsOpen) {
-      this.areCommentsHidden = false
-    } else {
-      store.dispatch(setCommentView({ videoId: this.videoId }))
+    this.areCommentsHidden = false
+
+    if (!this.isCommentsOpen) {
+      Comments.open({ videoId: this.videoId })
     }
   }
 
