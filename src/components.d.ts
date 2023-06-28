@@ -33,6 +33,7 @@ export namespace Components {
     }
     interface CommentsView {
         "areCommentsLoading": boolean;
+        "closeCallback": () => void;
         "comments": Comments;
         "commentsView": CommentsViewProps;
     }
@@ -286,6 +287,7 @@ declare namespace LocalJSX {
     }
     interface CommentsView {
         "areCommentsLoading"?: boolean;
+        "closeCallback"?: () => void;
         "comments"?: Comments;
         "commentsView"?: CommentsViewProps;
     }

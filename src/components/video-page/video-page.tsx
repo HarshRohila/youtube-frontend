@@ -166,6 +166,19 @@ export class VideoPage {
     ])
   }
 
+  @State() areCommentsHidden = false
+  private handleCloseComments = () => {
+    this.areCommentsHidden = true
+  }
+
+  private handleViewComments = () => {
+    if (this.isCommentsOpen) {
+      this.areCommentsHidden = false
+    } else {
+      store.dispatch(setCommentView({ videoId: this.videoId }))
+    }
+  }
+
   render() {
     return (
       <Host>
@@ -203,9 +216,14 @@ export class VideoPage {
                 icon={faComment}
                 label="View Comments"
                 type="secondary"
-                onBtnClicked={() => store.dispatch(setCommentView({ videoId: this.videoId }))}
+                onBtnClicked={this.handleViewComments}
               ></icon-btn>
-              {this.isCommentsOpen && <comments-view></comments-view>}
+              {this.isCommentsOpen && (
+                <comments-view
+                  class={this.areCommentsHidden ? "hide" : ""}
+                  closeCallback={this.handleCloseComments}
+                ></comments-view>
+              )}
               {!!this.stream.relatedVideos?.length && <h3 class="suggestion-header">You may also like</h3>}
               <Videos
                 preloadStream

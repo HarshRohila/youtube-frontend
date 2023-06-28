@@ -94,4 +94,8 @@ comments-view {
   width: 100%;
   height: -webkit-fill-available;
   z-index: $z-index-overlay;
+
+  &.hide {
+    visibility: hidden;
+  }
 }
