@@ -2,7 +2,7 @@ import { faClose, faSpinner } from "@fortawesome/free-solid-svg-icons"
 import { Component, Host, h, Prop, State } from "@stencil/core"
 import { state$, store } from "../../lib/redux"
 import { setCommentView, CommentsViewProps } from "../../lib/redux/video-page"
-import { Subject, debounceTime, filter, fromEvent, map, takeUntil, tap, throttle, throttleTime } from "rxjs"
+import { Subject, filter, fromEvent, map, takeUntil, throttleTime } from "rxjs"
 import { Comment, Comments } from "../../YoutubeApi"
 
 @Component({
