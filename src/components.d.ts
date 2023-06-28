@@ -33,6 +33,7 @@ export namespace Components {
     }
     interface CommentsView {
         "areCommentsLoading": boolean;
+        "closeCallback": () => void;
         "comments": Comments;
         "commentsView": CommentsViewProps;
     }
@@ -82,7 +83,6 @@ export namespace Components {
     }
     interface VideoPage {
         "history": RouterHistory;
-        "isCommentsOpen": boolean;
         "match": MatchResults;
         "shareForm": ShareFormState | undefined;
     }
@@ -286,6 +286,7 @@ declare namespace LocalJSX {
     }
     interface CommentsView {
         "areCommentsLoading"?: boolean;
+        "closeCallback"?: () => void;
         "comments"?: Comments;
         "commentsView"?: CommentsViewProps;
     }
@@ -336,7 +337,6 @@ declare namespace LocalJSX {
     }
     interface VideoPage {
         "history"?: RouterHistory;
-        "isCommentsOpen"?: boolean;
         "match"?: MatchResults;
         "shareForm"?: ShareFormState | undefined;
     }

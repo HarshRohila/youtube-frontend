@@ -10,9 +10,10 @@ import { Videos } from "../../lib/Search"
 import { UploaderInfo } from "./Uploader"
 import { getTimeAgoFormatter } from "../../utils/TimeFormatter"
 import { getShareHandler } from "../../lib/ShareForm/ShareHandler"
-import { ShareFormState, setCommentView } from "../../lib/redux/video-page"
+import { CommentsViewProps, ShareFormState } from "../../lib/redux/video-page"
 import { addItemInPlaylist } from "../../playlist"
 import { getNotifier } from "../../lib/notifier"
+import { Comments } from "./comments"
 
 @Component({
   tag: "video-page",
@@ -24,7 +25,6 @@ export class VideoPage {
   @Prop() history: RouterHistory
 
   @Prop({ mutable: true }) shareForm: ShareFormState | undefined
-  @Prop({ mutable: true }) isCommentsOpen: boolean
 
   @State() stream: Stream
   @State() error: IAppError | undefined
@@ -39,9 +39,9 @@ export class VideoPage {
     return this.match.params.videoId
   }
 
-  componentWillLoad() {
-    store.dispatch(setCommentView(undefined))
+  @State() commentsView: CommentsViewProps
 
+  componentWillLoad() {
     const videoId = this.match.params.videoId
 
     this.history.listen(args => {
@@ -69,13 +69,19 @@ export class VideoPage {
       )
       .subscribe(state => {
         this.shareForm = state.shareForm
-        this.isCommentsOpen = !!state.commentsView
+        this.commentsView = state.commentsView
       })
 
     this.fetchVideo(videoId)
   }
 
+  get isCommentsOpen() {
+    return !!this.commentsView
+  }
+
   private fetchVideo(videoId: string) {
+    Comments.close()
+
     if (!videoId) return
 
     store.dispatch(setLoading(true))
@@ -166,6 +172,19 @@ export class VideoPage {
     ])
   }
 
+  @State() areCommentsHidden = false
+  private handleCloseComments = () => {
+    this.areCommentsHidden = true
+  }
+
+  private handleViewComments = () => {
+    this.areCommentsHidden = false
+
+    if (!this.isCommentsOpen) {
+      Comments.open({ videoId: this.videoId })
+    }
+  }
+
   render() {
     return (
       <Host>
@@ -203,9 +222,14 @@ export class VideoPage {
                 icon={faComment}
                 label="View Comments"
                 type="secondary"
-                onBtnClicked={() => store.dispatch(setCommentView({ videoId: this.videoId }))}
+                onBtnClicked={this.handleViewComments}
               ></icon-btn>
-              {this.isCommentsOpen && <comments-view></comments-view>}
+              {this.isCommentsOpen && (
+                <comments-view
+                  class={this.areCommentsHidden ? "hide" : ""}
+                  closeCallback={this.handleCloseComments}
+                ></comments-view>
+              )}
               {!!this.stream.relatedVideos?.length && <h3 class="suggestion-header">You may also like</h3>}
               <Videos
                 preloadStream

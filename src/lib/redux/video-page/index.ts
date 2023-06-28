@@ -43,6 +43,10 @@ export const videoPageSlice = createSlice({
     },
     setCommentView(state, action: PayloadAction<CommentsViewProps | undefined>) {
       state.commentsView = action.payload
+
+      if (!state.commentsView) {
+        state.comments = newComments()
+      }
     },
     setComments(state, action: PayloadAction<Comments>) {
       state.comments = action.payload

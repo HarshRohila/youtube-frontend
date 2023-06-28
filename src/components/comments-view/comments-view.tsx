@@ -2,7 +2,7 @@ import { faClose, faSpinner } from "@fortawesome/free-solid-svg-icons"
 import { Component, Host, h, Prop, State } from "@stencil/core"
 import { state$, store } from "../../lib/redux"
 import { setCommentView, CommentsViewProps } from "../../lib/redux/video-page"
-import { Subject, map, takeUntil } from "rxjs"
+import { Subject, filter, fromEvent, map, takeUntil, throttleTime } from "rxjs"
 import { Comment, Comments } from "../../YoutubeApi"
 
 @Component({
@@ -15,13 +15,11 @@ export class CommentsView {
   @Prop({ mutable: true }) commentsView: CommentsViewProps
   @Prop({ mutable: true }) areCommentsLoading: boolean
 
+  @Prop() closeCallback: () => void
+
   @State() commentsList = [] as Comment[]
 
-  private observer: IntersectionObserver
-
   componentWillLoad() {
-    this.observer = new IntersectionObserver(this.handleIntersection, { root: null, rootMargin: "0px", threshold: 0.1 })
-
     state$
       .pipe(
         map(s => s.videoPage),
@@ -37,15 +35,16 @@ export class CommentsView {
       })
   }
 
-  private handleIntersection = (entries: IntersectionObserverEntry[]) => {
-    const lastCommentEntry = entries[0]
-
-    if (lastCommentEntry.isIntersecting) {
-      this.observer?.disconnect()
-      if (this.comments.nextpage) {
+  componentDidLoad() {
+    fromEvent(this.commentList, "scroll")
+      .pipe(
+        filter(() => isScrolledToBottom(this.commentList)),
+        throttleTime(200),
+        takeUntil(this.disconnected$)
+      )
+      .subscribe(() => {
         store.dispatch(setCommentView({ ...this.commentsView, nextpage: this.comments.nextpage }))
-      }
-    }
+      })
   }
 
   disconnected$ = new Subject<void>()
@@ -54,31 +53,26 @@ export class CommentsView {
     this.disconnected$.complete()
   }
 
+  private commentList: HTMLUListElement
+
   render() {
     const comments = this.commentsList
 
     return (
       <Host>
         <div class="comments-view">
-          <icon-btn
-            class="close-btn"
-            icon={faClose}
-            onBtnClicked={() => store.dispatch(setCommentView(undefined))}
-          ></icon-btn>
+          <icon-btn class="close-btn" icon={faClose} onBtnClicked={this.closeCallback}></icon-btn>
           <h3 class="heading">Comments</h3>
-          <ul class="list">
-            {comments.map((c, index) => {
-              if (index === comments.length - 1) {
-                return (
-                  <li ref={el => el && this.observer.observe(el)} key={c.commentId}>
-                    <a-comment comment={c}></a-comment>
-                  </li>
-                )
-              }
-
+          <ul
+            ref={el => {
+              this.commentList = el
+            }}
+            class="list"
+          >
+            {comments.map(c => {
               return (
                 <li>
-                  <a-comment comment={c}></a-comment>
+                  <a-comment comment={c} key={c.commentId}></a-comment>
                 </li>
               )
             })}
@@ -88,4 +82,8 @@ export class CommentsView {
       </Host>
     )
   }
+}
+
+function isScrolledToBottom(element: HTMLElement) {
+  return Math.abs(element.scrollHeight - element.scrollTop - element.clientHeight) < 1
 }
