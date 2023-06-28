@@ -10,7 +10,7 @@ import { Videos } from "../../lib/Search"
 import { UploaderInfo } from "./Uploader"
 import { getTimeAgoFormatter } from "../../utils/TimeFormatter"
 import { getShareHandler } from "../../lib/ShareForm/ShareHandler"
-import { ShareFormState, setCommentView } from "../../lib/redux/video-page"
+import { CommentsViewProps, ShareFormState, setCommentView } from "../../lib/redux/video-page"
 import { addItemInPlaylist } from "../../playlist"
 import { getNotifier } from "../../lib/notifier"
 
@@ -24,7 +24,6 @@ export class VideoPage {
   @Prop() history: RouterHistory
 
   @Prop({ mutable: true }) shareForm: ShareFormState | undefined
-  @Prop({ mutable: true }) isCommentsOpen: boolean
 
   @State() stream: Stream
   @State() error: IAppError | undefined
@@ -38,6 +37,8 @@ export class VideoPage {
   get videoId() {
     return this.match.params.videoId
   }
+
+  @State() commentsView: CommentsViewProps
 
   componentWillLoad() {
     store.dispatch(setCommentView(undefined))
@@ -69,10 +70,14 @@ export class VideoPage {
       )
       .subscribe(state => {
         this.shareForm = state.shareForm
-        this.isCommentsOpen = !!state.commentsView
+        this.commentsView = state.commentsView
       })
 
     this.fetchVideo(videoId)
+  }
+
+  get isCommentsOpen() {
+    return !!this.commentsView
   }
 
   private fetchVideo(videoId: string) {

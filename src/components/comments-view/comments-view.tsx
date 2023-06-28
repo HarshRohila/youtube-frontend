@@ -2,7 +2,7 @@ import { faClose, faSpinner } from "@fortawesome/free-solid-svg-icons"
 import { Component, Host, h, Prop, State } from "@stencil/core"
 import { state$, store } from "../../lib/redux"
 import { setCommentView, CommentsViewProps } from "../../lib/redux/video-page"
-import { Subject, debounceTime, fromEvent, map, takeUntil, tap } from "rxjs"
+import { Subject, debounceTime, filter, fromEvent, map, takeUntil, tap, throttle, throttleTime } from "rxjs"
 import { Comment, Comments } from "../../YoutubeApi"
 
 @Component({
@@ -38,15 +38,13 @@ export class CommentsView {
   componentDidLoad() {
     fromEvent(this.commentList, "scroll")
       .pipe(
-        debounceTime(300),
-        tap(() => {
-          if (isScrolledToBottom(this.commentList)) {
-            store.dispatch(setCommentView({ ...this.commentsView, nextpage: this.comments.nextpage }))
-          }
-        }),
+        filter(() => isScrolledToBottom(this.commentList)),
+        throttleTime(500),
         takeUntil(this.disconnected$)
       )
-      .subscribe()
+      .subscribe(() => {
+        store.dispatch(setCommentView({ ...this.commentsView, nextpage: this.comments.nextpage }))
+      })
   }
 
   disconnected$ = new Subject<void>()
