@@ -14,6 +14,7 @@ import { CommentsViewProps, ShareFormState } from "../../lib/redux/video-page"
 import { addItemInPlaylist } from "../../playlist"
 import { getNotifier } from "../../lib/notifier"
 import { Comments } from "./comments"
+import { MediaSession } from "./mediaSession"
 
 @Component({
   tag: "video-page",
@@ -101,6 +102,11 @@ export class VideoPage {
         next: stream => {
           this.stream = stream
           store.dispatch(setLoading(false))
+          MediaSession.init({
+            title: stream.title,
+            author: stream.uploader,
+            images: [{ src: stream.thumbnail, type: "image/webp" }]
+          })
         },
         error: () => {
           this.error = { message: "Failed to load video. Please try changing server from settings(in home page)" }
