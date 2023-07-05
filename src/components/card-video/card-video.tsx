@@ -1,6 +1,6 @@
 import { Component, Host, Prop, State, h } from "@stencil/core"
 import { SearchResult, Stream, YouTubeApi } from "../../YoutubeApi"
-import { faTrash } from "@fortawesome/free-solid-svg-icons"
+import { faCheck, faTrash } from "@fortawesome/free-solid-svg-icons"
 import { take } from "rxjs"
 
 const formatter = Intl.NumberFormat("en", { notation: "compact" })
@@ -20,7 +20,7 @@ export class CardVideo {
   get subDescription() {
     const { video } = this
 
-    return [video.uploaderName, ...(video.views ? [formatter.format(video.views)] : []), video.uploadedDate].join(" ‧ ")
+    return ["", ...(video.views ? [formatter.format(video.views)] : []), video.uploadedDate].join(" ‧ ")
   }
 
   @State() stream: Stream | undefined
@@ -49,9 +49,13 @@ export class CardVideo {
           <img class="thumbnail" src={this.thumbnail}></img>
           <div class="video-desc">
             <img class="uploader-avatar" src={video.uploaderAvatar}></img>
-            <span>
+            <span class="avatar-right">
               <h3>{video.title}</h3>
-              <p>{subDescription}</p>
+              <p class="sub-desc">
+                <span>{video.uploaderName}</span>
+                <x-icon icon={faCheck}></x-icon>
+                <span>{subDescription}</span>
+              </p>
             </span>
             {this.deleteCallback && (
               <icon-btn

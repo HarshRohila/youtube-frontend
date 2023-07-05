@@ -137,7 +137,7 @@ class PipedApi implements IYouTubeApi {
     )
   }
 }
-function createSearchResultMapFunc(): any {
+function createSearchResultMapFunc(): (v: any) => SearchResult {
   return v => ({
     videoId: v.url.split("/watch?v=")[1],
     thumbnail: v.thumbnail,
@@ -145,6 +145,7 @@ function createSearchResultMapFunc(): any {
     uploaderAvatar: v.uploaderAvatar,
     uploaderName: v.uploaderName,
     uploadedDate: v.uploadedDate,
+    uploaderVerified: v.uploaderVerified,
     views: v.views
   })
 }
