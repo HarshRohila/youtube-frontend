@@ -27,6 +27,7 @@ export interface SearchResult {
   uploaderAvatar: string
   uploaderName: string
   uploadedDate: string
+  uploaderVerified?: boolean
   views?: number
 }
 

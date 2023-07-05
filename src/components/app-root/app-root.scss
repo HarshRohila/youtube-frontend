@@ -133,7 +133,7 @@ ul.trending {
     .uploader-avatar {
       @include uploader-avatar();
     }
-    span {
+    span.avatar-right {
       width: 100px;
       flex: 1;
       display: block;
@@ -144,10 +144,16 @@ ul.trending {
       margin-bottom: 2px;
       @include ellipsis();
     }
-    p {
+    p.sub-desc {
+      > x-icon {
+        margin: 0 3px;
+      }
       margin: 0;
       font-size: 0.9rem;
-      @include ellipsis();
+      display: flex;
+      > span {
+        @include ellipsis();
+      }
     }
   }
 }
