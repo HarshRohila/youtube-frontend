@@ -53,7 +53,7 @@ export class CardVideo {
               <h3>{video.title}</h3>
               <p class="sub-desc">
                 <span>{video.uploaderName}</span>
-                <x-icon icon={faCheck}></x-icon>
+                {!!video.uploaderVerified && <x-icon icon={faCheck}></x-icon>}
                 <span>{subDescription}</span>
               </p>
             </span>

@@ -58,6 +58,7 @@ export interface Stream {
   uploadDate: string
   thumbnail: string
   id: string
+  uploaderVerified?: boolean
 }
 export interface StreamSource {
   url: string

@@ -28,6 +28,10 @@ h3 {
   .info {
     display: flex;
     align-items: baseline;
+    > x-icon {
+      font-size: 0.9rem;
+      margin-left: 2px;
+    }
   }
   img {
     @include uploader-avatar(30px);
