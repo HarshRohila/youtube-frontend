@@ -37,13 +37,15 @@ export class TrendingPage {
         map(state => state.search),
         untilDestroyed(this, "disconnectedCallback")
       )
-      .subscribe(state => {
-        this.showSearchbar = state.showSearchBar
-        this.searchText = state.searchText
-        this.videos = state.searchResponse.results
-        this.suggestions = state.suggestions
-        this.suggestionsError = state.suggestionsError
-        this.suggestionsLoading = state.suggestionsLoading
+      .subscribe({
+        next: state => {
+          this.showSearchbar = state.showSearchBar
+          this.searchText = state.searchText
+          this.videos = state.searchResponse.results
+          this.suggestions = state.suggestions
+          this.suggestionsError = state.suggestionsError
+          this.suggestionsLoading = state.suggestionsLoading
+        }
       })
   }
 
