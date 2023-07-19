@@ -1,7 +1,7 @@
-import { Observable, catchError, defer, map, from, of } from "rxjs"
-import axios from "axios"
+import { Observable, catchError, map, of } from "rxjs"
 import { Comments, IYouTubeApi, SearchResponse, SearchResult, Source, Stream } from "./IYouTubeApi"
 import { CurrentServerInstance } from "../server-instance/currentServerInstance"
+import { httpGet$ } from "../utils/http"
 
 export * from "./IYouTubeApi"
 
@@ -33,7 +33,7 @@ class PipedApi implements IYouTubeApi {
       url = `${this.getBaseUrl()}/nextpage/comments/${videoId}?nextpage=${nextpage}`
     }
 
-    return defer(() => axios.get(url)).pipe(map(response => response.data))
+    return httpGet$(url).pipe(map(response => response.data))
   }
 
   getSearchResults(query: string, nextpage?: string): Observable<SearchResponse> {
@@ -53,7 +53,7 @@ class PipedApi implements IYouTubeApi {
       url = `${this.getBaseUrl()}/nextpage/search?q=${query}&filter=videos&nextpage=${nextpage}`
     }
 
-    return defer(() => axios.get(url)).pipe(
+    return httpGet$(url).pipe(
       map(response => response.data),
       map(data => {
         return {
@@ -79,7 +79,7 @@ class PipedApi implements IYouTubeApi {
       return { ...stream, mime: stream.mimeType }
     }
 
-    return defer(() => axios.get(`${this.getBaseUrl()}/streams/${videoId}`)).pipe(
+    return httpGet$(`${this.getBaseUrl()}/streams/${videoId}`).pipe(
       map(response => response.data),
       map(data => {
         return {
@@ -106,7 +106,7 @@ class PipedApi implements IYouTubeApi {
 
   getTrendingVideos(): Observable<SearchResult[]> {
     const region = "IN"
-    return defer(() => axios.get(`${this.getBaseUrl()}/trending?region=${region}`)).pipe(
+    return httpGet$(`${this.getBaseUrl()}/trending?region=${region}`).pipe(
       map(response => response.data),
       map(videos => {
         return videos.map(createSearchResultMapFunc())
@@ -115,18 +115,12 @@ class PipedApi implements IYouTubeApi {
   }
 
   getSuggestions(query: string): Observable<string[]> {
-    return defer(() => axios.get(`${this.getBaseUrl()}/suggestions?query=${query}`)).pipe(
-      map(response => response.data)
-    )
+    return httpGet$(`${this.getBaseUrl()}/suggestions?query=${query}`).pipe(map(response => response.data))
   }
 
   getSkipSegments(videoId: string): Observable<number[][]> {
-    return defer(() =>
-      from(
-        axios.get(
-          `${this.getBaseUrl()}/sponsors/${videoId}?category=["sponsor","interaction","selfpromo","music_offtopic"]`
-        )
-      )
+    return httpGet$(
+      `${this.getBaseUrl()}/sponsors/${videoId}?category=["sponsor","interaction","selfpromo","music_offtopic"]`
     ).pipe(
       map(response => response.data.segments),
       map(segments => {

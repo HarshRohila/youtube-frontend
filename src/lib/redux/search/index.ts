@@ -10,11 +10,13 @@ import {
   map,
   of,
   switchMap,
-  takeUntil
+  takeUntil,
+  timeout
 } from "rxjs"
 import { SearchResponse, YouTubeApi } from "../../../YoutubeApi"
 import { RootState } from ".."
 import { IAppError, setError, setLoading } from "../global"
+import { REQUEST_TIMEOUT } from "../../../utils/constants"
 
 const initialState = {
   showSearchBar: false,
@@ -92,6 +94,7 @@ export const fetchTrendingEpic = (action$: Observable<Action>) =>
       const api$ = YouTubeApi.getApi()
         .getTrendingVideos()
         .pipe(
+          timeout(REQUEST_TIMEOUT),
           map(results => setSearchResult({ results, nextpage: "" })),
           catchError(() =>
             of(

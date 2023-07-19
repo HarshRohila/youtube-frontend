@@ -25,8 +25,12 @@ export class CardVideo {
 
   @State() stream: Stream | undefined
 
-  componentWillLoad() {
-    if (!this.preloadStream) return
+  get thumbnail() {
+    return this.stream?.thumbnail || this.video.thumbnail
+  }
+
+  private handleImageLoad = () => {
+    if (!this.preloadStream || this.stream) return
 
     YouTubeApi.getApi()
       .getStream(this.video.videoId)
@@ -34,10 +38,6 @@ export class CardVideo {
       .subscribe(s => {
         this.stream = s
       })
-  }
-
-  get thumbnail() {
-    return this.stream?.thumbnail || this.video.thumbnail
   }
 
   render() {
@@ -48,7 +48,7 @@ export class CardVideo {
         <div class="card">
           <img class="thumbnail" src={this.thumbnail}></img>
           <div class="video-desc">
-            <img class="uploader-avatar" src={video.uploaderAvatar}></img>
+            <img class="uploader-avatar" onLoad={this.handleImageLoad} src={video.uploaderAvatar}></img>
             <span class="avatar-right">
               <h3>{video.title}</h3>
               <p class="sub-desc">
