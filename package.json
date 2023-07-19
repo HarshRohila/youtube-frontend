@@ -7,7 +7,7 @@
     "deploy": "pnpm run build && gh-pages -d www -r https://github.com/HarshRohila/youtube-frontend.git",
     "build": "pnpm generateIndexHtmlProd && stencil build",
     "start": "pnpm run generateIndexHtmlDev && stencil build --dev --watch --serve",
-    "test": "stencil test --spec --e2e",
+    "test": "stencil test --spec",
     "test.watch": "stencil test --spec --e2e --watchAll",
     "generate": "stencil generate",
     "generateIndexHtmlDev": "sed \"s/{{rootUrl}}/\\//g\" src/indexTemplate.html > src/index.html",
