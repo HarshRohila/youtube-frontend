@@ -19,10 +19,10 @@ export function getServerInstances(): Observable<ServerInstance[]> {
           }
           instances.push({
             name: split[0].trim(),
-            apiurl: split[1].trim(),
+            apiUrl: split[1].trim(),
             locations: split[2].trim(),
             hasCdn: split[3].trim() === "Yes" ? true : false
-          })
+          } as ServerInstance)
         }
       })
 
