@@ -1,0 +1,1 @@
+import{h as r}from"./p-27ce4408.js";import{A as e}from"./p-954d5885.js";function o({onHeaderClick:o,className:s}){return s||(s=""),r("header",{class:s},r("h1",{onClick:o},e))}export{o as H}
