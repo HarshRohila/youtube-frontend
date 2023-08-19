@@ -10,6 +10,7 @@
     "test": "stencil test --spec --e2e",
     "test.watch": "stencil test --spec --e2e --watchAll",
     "generate": "stencil generate",
+    "cypress:open": "cypress open",
     "generateIndexHtmlDev": "sed \"s/{{rootUrl}}/\\//g\" src/indexTemplate.html > src/index.html",
     "generateIndexHtmlProd": "sed \"s/{{rootUrl}}/\\/youtube-frontend\\//g\" src/indexTemplate.html > src/index.html"
   },
@@ -19,6 +20,7 @@
     "@stencil/core": "2.13.0",
     "@stencil/sass": "^3.0.1",
     "@types/jest": "^27.0.3",
+    "cypress": "^12.17.4",
     "gh-pages": "^5.0.0",
     "jest": "^27.4.5",
     "jest-cli": "^27.4.5",
