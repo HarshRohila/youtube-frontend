@@ -88,6 +88,7 @@ export namespace Components {
     }
     interface VideoPlayer {
         "currentTime": (newTime?: number) => Promise<number>;
+        "muted": boolean;
         "skipSegments": number[][];
         "sources": Source[];
     }
@@ -341,6 +342,7 @@ declare namespace LocalJSX {
         "shareForm"?: ShareFormState | undefined;
     }
     interface VideoPlayer {
+        "muted"?: boolean;
         "onLoaded"?: (event: CustomEvent<{ player: Player }>) => void;
         "skipSegments"?: number[][];
         "sources"?: Source[];

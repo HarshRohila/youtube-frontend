@@ -27,6 +27,7 @@ export class VideoPlayer {
   }
 
   @Prop() sources: Source[]
+  @Prop() muted = false
 
   get src() {
     return this.sources[0]
@@ -82,6 +83,7 @@ export class VideoPlayer {
 
   componentDidLoad() {
     this.player = videojs(this.videoElement, {
+      muted: this.muted,
       controls: true,
       autoplay: true,
       preload: "auto",
@@ -187,6 +189,8 @@ export class VideoPlayer {
     keyboard.unbind(KEYS.space, this.handleSpacebar)
     keyboard.unbind(KEYS.right, this.handleRight)
     keyboard.unbind(KEYS.left, this.handleLeft)
+
+    this.player?.dispose()
   }
 
   private setVideoElement = (el: HTMLElement) => {
