@@ -1,1 +1,0 @@
-import{o as l,c as n,h as s}from"./p-b157210b.js";function t(t,o){return l(((l,r)=>{let u=null,a=0,c=!1;const e=()=>c&&!u&&r.complete();l.subscribe(n(r,(l=>{null==u||u.unsubscribe();let c=0;const p=a++;s(t(l,p)).subscribe(u=n(r,(n=>r.next(o?o(l,n,p,c++):n)),(()=>{u=null,e()})))}),(()=>{c=!0,e()})))}))}export{t as s}
