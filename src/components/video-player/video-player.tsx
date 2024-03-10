@@ -189,6 +189,8 @@ export class VideoPlayer {
     keyboard.unbind(KEYS.space, this.handleSpacebar)
     keyboard.unbind(KEYS.right, this.handleRight)
     keyboard.unbind(KEYS.left, this.handleLeft)
+
+    this.player?.dispose()
   }
 
   private setVideoElement = (el: HTMLElement) => {

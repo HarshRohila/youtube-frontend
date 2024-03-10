@@ -1,7 +1,8 @@
 import { Component, Host, Prop, State, h, Element } from "@stencil/core"
 import { SearchResult, Stream, YouTubeApi } from "../../YoutubeApi"
 import { faCheck, faTrash } from "@fortawesome/free-solid-svg-icons"
-import { fromEvent, take, takeUntil, switchMap } from "../../lib/rx"
+import { fromEvent, take, switchMap, of, map, merge, Subject, timer, takeUntil } from "../../lib/rx"
+import { untilDestroyed } from "@ngneat/until-destroy"
 
 const formatter = Intl.NumberFormat("en", { notation: "compact" })
 
@@ -43,6 +44,8 @@ export class CardVideo {
   }
 
   private getStream = () => {
+    if (this.stream) return of(this.stream)
+
     return YouTubeApi.getApi().getStream(this.video.videoId)
   }
 
@@ -50,12 +53,24 @@ export class CardVideo {
     const card = this.el.querySelector(".card")
 
     const mouseLeave$ = fromEvent(card, "mouseleave")
+    const mouseEnter$ = fromEvent(card, "mouseenter")
 
-    fromEvent(card, "mouseenter")
-      .pipe(switchMap(this.getStream), takeUntil(mouseLeave$))
-      .subscribe(stream => {
-        this.setStream(stream)
-        this.showVideoPreview = true
+    const videoStream$ = mouseEnter$.pipe(
+      switchMap(() => timer(300).pipe(takeUntil(mouseLeave$))),
+      switchMap(this.getStream)
+    )
+
+    videoStream$.pipe(untilDestroyed(this, "disconnectedCallback")).subscribe(stream => {
+      this.setStream(stream)
+    })
+
+    const showVideoPreview$ = videoStream$.pipe(map(() => true))
+    const hideVideoPreview$ = merge(mouseLeave$, this.destroy$).pipe(map(() => false))
+
+    merge(showVideoPreview$, hideVideoPreview$)
+      .pipe(untilDestroyed(this, "disconnectedCallback"))
+      .subscribe(value => {
+        this.showVideoPreview = value
       })
 
     mouseLeave$.pipe(take(1)).subscribe(() => {
@@ -72,13 +87,7 @@ export class CardVideo {
           <img class="thumbnail" src={this.thumbnail}></img>
           <div class="video-preview">
             {this.stream && this.showVideoPreview && (
-              <video-player
-                sources={this.stream.sources}
-                muted={true}
-                onLoaded={({ detail }) => {
-                  detail.player.play()
-                }}
-              ></video-player>
+              <video-player sources={this.stream.sources} muted={true}></video-player>
             )}
           </div>
           <div class="video-desc">
@@ -107,5 +116,12 @@ export class CardVideo {
         </div>
       </Host>
     )
+  }
+
+  destroy$ = new Subject<void>()
+
+  disconnectedCallback() {
+    this.destroy$.next()
+    this.destroy$.complete()
   }
 }
