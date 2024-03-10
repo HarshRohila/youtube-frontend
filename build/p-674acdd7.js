@@ -1,1 +1,0 @@
-import{m as r}from"./p-3b7085e5.js";const{isArray:n}=Array;function t(t){return r((r=>function(r,t){return n(t)?r(...t):r(t)}(t,r)))}export{t as m}

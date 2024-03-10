@@ -1,0 +1,1 @@
+import{m as r}from"./p-7b8d1737.js";const{isArray:n}=Array;function t(t){return r((r=>function(r,t){return n(t)?r(...t):r(t)}(t,r)))}export{t as m}
