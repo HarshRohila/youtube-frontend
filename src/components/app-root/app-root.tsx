@@ -2,11 +2,11 @@ import { Component, h, Element, State, Prop } from "@stencil/core"
 import { AppRoute } from "../../utils/AppRoute"
 import { Subject, combineLatest, map } from "rxjs"
 import { state$ } from "../../lib/redux"
-import { untilDestroyed } from "@ngneat/until-destroy"
 import { IAppError } from "../../lib/redux/global"
 import { initDatbase } from "../../playlist/database/Database"
 import { NotificationModel } from "../../lib/notifier"
 import { notifcationState$ } from "../../lib/facades/notifier"
+import { myLib } from "../../lib/app-state-mgt"
 
 @Component({
   tag: "app-root",
@@ -23,19 +23,18 @@ export class AppRoot {
   @Prop({ mutable: true }) notification: NotificationModel
 
   componentWillLoad() {
+    const lib = myLib(this)
+
     const initDb$ = initDatbase()
 
-    combineLatest([initDb$, state$])
-      .pipe(
-        map(([, state]) => state.global),
-        untilDestroyed(this, "disconnectedCallback")
-      )
-      .subscribe(state => {
-        this.error = state.error
-        this.isLoading = state.isLoading
-      })
+    const combined$ = combineLatest([initDb$, state$]).pipe(map(([, state]) => state.global))
 
-    notifcationState$.pipe(untilDestroyed(this, "disconnectedCallback")).subscribe(s => {
+    lib.untilDestroyed(combined$).subscribe(state => {
+      this.error = state.error
+      this.isLoading = state.isLoading
+    })
+
+    lib.untilDestroyed(notifcationState$).subscribe(s => {
       this.notification = s
     })
   }
