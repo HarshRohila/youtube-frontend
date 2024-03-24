@@ -1,12 +1,11 @@
 import { Component, h, Element, State, Prop } from "@stencil/core"
 import { AppRoute } from "../../utils/AppRoute"
-import { Subject, combineLatest, map } from "rxjs"
-import { state$ } from "../../lib/redux"
+import { Subject } from "rxjs"
 import { IAppError } from "../../lib/redux/global"
-import { initDatbase } from "../../playlist/database/Database"
 import { NotificationModel } from "../../lib/notifier"
 import { notifcationState$ } from "../../lib/facades/notifier"
 import { myLib } from "../../lib/app-state-mgt"
+import { globalState$ } from "../../lib/facades/global"
 
 @Component({
   tag: "app-root",
@@ -23,18 +22,14 @@ export class AppRoot {
   @Prop({ mutable: true }) notification: NotificationModel
 
   componentWillLoad() {
-    const lib = myLib(this)
+    const component = myLib(this)
 
-    const initDb$ = initDatbase()
-
-    const combined$ = combineLatest([initDb$, state$]).pipe(map(([, state]) => state.global))
-
-    lib.untilDestroyed(combined$).subscribe(state => {
+    component.untilDestroyed(globalState$).subscribe(state => {
       this.error = state.error
       this.isLoading = state.isLoading
     })
 
-    lib.untilDestroyed(notifcationState$).subscribe(s => {
+    component.untilDestroyed(notifcationState$).subscribe(s => {
       this.notification = s
     })
   }
