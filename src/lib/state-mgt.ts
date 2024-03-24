@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable, Subject } from "rxjs"
 function initMyLib({ componentDestroyHandlerName }: { componentDestroyHandlerName: string }) {
   return function initInComponent(componentContext: any) {
     return {
-      untilDestroyed(anyObservable: Observable<any>) {
+      untilDestroyed<T>(anyObservable: Observable<T>) {
         return anyObservable.pipe(untilDestroyed(componentContext, componentDestroyHandlerName))
       }
     }

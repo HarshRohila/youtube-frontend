@@ -3,15 +3,19 @@ import { ofType } from "redux-observable"
 import { BehaviorSubject, Observable, catchError, concat, map, of, switchMap } from "rxjs"
 import { RootState } from ".."
 import { Comments, YouTubeApi, newComments } from "../../../YoutubeApi"
+import { createState } from "../../state-mgt"
 
 const initialState = {
   shareForm: undefined as ShareFormState | undefined,
   currentTimeEnabled: false,
-  copiedLink: "",
   commentsView: undefined as CommentsViewProps | undefined,
   comments: undefined as Comments | undefined,
   areCommentsLoading: false
 }
+
+const state = createState({
+  copiedLink: ""
+})
 
 export interface CommentsViewProps {
   videoId: string
@@ -26,20 +30,17 @@ export const videoPageSlice = createSlice({
   name: "video-page",
   initialState,
   reducers: {
-    setShareForm: (state, action: PayloadAction<ShareFormState | undefined>) => {
-      state.shareForm = action.payload
+    setShareForm: (reduxState, action: PayloadAction<ShareFormState | undefined>) => {
+      reduxState.shareForm = action.payload
 
       if (!action.payload) {
-        state.currentTimeEnabled = false
-        state.copiedLink = ""
+        reduxState.currentTimeEnabled = false
+        state.update({ copiedLink: "" })
       }
     },
-    setCurrentTimeEnabled(state, action: PayloadAction<boolean>) {
-      state.currentTimeEnabled = action.payload
-      state.copiedLink = ""
-    },
-    setCopiedLink(state, action: PayloadAction<string>) {
-      state.copiedLink = action.payload
+    setCurrentTimeEnabled(reduxState, action: PayloadAction<boolean>) {
+      reduxState.currentTimeEnabled = action.payload
+      state.update({ copiedLink: "" })
     },
     setCommentView(state, action: PayloadAction<CommentsViewProps | undefined>) {
       state.commentsView = action.payload
@@ -57,14 +58,8 @@ export const videoPageSlice = createSlice({
   }
 })
 
-export const {
-  setShareForm,
-  setCurrentTimeEnabled,
-  setCopiedLink,
-  setCommentView,
-  setComments,
-  setAreCommentsLoading
-} = videoPageSlice.actions
+export const { setShareForm, setCurrentTimeEnabled, setCommentView, setComments, setAreCommentsLoading } =
+  videoPageSlice.actions
 
 export const fetchCommentsEpic = (action$: Observable<Action>, _state$: BehaviorSubject<RootState>) =>
   action$.pipe(
@@ -94,3 +89,5 @@ export const fetchCommentsEpic = (action$: Observable<Action>, _state$: Behavior
   )
 
 export default videoPageSlice.reducer
+
+export { state as videoPageState }

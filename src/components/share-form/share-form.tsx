@@ -1,6 +1,6 @@
 import { Component, Host, h, Prop } from "@stencil/core"
 import { state$, store } from "../../lib/redux"
-import { setCopiedLink, setCurrentTimeEnabled, setShareForm } from "../../lib/redux/video-page"
+import { setCurrentTimeEnabled, setShareForm, videoPageState } from "../../lib/redux/video-page"
 import { getId } from "../../utils/getId"
 import { map } from "rxjs"
 import { Modal } from "../../lib/Modal"
@@ -31,6 +31,8 @@ export class ShareForm {
     component.untilDestroyed(videoPageState$).subscribe(state => {
       this.shareForm = state.shareForm
       this.currentTimeEnabled = state.currentTimeEnabled
+    })
+    component.untilDestroyed(videoPageState.asObservable()).subscribe(state => {
       this.copiedLink = state.copiedLink
     })
   }
@@ -39,7 +41,7 @@ export class ShareForm {
 
   private handleCopyLink = async (link: string) => {
     copyToClipboard(link).then(() => {
-      store.dispatch(setCopiedLink(link))
+      videoPageState.update({ copiedLink: link })
     })
   }
 
