@@ -6,4 +6,6 @@ const initDb$ = initDatbase()
 
 const globalState$ = combineLatest([initDb$, state$]).pipe(map(([, state]) => state.global))
 
-export { globalState$ }
+const searchState$ = state$.pipe(map(state => state.search))
+
+export { globalState$, searchState$ }
