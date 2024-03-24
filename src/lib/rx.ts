@@ -11,5 +11,11 @@ export {
   timer,
   combineLatest,
   Observable,
-  BehaviorSubject
+  BehaviorSubject,
+  startWith,
+  catchError,
+  concat,
+  debounceTime,
+  filter,
+  timeout
 } from "rxjs"

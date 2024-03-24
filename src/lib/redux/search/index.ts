@@ -11,11 +11,12 @@ import {
   of,
   switchMap,
   takeUntil,
+  tap,
   timeout
-} from "rxjs"
+} from "../../../lib/rx"
 import { SearchResponse, YouTubeApi } from "../../../YoutubeApi"
 import { RootState } from ".."
-import { IAppError, setError, setLoading } from "../global"
+import { IAppError, globalState } from "../global"
 import { REQUEST_TIMEOUT } from "../../../utils/constants"
 
 const initialState = {
@@ -87,30 +88,36 @@ export const {
 
 export default searchSlice.reducer
 
+const ERROR_FAILED_FETCH_TRENDING =
+  "Failed to get response from the Server. Please try changing server from settings(in home page)"
+
 export const fetchTrendingEpic = (action$: Observable<Action>) =>
   action$.pipe(
     ofType(loadTrending),
+    tap(() => {
+      globalState.update({ isLoading: true })
+    }),
     switchMap(() => {
       const api$ = YouTubeApi.getApi()
         .getTrendingVideos()
         .pipe(
           timeout(REQUEST_TIMEOUT),
           map(results => setSearchResult({ results, nextpage: "" })),
-          catchError(() =>
-            of(
-              setError({
-                message:
-                  "Failed to get response from the Server. Please try changing server from settings(in home page)"
-              })
-            )
-          )
+          catchError(() => {
+            globalState.update({
+              error: {
+                message: ERROR_FAILED_FETCH_TRENDING
+              }
+            })
+            return of(setSearchResult({ results: [], nextpage: "" }))
+          })
         )
 
-      const dispatchLoading = (isLoading: boolean) => {
-        return of(setLoading(isLoading))
-      }
-
-      return concat(dispatchLoading(true), api$, dispatchLoading(false))
+      return api$.pipe(
+        tap(() => {
+          globalState.update({ isLoading: false })
+        })
+      )
     })
   )
 
@@ -120,6 +127,9 @@ export const fetchSuggestionsEpic = (action$: Observable<Action>, state$: Behavi
     map(() => state$.value.search.searchText),
     filter(text => !!text.length),
     debounceTime(300),
+    tap(() => {
+      globalState.update({ isLoading: true })
+    }),
     switchMap(text => {
       const resetError = of(setSuggestionsError(undefined))
 
@@ -136,11 +146,11 @@ export const fetchSuggestionsEpic = (action$: Observable<Action>, state$: Behavi
               takeUntil(action$.pipe(ofType(submitSearch.type)))
             )
 
-          const dispatchLoading = (isLoading: boolean) => {
-            return of(setSuggestionsLoading(isLoading))
-          }
-
-          return concat(dispatchLoading(true), api$, dispatchLoading(false))
+          return api$.pipe(
+            tap(() => {
+              globalState.update({ isLoading: false })
+            })
+          )
         })
       )
 
@@ -153,26 +163,25 @@ export const doSearchEpic = (action$: Observable<Action>, state$: BehaviorSubjec
     ofType(submitSearch.type),
     map(() => state$.value.search.searchText),
     filter(text => !!text.length),
+    tap(() => {
+      globalState.update({ isLoading: true })
+    }),
     switchMap(text => {
       const api$ = YouTubeApi.getApi()
         .getSearchResults(text)
         .pipe(
           map(results => setSearchResult(results)),
-          catchError(() =>
-            of(
-              setError({
-                message:
-                  "Failed to get response from the Server. Please try changing server from settings(in home page)"
-              })
-            )
-          )
+          catchError(() => {
+            globalState.update({ error: { message: ERROR_FAILED_FETCH_TRENDING } })
+            return of(setSearchResult({ results: [], nextpage: "" }))
+          })
         )
 
-      const dispatchLoading = (isLoading: boolean) => {
-        return of(setLoading(isLoading))
-      }
-
-      return concat(dispatchLoading(true), api$, dispatchLoading(false))
+      return api$.pipe(
+        tap(() => {
+          globalState.update({ isLoading: false })
+        })
+      )
     })
   )
 

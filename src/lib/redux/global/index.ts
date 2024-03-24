@@ -1,27 +1,14 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit"
+import { createState } from "../../state-mgt"
 
 const initialState = {
   error: undefined as IAppError | undefined,
   isLoading: false
 }
 
-export const globalSlice = createSlice({
-  name: "global",
-  initialState,
-  reducers: {
-    setError: (state, action: PayloadAction<IAppError>) => {
-      state.error = action.payload
-    },
-    setLoading(state, action: PayloadAction<boolean>) {
-      state.isLoading = action.payload
-    }
-  }
-})
-
-export const { setError, setLoading } = globalSlice.actions
-
-export default globalSlice.reducer
-
-export interface IAppError {
+interface IAppError {
   message: string
 }
+
+const state = createState(initialState)
+
+export { IAppError, state as globalState }

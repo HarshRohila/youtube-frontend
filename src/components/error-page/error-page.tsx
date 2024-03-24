@@ -1,7 +1,6 @@
 import { Component, Host, h, Prop } from "@stencil/core"
-import { IAppError, setError } from "../../lib/redux/global"
+import { IAppError, globalState } from "../../lib/redux/global"
 import { Modal } from "../../lib/Modal"
-import { store } from "../../lib/redux"
 
 @Component({
   tag: "error-page",
@@ -21,7 +20,11 @@ export class ErrorPage {
   render() {
     return (
       <Host>
-        <Modal onClose={() => store.dispatch(setError(undefined))}>
+        <Modal
+          onClose={() => {
+            globalState.update({ error: undefined })
+          }}
+        >
           <h3>{this.error.message}</h3>
         </Modal>
       </Host>

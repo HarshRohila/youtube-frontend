@@ -1,7 +1,6 @@
 import { from } from "rxjs"
 import { configureStore } from "@reduxjs/toolkit"
 import search, { doSearchEpic, fetchSuggestionsEpic, fetchTrendingEpic } from "./search"
-import global from "./global"
 
 import { createEpicMiddleware, combineEpics } from "redux-observable"
 import videoPage, { fetchCommentsEpic } from "./video-page"
@@ -14,7 +13,6 @@ export const store = configureStore({
   middleware: getDefaultMiddleware => getDefaultMiddleware().concat(epicMiddleware),
   reducer: {
     search,
-    global,
     videoPage
   }
 })

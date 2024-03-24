@@ -2,8 +2,8 @@ import { MatchResults, RouterHistory } from "@stencil-community/router"
 import { Component, Host, Prop, h, State, Fragment } from "@stencil/core"
 import { SearchResult, Stream, YouTubeApi } from "../../YoutubeApi"
 import { Subject, map, take, takeUntil } from "rxjs"
-import { IAppError, setLoading } from "../../lib/redux/global"
-import { state$, store } from "../../lib/redux"
+import { IAppError, globalState } from "../../lib/redux/global"
+import { state$ } from "../../lib/redux"
 import { faComment, faPlus, faShare, faThumbsDown, faThumbsUp } from "@fortawesome/free-solid-svg-icons"
 import { Router } from "../../lib/Router"
 import { Videos } from "../../lib/Search"
@@ -85,7 +85,7 @@ export class VideoPage {
 
     if (!videoId) return
 
-    store.dispatch(setLoading(true))
+    globalState.update({ isLoading: true })
 
     window.scrollTo({ top: 0, behavior: "smooth" })
 
@@ -101,7 +101,7 @@ export class VideoPage {
       .subscribe({
         next: stream => {
           this.stream = stream
-          store.dispatch(setLoading(false))
+          globalState.update({ isLoading: false })
           MediaSession.init({
             title: stream.title,
             author: stream.uploader,
@@ -110,7 +110,7 @@ export class VideoPage {
         },
         error: () => {
           this.error = { message: "Failed to load video. Please try changing server from settings(in home page)" }
-          store.dispatch(setLoading(false))
+          globalState.update({ isLoading: false })
         }
       })
   }
