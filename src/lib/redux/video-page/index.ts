@@ -6,15 +6,15 @@ import { Comments, YouTubeApi, newComments } from "../../../YoutubeApi"
 import { createState } from "../../state-mgt"
 
 const initialState = {
-  shareForm: undefined as ShareFormState | undefined,
-  currentTimeEnabled: false,
   commentsView: undefined as CommentsViewProps | undefined,
   comments: undefined as Comments | undefined,
   areCommentsLoading: false
 }
 
 const state = createState({
-  copiedLink: ""
+  shareForm: undefined as ShareFormState | undefined,
+  copiedLink: "",
+  currentTimeEnabled: false
 })
 
 export interface CommentsViewProps {
@@ -30,18 +30,6 @@ export const videoPageSlice = createSlice({
   name: "video-page",
   initialState,
   reducers: {
-    setShareForm: (reduxState, action: PayloadAction<ShareFormState | undefined>) => {
-      reduxState.shareForm = action.payload
-
-      if (!action.payload) {
-        reduxState.currentTimeEnabled = false
-        state.update({ copiedLink: "" })
-      }
-    },
-    setCurrentTimeEnabled(reduxState, action: PayloadAction<boolean>) {
-      reduxState.currentTimeEnabled = action.payload
-      state.update({ copiedLink: "" })
-    },
     setCommentView(state, action: PayloadAction<CommentsViewProps | undefined>) {
       state.commentsView = action.payload
 
@@ -58,8 +46,19 @@ export const videoPageSlice = createSlice({
   }
 })
 
-export const { setShareForm, setCurrentTimeEnabled, setCommentView, setComments, setAreCommentsLoading } =
-  videoPageSlice.actions
+function setShareForm(shareForm: ShareFormState) {
+  state.update({ shareForm })
+
+  if (!shareForm) {
+    state.update({ copiedLink: "", currentTimeEnabled: false })
+  }
+}
+
+function setCurrentTimeEnabled(currentTimeEnabled: boolean) {
+  state.update({ copiedLink: "", currentTimeEnabled })
+}
+
+export const { setCommentView, setComments, setAreCommentsLoading } = videoPageSlice.actions
 
 export const fetchCommentsEpic = (action$: Observable<Action>, _state$: BehaviorSubject<RootState>) =>
   action$.pipe(
@@ -90,4 +89,4 @@ export const fetchCommentsEpic = (action$: Observable<Action>, _state$: Behavior
 
 export default videoPageSlice.reducer
 
-export { state as videoPageState }
+export { state as videoPageState, setShareForm, setCurrentTimeEnabled }

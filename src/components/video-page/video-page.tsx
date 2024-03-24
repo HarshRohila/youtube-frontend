@@ -10,11 +10,12 @@ import { Videos } from "../../lib/Search"
 import { UploaderInfo } from "./Uploader"
 import { getTimeAgoFormatter } from "../../utils/TimeFormatter"
 import { getShareHandler } from "../../lib/ShareForm/ShareHandler"
-import { CommentsViewProps, ShareFormState } from "../../lib/redux/video-page"
+import { CommentsViewProps, ShareFormState, videoPageState } from "../../lib/redux/video-page"
 import { addItemInPlaylist } from "../../playlist"
 import { getNotifier } from "../../lib/notifier"
 import { Comments } from "./comments"
 import { MediaSession } from "./mediaSession"
+import { myLib } from "../../lib/app-state-mgt"
 
 @Component({
   tag: "video-page",
@@ -42,6 +43,8 @@ export class VideoPage {
 
   @State() commentsView: CommentsViewProps
 
+  component = myLib(this)
+
   componentWillLoad() {
     const videoId = this.match.params.videoId
 
@@ -63,15 +66,14 @@ export class VideoPage {
       }
     })
 
-    state$
-      .pipe(
-        map(s => s.videoPage),
-        takeUntil(this.disconnected$)
-      )
-      .subscribe(state => {
-        this.shareForm = state.shareForm
-        this.commentsView = state.commentsView
-      })
+    const videoPageState$ = state$.pipe(map(s => s.videoPage))
+    this.component.untilDestroyed(videoPageState$).subscribe(state => {
+      this.commentsView = state.commentsView
+    })
+
+    this.component.untilDestroyed(videoPageState.asObservable()).subscribe(state => {
+      this.shareForm = state.shareForm
+    })
 
     this.fetchVideo(videoId)
   }

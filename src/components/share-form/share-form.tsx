@@ -1,8 +1,6 @@
 import { Component, Host, h, Prop } from "@stencil/core"
-import { state$, store } from "../../lib/redux"
 import { setCurrentTimeEnabled, setShareForm, videoPageState } from "../../lib/redux/video-page"
 import { getId } from "../../utils/getId"
-import { map } from "rxjs"
 import { Modal } from "../../lib/Modal"
 import { faCheck, faLink, faShare } from "@fortawesome/free-solid-svg-icons"
 import { AppRoute } from "../../utils/AppRoute"
@@ -26,14 +24,10 @@ export class ShareForm {
   componentWillLoad() {
     const component = myLib(this)
 
-    const videoPageState$ = state$.pipe(map(s => s.videoPage))
-
-    component.untilDestroyed(videoPageState$).subscribe(state => {
-      this.shareForm = state.shareForm
-      this.currentTimeEnabled = state.currentTimeEnabled
-    })
     component.untilDestroyed(videoPageState.asObservable()).subscribe(state => {
       this.copiedLink = state.copiedLink
+      this.shareForm = state.shareForm
+      this.currentTimeEnabled = state.currentTimeEnabled
     })
   }
 
@@ -58,7 +52,7 @@ export class ShareForm {
 
     return (
       <Host>
-        <Modal onClose={() => store.dispatch(setShareForm(undefined))}>
+        <Modal onClose={() => setShareForm(undefined)}>
           <form
             class="share-form"
             onSubmit={ev => {
@@ -70,7 +64,7 @@ export class ShareForm {
               id={id}
               checked={this.currentTimeEnabled}
               onClick={() => {
-                store.dispatch(setCurrentTimeEnabled(!this.currentTimeEnabled))
+                setCurrentTimeEnabled(!this.currentTimeEnabled)
               }}
             />
             <label htmlFor={id}>
