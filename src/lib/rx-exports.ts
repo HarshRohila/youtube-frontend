@@ -1,1 +1,1 @@
-export { combineLatest, map, Observable } from "rxjs"
+export { combineLatest, map, Observable, Subject } from "rxjs"

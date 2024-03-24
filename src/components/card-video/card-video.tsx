@@ -1,8 +1,9 @@
 import { Component, Host, Prop, State, h, Element } from "@stencil/core"
 import { SearchResult, Stream, YouTubeApi } from "../../YoutubeApi"
 import { faCheck, faTrash } from "@fortawesome/free-solid-svg-icons"
-import { fromEvent, take, switchMap, of, map, merge, Subject, timer, takeUntil } from "../../lib/rx"
-import { untilDestroyed } from "@ngneat/until-destroy"
+import { take, of, switchMap, timer, takeUntil, map, merge } from "../../lib/rx"
+import { myLib } from "../../lib/app-state-mgt"
+import { createEvent, createVoidEvent } from "../../lib/state-mgt"
 
 const formatter = Intl.NumberFormat("en", { notation: "compact" })
 
@@ -36,42 +37,49 @@ export class CardVideo {
   private handleImageLoad = () => {
     if (!this.preloadStream || this.stream) return
 
-    this.getStream().pipe(take(1)).subscribe(this.setStream)
+    this.getStream(this.video).pipe(take(1)).subscribe(this.setStream)
   }
 
   private setStream = (newStream: Stream) => {
     this.stream = newStream
   }
 
-  private getStream = () => {
+  private getStream = (video: SearchResult) => {
     if (this.stream) return of(this.stream)
 
-    return YouTubeApi.getApi().getStream(this.video.videoId)
+    return YouTubeApi.getApi().getStream(video.videoId)
   }
 
-  componentDidLoad() {
-    const card = this.el.querySelector(".card")
+  mouseLeaveEvent = createVoidEvent<MouseEvent>()
+  mouseEnterEvent = createEvent<MouseEvent, SearchResult>(() => this.video)
+  destroyEvent = createVoidEvent<void>({ once: true })
 
-    const mouseLeave$ = fromEvent(card, "mouseleave")
-    const mouseEnter$ = fromEvent(card, "mouseenter")
+  componentDidLoad() {
+    const mouseLeave$ = this.mouseLeaveEvent.$
+    const mouseEnter$ = this.mouseEnterEvent.$
+
+    const component = myLib(this)
 
     const videoStream$ = mouseEnter$.pipe(
-      switchMap(() => timer(300).pipe(takeUntil(mouseLeave$))),
+      switchMap(video =>
+        timer(300).pipe(
+          takeUntil(mouseLeave$),
+          map(() => video)
+        )
+      ),
       switchMap(this.getStream)
     )
 
-    videoStream$.pipe(untilDestroyed(this, "disconnectedCallback")).subscribe(stream => {
+    component.untilDestroyed(videoStream$).subscribe(stream => {
       this.setStream(stream)
     })
 
     const showVideoPreview$ = videoStream$.pipe(map(() => true))
-    const hideVideoPreview$ = merge(mouseLeave$, this.destroy$).pipe(map(() => false))
+    const hideVideoPreview$ = merge(mouseLeave$, this.destroyEvent.$).pipe(map(() => false))
 
-    merge(showVideoPreview$, hideVideoPreview$)
-      .pipe(untilDestroyed(this, "disconnectedCallback"))
-      .subscribe(value => {
-        this.showVideoPreview = value
-      })
+    component.untilDestroyed(merge(showVideoPreview$, hideVideoPreview$)).subscribe(value => {
+      this.showVideoPreview = value
+    })
   }
 
   render() {
@@ -79,7 +87,7 @@ export class CardVideo {
 
     return (
       <Host>
-        <div class="card">
+        <div class="card" onMouseLeave={this.mouseLeaveEvent.handler} onMouseEnter={this.mouseEnterEvent.handler}>
           <img class="thumbnail" src={this.thumbnail}></img>
           <div class="video-preview">
             {this.stream && this.showVideoPreview && (
@@ -114,10 +122,7 @@ export class CardVideo {
     )
   }
 
-  destroy$ = new Subject<void>()
-
   disconnectedCallback() {
-    this.destroy$.next()
-    this.destroy$.complete()
+    this.destroyEvent.handler()
   }
 }
