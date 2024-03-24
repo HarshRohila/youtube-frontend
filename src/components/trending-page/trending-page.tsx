@@ -4,12 +4,12 @@ import { map } from "rxjs"
 import { RouterHistory } from "@stencil-community/router"
 import { Router } from "../../lib/Router"
 import { state$, store } from "../../lib/redux"
-import { untilDestroyed } from "@ngneat/until-destroy"
 import { SearchBar, Suggestions, Videos } from "../../lib/Search"
 import { keyPress, loadTrending, toggleSearchBar } from "../../lib/redux/search"
 import { IAppError } from "../../lib/redux/global"
 import { APP_NAME } from "../../utils/constants"
 import { faList } from "@fortawesome/free-solid-svg-icons"
+import { myLib } from "../../lib/app-state-mgt"
 
 @Component({
   tag: "trending-page",
@@ -32,21 +32,20 @@ export class TrendingPage {
   componentWillLoad() {
     store.dispatch(loadTrending())
 
-    state$
-      .pipe(
-        map(state => state.search),
-        untilDestroyed(this, "disconnectedCallback")
-      )
-      .subscribe({
-        next: state => {
-          this.showSearchbar = state.showSearchBar
-          this.searchText = state.searchText
-          this.videos = state.searchResponse.results
-          this.suggestions = state.suggestions
-          this.suggestionsError = state.suggestionsError
-          this.suggestionsLoading = state.suggestionsLoading
-        }
-      })
+    const component = myLib(this)
+
+    const searchState$ = state$.pipe(map(state => state.search))
+
+    component.untilDestroyed(searchState$).subscribe({
+      next: state => {
+        this.showSearchbar = state.showSearchBar
+        this.searchText = state.searchText
+        this.videos = state.searchResponse.results
+        this.suggestions = state.suggestions
+        this.suggestionsError = state.suggestionsError
+        this.suggestionsLoading = state.suggestionsLoading
+      }
+    })
   }
 
   disconnectedCallback() {}

@@ -2,12 +2,13 @@ import { Component, Host, h, Prop } from "@stencil/core"
 import { state$, store } from "../../lib/redux"
 import { setCopiedLink, setCurrentTimeEnabled, setShareForm } from "../../lib/redux/video-page"
 import { getId } from "../../utils/getId"
-import { Subject, map, takeUntil } from "rxjs"
+import { map } from "rxjs"
 import { Modal } from "../../lib/Modal"
 import { faCheck, faLink, faShare } from "@fortawesome/free-solid-svg-icons"
 import { AppRoute } from "../../utils/AppRoute"
 import { ShareFormState } from "../../lib/redux/video-page"
 import { Stream } from "../../YoutubeApi"
+import { myLib } from "../../lib/app-state-mgt"
 
 const id = getId("share-cb")
 
@@ -22,25 +23,19 @@ export class ShareForm {
   @Prop({ mutable: true }) copiedLink: string
   @Prop() video: Stream
 
-  disconnected$ = new Subject<void>()
-
   componentWillLoad() {
-    state$
-      .pipe(
-        map(s => s.videoPage),
-        takeUntil(this.disconnected$)
-      )
-      .subscribe(state => {
-        this.shareForm = state.shareForm
-        this.currentTimeEnabled = state.currentTimeEnabled
-        this.copiedLink = state.copiedLink
-      })
+    const component = myLib(this)
+
+    const videoPageState$ = state$.pipe(map(s => s.videoPage))
+
+    component.untilDestroyed(videoPageState$).subscribe(state => {
+      this.shareForm = state.shareForm
+      this.currentTimeEnabled = state.currentTimeEnabled
+      this.copiedLink = state.copiedLink
+    })
   }
 
-  disconnectedCallback() {
-    this.disconnected$.next()
-    this.disconnected$.complete()
-  }
+  disconnectedCallback() {}
 
   private handleCopyLink = async (link: string) => {
     copyToClipboard(link).then(() => {
