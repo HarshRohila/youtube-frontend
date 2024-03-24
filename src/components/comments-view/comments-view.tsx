@@ -1,11 +1,11 @@
 import { faClose, faSpinner } from "@fortawesome/free-solid-svg-icons"
 import { Component, Host, h, Prop, State } from "@stencil/core"
-import { state$, store } from "../../lib/redux"
-import { setCommentView, CommentsViewProps } from "../../lib/redux/video-page"
-import { filter, map, throttleTime } from "rxjs"
+import { CommentsViewProps, commentsState } from "../../lib/redux/video-page"
+import { filter, map, throttleTime } from "../../lib/rx"
 import { Comment, Comments } from "../../YoutubeApi"
 import { myLib } from "../../lib/app-state-mgt"
 import { createEvent } from "../../lib/state-mgt"
+import { fetchComments } from "../../lib/facades/comments"
 
 @Component({
   tag: "comments-view",
@@ -24,9 +24,8 @@ export class CommentsView {
   component = myLib(this)
   componentWillLoad() {
     const { component } = this
-    const videoPageState$ = state$.pipe(map(s => s.videoPage))
 
-    component.untilDestroyed(videoPageState$).subscribe(state => {
+    component.untilDestroyed(commentsState.asObservable()).subscribe(state => {
       if (this.comments !== state.comments) {
         this.comments = state.comments
         this.commentsList = [...this.commentsList, ...state.comments.comments]
@@ -39,14 +38,17 @@ export class CommentsView {
   scrollEvent = createEvent<UIEvent, HTMLUListElement>(ev => ev.target as HTMLUListElement)
 
   componentDidLoad() {
+    const nextPageCommentsState = () => {
+      return { ...this.commentsView, nextpage: this.comments.nextpage }
+    }
+
     const scrolledToBottom$ = this.scrollEvent.$.pipe(
       filter(commentList => isScrolledToBottom(commentList)),
-      throttleTime(200)
+      throttleTime(200),
+      map(nextPageCommentsState)
     )
 
-    this.component.untilDestroyed(scrolledToBottom$).subscribe(() => {
-      store.dispatch(setCommentView({ ...this.commentsView, nextpage: this.comments.nextpage }))
-    })
+    this.component.justSubscribe(scrolledToBottom$.pipe(fetchComments))
   }
 
   disconnectedCallback() {}

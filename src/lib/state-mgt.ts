@@ -3,11 +3,18 @@ import { BehaviorSubject, Observable, Subject } from "rxjs"
 
 function initMyLib({ componentDestroyHandlerName }: { componentDestroyHandlerName: string }) {
   return function initInComponent(componentContext: any) {
-    return {
+    const pub = {
       untilDestroyed<T>(anyObservable: Observable<T>) {
         return anyObservable.pipe(untilDestroyed(componentContext, componentDestroyHandlerName))
+      },
+      justSubscribe(...observables: Observable<unknown>[]) {
+        observables.forEach(obs => {
+          pub.untilDestroyed(obs).subscribe()
+        })
       }
     }
+
+    return pub
   }
 }
 

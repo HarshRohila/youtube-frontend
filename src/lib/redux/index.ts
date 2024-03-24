@@ -3,17 +3,15 @@ import { configureStore } from "@reduxjs/toolkit"
 import search, { doSearchEpic, fetchSuggestionsEpic, fetchTrendingEpic } from "./search"
 
 import { createEpicMiddleware, combineEpics } from "redux-observable"
-import videoPage, { fetchCommentsEpic } from "./video-page"
 
 const epicMiddleware = createEpicMiddleware()
 // @ts-ignore
-export const rootEpic = combineEpics(fetchSuggestionsEpic, doSearchEpic, fetchTrendingEpic, fetchCommentsEpic)
+export const rootEpic = combineEpics(fetchSuggestionsEpic, doSearchEpic, fetchTrendingEpic)
 
 export const store = configureStore({
   middleware: getDefaultMiddleware => getDefaultMiddleware().concat(epicMiddleware),
   reducer: {
-    search,
-    videoPage
+    search
   }
 })
 

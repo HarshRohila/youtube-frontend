@@ -17,5 +17,7 @@ export {
   concat,
   debounceTime,
   filter,
-  timeout
+  timeout,
+  throttleTime,
+  iif
 } from "rxjs"
