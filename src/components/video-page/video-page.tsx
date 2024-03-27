@@ -1,20 +1,28 @@
 import { MatchResults, RouterHistory } from "@stencil-community/router"
 import { Component, Host, Prop, h, State, Fragment } from "@stencil/core"
 import { SearchResult, Stream, YouTubeApi } from "../../YoutubeApi"
-import { Subject, map, take, takeUntil } from "rxjs"
-import { IAppError, setLoading } from "../../lib/redux/global"
-import { state$, store } from "../../lib/redux"
+import { Subject, map, take, tap } from "../../lib/rx"
+import { IAppError, globalState } from "../../lib/redux/global"
 import { faComment, faPlus, faShare, faThumbsDown, faThumbsUp } from "@fortawesome/free-solid-svg-icons"
 import { Router } from "../../lib/Router"
 import { Videos } from "../../lib/Search"
 import { UploaderInfo } from "./Uploader"
 import { getTimeAgoFormatter } from "../../utils/TimeFormatter"
 import { getShareHandler } from "../../lib/ShareForm/ShareHandler"
-import { CommentsViewProps, ShareFormState } from "../../lib/redux/video-page"
+import {
+  CommentsViewProps,
+  ShareFormState,
+  commentsState,
+  setCommentView,
+  videoPageState
+} from "../../lib/redux/video-page"
 import { addItemInPlaylist } from "../../playlist"
 import { getNotifier } from "../../lib/notifier"
 import { Comments } from "./comments"
 import { MediaSession } from "./mediaSession"
+import { componentUtil } from "../../lib/app-state-mgt"
+import { createVoidEvent } from "../../lib/state-mgt"
+import { fetchComments } from "../../lib/facades/comments"
 
 @Component({
   tag: "video-page",
@@ -31,8 +39,6 @@ export class VideoPage {
   @State() error: IAppError | undefined
   @State() skipSegments: number[][] = []
 
-  disconnected$ = new Subject<void>()
-
   routeChange$ = new Subject<{ videoId: string; time: undefined | number }>()
   videoPlayer: HTMLVideoPlayerElement
 
@@ -41,6 +47,8 @@ export class VideoPage {
   }
 
   @State() commentsView: CommentsViewProps
+
+  component = componentUtil(this)
 
   componentWillLoad() {
     const videoId = this.match.params.videoId
@@ -55,7 +63,7 @@ export class VideoPage {
       this.routeChange$.next({ videoId, time })
     })
 
-    this.routeChange$.pipe(takeUntil(this.disconnected$)).subscribe(({ videoId, time }) => {
+    this.component.untilDestroyed(this.routeChange$).subscribe(({ videoId, time }) => {
       if (videoId === this.stream.id) {
         this.setCurrentTime(time)
       } else {
@@ -63,15 +71,29 @@ export class VideoPage {
       }
     })
 
-    state$
-      .pipe(
-        map(s => s.videoPage),
-        takeUntil(this.disconnected$)
-      )
-      .subscribe(state => {
-        this.shareForm = state.shareForm
-        this.commentsView = state.commentsView
-      })
+    this.component.untilDestroyed(commentsState.asObservable()).subscribe(state => {
+      this.commentsView = state.commentsView
+    })
+
+    this.component.untilDestroyed(videoPageState.asObservable()).subscribe(state => {
+      this.shareForm = state.shareForm
+    })
+
+    const newCommentsViewState = () => {
+      return { videoId: this.videoId }
+    }
+
+    const viewCommentsClicked$ = this.viewCommentsEvent.$
+    const fetchComments$ = viewCommentsClicked$.pipe(
+      map(newCommentsViewState),
+      tap(commentsView => {
+        this.areCommentsHidden = false
+        setCommentView(commentsView)
+      }),
+      fetchComments
+    )
+
+    this.component.justSubscribe(fetchComments$)
 
     this.fetchVideo(videoId)
   }
@@ -85,7 +107,7 @@ export class VideoPage {
 
     if (!videoId) return
 
-    store.dispatch(setLoading(true))
+    globalState.update({ isLoading: true })
 
     window.scrollTo({ top: 0, behavior: "smooth" })
 
@@ -95,30 +117,26 @@ export class VideoPage {
         this.skipSegments = skipSegments
       })
 
-    YouTubeApi.getApi()
-      .getStream(videoId)
-      .pipe(takeUntil(this.disconnected$))
-      .subscribe({
-        next: stream => {
-          this.stream = stream
-          store.dispatch(setLoading(false))
-          MediaSession.init({
-            title: stream.title,
-            author: stream.uploader,
-            images: [{ src: stream.thumbnail, type: "image/webp" }]
-          })
-        },
-        error: () => {
-          this.error = { message: "Failed to load video. Please try changing server from settings(in home page)" }
-          store.dispatch(setLoading(false))
-        }
-      })
+    const videoStream$ = YouTubeApi.getApi().getStream(videoId)
+
+    this.component.untilDestroyed(videoStream$).subscribe({
+      next: stream => {
+        this.stream = stream
+        globalState.update({ isLoading: false })
+        MediaSession.init({
+          title: stream.title,
+          author: stream.uploader,
+          images: [{ src: stream.thumbnail, type: "image/webp" }]
+        })
+      },
+      error: () => {
+        this.error = { message: "Failed to load video. Please try changing server from settings(in home page)" }
+        globalState.update({ isLoading: false })
+      }
+    })
   }
 
-  disconnectedCallback() {
-    this.disconnected$.next()
-    this.disconnected$.complete()
-  }
+  disconnectedCallback() {}
 
   private share = async () => {
     const time = (await this.videoPlayer.currentTime()) ?? 0
@@ -183,13 +201,7 @@ export class VideoPage {
     this.areCommentsHidden = true
   }
 
-  private handleViewComments = () => {
-    this.areCommentsHidden = false
-
-    if (!this.isCommentsOpen) {
-      Comments.open({ videoId: this.videoId })
-    }
-  }
+  viewCommentsEvent = createVoidEvent()
 
   render() {
     return (
@@ -228,7 +240,7 @@ export class VideoPage {
                 icon={faComment}
                 label="View Comments"
                 type="secondary"
-                onBtnClicked={this.handleViewComments}
+                onBtnClicked={this.viewCommentsEvent.handler}
               ></icon-btn>
               {this.isCommentsOpen && (
                 <comments-view

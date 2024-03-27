@@ -1,12 +1,13 @@
 import { Component, Host, h, State, Prop } from "@stencil/core"
 import { SearchBar, Suggestions, Videos } from "../../lib/Search"
-import { state$, store } from "../../lib/redux"
-import { Subject, map, takeUntil } from "rxjs"
-import { submitSearch, keyPress, setSearchText } from "../../lib/redux/search"
+import { submitSearch, keyPress, setSearchText, searchState, doSearch, getSuggestions } from "../../lib/redux/search"
 import { RouterHistory } from "@stencil-community/router"
 import { SearchResult } from "../../YoutubeApi"
 import { Router } from "../../lib/Router"
 import { IAppError } from "../../lib/redux/global"
+import { componentUtil } from "../../lib/app-state-mgt"
+import { merge, startWith, tap } from "../../lib/rx"
+import { createEvent } from "../../lib/state-mgt"
 
 @Component({
   tag: "search-page",
@@ -21,24 +22,47 @@ export class SearchPage {
   @State() private suggestionsError: IAppError | undefined
   @State() private suggestionsLoading: boolean
 
-  private disconnected$ = new Subject<void>()
+  searchSubmitEvent = createEvent(() => this.searchText)
+  suggestionClickEvent = createEvent<string>()
+
   componentWillLoad() {
-    const searchText = this.history.location.query.q
-    store.dispatch(submitSearch(searchText))
+    const searchText = this.history.location.query.q as string
 
-    state$
-      .pipe(
-        map(state => state.search),
-        takeUntil(this.disconnected$)
-      )
-      .subscribe(state => {
-        this.videos = state.searchResponse.results
-        this.suggestions = state.suggestions
-        this.suggestionsError = state.suggestionsError
-        this.suggestionsLoading = state.suggestionsLoading
+    const component = componentUtil(this)
 
-        this.searchText = state.searchText
+    component.untilDestroyed(searchState.asObservable()).subscribe(state => {
+      this.videos = state.searchResponse.results
+      this.suggestions = state.suggestions
+      this.suggestionsError = state.suggestionsError
+      this.suggestionsLoading = state.suggestionsLoading
+
+      this.searchText = state.searchText
+    })
+
+    const laterSubmits$ = merge(this.searchSubmitEvent.$, this.suggestionClickEvent.$).pipe(
+      tap(searchText => {
+        window.scrollTo({ top: 0 })
+        new Router(this.history).showSearchPage(searchText, { replace: true })
       })
+    )
+
+    const submitSearch$ = laterSubmits$.pipe(
+      startWith(searchText),
+      tap(searchText => {
+        submitSearch(searchText)
+      })
+    )
+
+    const doSearch$ = doSearch(submitSearch$)
+
+    const keyPress$ = this.searchTextChangeEvent.$.pipe(
+      tap(searchText => {
+        keyPress(searchText)
+      }),
+      getSuggestions(laterSubmits$)
+    )
+
+    component.justSubscribe(doSearch$, keyPress$)
   }
 
   private handleBack = () => {
@@ -46,16 +70,10 @@ export class SearchPage {
   }
 
   disconnectedCallback() {
-    this.disconnected$.next()
-    this.disconnected$.complete()
-    store.dispatch(setSearchText(""))
+    setSearchText("")
   }
 
-  private onSearchSubmit = (searchText: string) => {
-    window.scrollTo({ top: 0 })
-    store.dispatch(submitSearch(searchText))
-    new Router(this.history).showSearchPage(searchText, { replace: true })
-  }
+  searchTextChangeEvent = createEvent<Event, string>(ev => ev.target["value"])
 
   render() {
     const isShowingSuggestions = !!this.suggestions.length
@@ -65,12 +83,10 @@ export class SearchPage {
         <header class="search-active">
           <SearchBar
             searchText={this.searchText}
-            onCloseClick={() => store.dispatch(setSearchText(""))}
-            onSearchSubmit={() => {
-              this.onSearchSubmit(this.searchText)
-            }}
+            onCloseClick={() => setSearchText("")}
+            onSearchSubmit={this.searchSubmitEvent.handler}
             showSearchbar={true}
-            onSearchTextChange={ev => store.dispatch(keyPress(ev.target["value"]))}
+            onSearchTextChange={this.searchTextChangeEvent.handler}
             onClickBack={this.handleBack}
           />
         </header>
@@ -79,7 +95,7 @@ export class SearchPage {
             suggestions={this.suggestions}
             error={this.suggestionsError}
             loading={this.suggestionsLoading}
-            onClickSuggesion={this.onSearchSubmit}
+            onClickSuggesion={this.suggestionClickEvent.handler}
           />
         )}
         {this.videos.length && (

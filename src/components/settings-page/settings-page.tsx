@@ -2,8 +2,7 @@ import { Component, Host, Prop, State, h } from "@stencil/core"
 import { ServerInstance, getServerInstances } from "../../server-instance/serverInstanceApi"
 import { take } from "rxjs"
 import { RouterHistory } from "@stencil-community/router"
-import { store } from "../../lib/redux"
-import { setLoading } from "../../lib/redux/global"
+import { globalState } from "../../lib/redux/global"
 
 @Component({
   tag: "settings-page",
@@ -15,10 +14,10 @@ export class SettingsPage {
   @Prop() history: RouterHistory
 
   componentWillLoad() {
-    store.dispatch(setLoading(true))
+    globalState.update({ isLoading: true })
 
     const done = () => {
-      store.dispatch(setLoading(false))
+      globalState.update({ isLoading: false })
     }
 
     getServerInstances()

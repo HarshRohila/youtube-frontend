@@ -1,9 +1,11 @@
 import { faClose, faSpinner } from "@fortawesome/free-solid-svg-icons"
 import { Component, Host, h, Prop, State } from "@stencil/core"
-import { state$, store } from "../../lib/redux"
-import { setCommentView, CommentsViewProps } from "../../lib/redux/video-page"
-import { Subject, filter, fromEvent, map, takeUntil, throttleTime } from "rxjs"
+import { CommentsViewProps, commentsState } from "../../lib/redux/video-page"
+import { filter, map, throttleTime } from "../../lib/rx"
 import { Comment, Comments } from "../../YoutubeApi"
+import { componentUtil } from "../../lib/app-state-mgt"
+import { createEvent } from "../../lib/state-mgt"
+import { fetchComments } from "../../lib/facades/comments"
 
 @Component({
   tag: "comments-view",
@@ -19,41 +21,37 @@ export class CommentsView {
 
   @State() commentsList = [] as Comment[]
 
+  component = componentUtil(this)
   componentWillLoad() {
-    state$
-      .pipe(
-        map(s => s.videoPage),
-        takeUntil(this.disconnected$)
-      )
-      .subscribe(state => {
-        if (this.comments !== state.comments) {
-          this.comments = state.comments
-          this.commentsList = [...this.commentsList, ...state.comments.comments]
-        }
-        this.commentsView = state.commentsView
-        this.areCommentsLoading = state.areCommentsLoading
-      })
+    const { component } = this
+
+    component.untilDestroyed(commentsState.asObservable()).subscribe(state => {
+      if (this.comments !== state.comments) {
+        this.comments = state.comments
+        this.commentsList = [...this.commentsList, ...state.comments.comments]
+      }
+      this.commentsView = state.commentsView
+      this.areCommentsLoading = state.areCommentsLoading
+    })
   }
+
+  scrollEvent = createEvent<UIEvent, HTMLUListElement>(ev => ev.target as HTMLUListElement)
 
   componentDidLoad() {
-    fromEvent(this.commentList, "scroll")
-      .pipe(
-        filter(() => isScrolledToBottom(this.commentList)),
-        throttleTime(200),
-        takeUntil(this.disconnected$)
-      )
-      .subscribe(() => {
-        store.dispatch(setCommentView({ ...this.commentsView, nextpage: this.comments.nextpage }))
-      })
+    const nextPageCommentsState = () => {
+      return { ...this.commentsView, nextpage: this.comments.nextpage }
+    }
+
+    const scrolledToBottom$ = this.scrollEvent.$.pipe(
+      filter(commentList => isScrolledToBottom(commentList)),
+      throttleTime(200),
+      map(nextPageCommentsState)
+    )
+
+    this.component.justSubscribe(scrolledToBottom$.pipe(fetchComments))
   }
 
-  disconnected$ = new Subject<void>()
-  disconnectedCallback() {
-    this.disconnected$.next()
-    this.disconnected$.complete()
-  }
-
-  private commentList: HTMLUListElement
+  disconnectedCallback() {}
 
   render() {
     const comments = this.commentsList
@@ -63,12 +61,7 @@ export class CommentsView {
         <div class="comments-view">
           <icon-btn class="close-btn" icon={faClose} onBtnClicked={this.closeCallback}></icon-btn>
           <h3 class="heading">Comments</h3>
-          <ul
-            ref={el => {
-              this.commentList = el
-            }}
-            class="list"
-          >
+          <ul onScroll={this.scrollEvent.handler} class="list">
             {comments.map(c => {
               return (
                 <li>

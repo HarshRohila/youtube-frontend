@@ -1,13 +1,14 @@
-import { BehaviorSubject } from "rxjs"
 import { NotificationModel } from "../../notifier"
+import { map } from "../../rx"
+import { createState } from "../../state-mgt"
 
-const state$ = new BehaviorSubject<NotificationModel | undefined>(undefined)
+const state = createState<{ notification?: NotificationModel }>({ notification: undefined })
 
 export function createNotification(notification: NotificationModel) {
-  state$.next(notification)
+  state.update({ notification })
   setTimeout(() => {
-    state$.next(undefined)
+    state.update({ notification: undefined })
   }, 2000)
 }
 
-export const notifcationState$ = state$
+export const notifcationState$ = state.asObservable().pipe(map(state => state.notification))

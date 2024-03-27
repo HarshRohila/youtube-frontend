@@ -1,15 +1,23 @@
 import { Component, Host, Prop, State, h, Element } from "@stencil/core"
 import { SearchResult } from "../../YoutubeApi"
-import { map } from "rxjs"
 import { RouterHistory } from "@stencil-community/router"
 import { Router } from "../../lib/Router"
-import { state$, store } from "../../lib/redux"
-import { untilDestroyed } from "@ngneat/until-destroy"
 import { SearchBar, Suggestions, Videos } from "../../lib/Search"
-import { keyPress, loadTrending, toggleSearchBar } from "../../lib/redux/search"
+import {
+  doSearch,
+  fetchTrending,
+  getSuggestions,
+  keyPress,
+  searchState,
+  submitSearch,
+  toggleSearchBar
+} from "../../lib/redux/search"
 import { IAppError } from "../../lib/redux/global"
 import { APP_NAME } from "../../utils/constants"
 import { faList } from "@fortawesome/free-solid-svg-icons"
+import { componentUtil } from "../../lib/app-state-mgt"
+import { merge, of, tap } from "../../lib/rx"
+import { createEvent } from "../../lib/state-mgt"
 
 @Component({
   tag: "trending-page",
@@ -30,30 +38,43 @@ export class TrendingPage {
   @Prop() history: RouterHistory
 
   componentWillLoad() {
-    store.dispatch(loadTrending())
+    const component = componentUtil(this)
 
-    state$
-      .pipe(
-        map(state => state.search),
-        untilDestroyed(this, "disconnectedCallback")
-      )
-      .subscribe({
-        next: state => {
-          this.showSearchbar = state.showSearchBar
-          this.searchText = state.searchText
-          this.videos = state.searchResponse.results
-          this.suggestions = state.suggestions
-          this.suggestionsError = state.suggestionsError
-          this.suggestionsLoading = state.suggestionsLoading
-        }
+    const loadTrending$ = fetchTrending(of(1))
+
+    component.justSubscribe(loadTrending$)
+
+    component.untilDestroyed(searchState.asObservable()).subscribe({
+      next: state => {
+        this.showSearchbar = state.showSearchBar
+        this.searchText = state.searchText
+        this.videos = state.searchResponse.results
+        this.suggestions = state.suggestions
+        this.suggestionsError = state.suggestionsError
+        this.suggestionsLoading = state.suggestionsLoading
+      }
+    })
+
+    const submitSearch$ = merge(this.suggestionClickEvent.$, this.searchSubmitEvent.$).pipe(
+      tap(searchText => {
+        submitSearch(searchText)
+        new Router(this.history).showSearchPage(searchText)
       })
+    )
+
+    const doSearch$ = doSearch(submitSearch$)
+
+    const keyPress$ = this.searchTextChangeEvent.$.pipe(
+      tap(searchText => {
+        keyPress(searchText)
+      }),
+      getSuggestions(submitSearch$)
+    )
+
+    component.justSubscribe(doSearch$, keyPress$)
   }
 
   disconnectedCallback() {}
-
-  private onSearchSubmit = (searchText: string) => {
-    new Router(this.history).showSearchPage(searchText)
-  }
 
   private onClickPlaylistBtn = () => {
     new Router(this.history).showPlaylistPage()
@@ -62,6 +83,12 @@ export class TrendingPage {
   get headerClass() {
     return this.showSearchbar ? "search-active" : ""
   }
+
+  searchTextChangeEvent = createEvent<Event, string>(ev => {
+    return ev.target["value"]
+  })
+  searchSubmitEvent = createEvent(() => this.searchText)
+  suggestionClickEvent = createEvent<string>()
 
   render() {
     const isShowingSuggestions = this.showSearchbar
@@ -76,20 +103,17 @@ export class TrendingPage {
           {!this.showSearchbar && <h1>{APP_NAME}</h1>}
           <SearchBar
             searchText={this.searchText}
-            onCloseClick={() => store.dispatch(toggleSearchBar())}
+            onCloseClick={() => toggleSearchBar()}
             onSearchBtnClick={() => {
               const searchInput = this.el.querySelector(".search-input") as HTMLInputElement
-
-              store.dispatch(toggleSearchBar())
+              toggleSearchBar()
               setTimeout(() => {
                 searchInput.focus()
               }, 150)
             }}
-            onSearchSubmit={() => {
-              this.onSearchSubmit(this.searchText)
-            }}
+            onSearchSubmit={this.searchSubmitEvent.handler}
             showSearchbar={this.showSearchbar}
-            onSearchTextChange={ev => store.dispatch(keyPress(ev.target["value"]))}
+            onSearchTextChange={this.searchTextChangeEvent.handler}
           />
         </header>
         {!this.showSearchbar && <settings-btn history={this.history}></settings-btn>}
@@ -98,9 +122,7 @@ export class TrendingPage {
             suggestions={this.suggestions}
             error={this.suggestionsError}
             loading={this.suggestionsLoading}
-            onClickSuggesion={suggestion => {
-              this.onSearchSubmit(suggestion)
-            }}
+            onClickSuggesion={this.suggestionClickEvent.handler}
           />
         )}
         <Videos

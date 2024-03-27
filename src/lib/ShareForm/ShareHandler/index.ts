@@ -1,6 +1,5 @@
 import { Stream } from "../../../YoutubeApi"
-import { store } from "../../redux"
-import { setCopiedLink, setCurrentTimeEnabled, setShareForm } from "../../redux/video-page"
+import { setCurrentTimeEnabled, setShareForm, videoPageState } from "../../redux/video-page"
 
 interface IShareHandler {
   share(video: Stream, videoState: { currentTime: number }): void
@@ -8,9 +7,9 @@ interface IShareHandler {
 
 class ShareHandler implements IShareHandler {
   share(_, { currentTime }): void {
-    store.dispatch(setCurrentTimeEnabled(false))
-    store.dispatch(setCopiedLink(""))
-    store.dispatch(setShareForm({ currentTime }))
+    setCurrentTimeEnabled(false)
+    videoPageState.update({ copiedLink: "" })
+    setShareForm({ currentTime })
   }
 }
 
