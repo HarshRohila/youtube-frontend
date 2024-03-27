@@ -15,7 +15,7 @@ import {
 import { IAppError } from "../../lib/redux/global"
 import { APP_NAME } from "../../utils/constants"
 import { faList } from "@fortawesome/free-solid-svg-icons"
-import { myLib } from "../../lib/app-state-mgt"
+import { componentUtil } from "../../lib/app-state-mgt"
 import { merge, of, tap } from "../../lib/rx"
 import { createEvent } from "../../lib/state-mgt"
 
@@ -38,7 +38,7 @@ export class TrendingPage {
   @Prop() history: RouterHistory
 
   componentWillLoad() {
-    const component = myLib(this)
+    const component = componentUtil(this)
 
     const loadTrending$ = fetchTrending(of(1))
 

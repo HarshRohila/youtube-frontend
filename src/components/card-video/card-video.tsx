@@ -2,7 +2,7 @@ import { Component, Host, Prop, State, h, Element } from "@stencil/core"
 import { SearchResult, Stream, YouTubeApi } from "../../YoutubeApi"
 import { faCheck, faTrash } from "@fortawesome/free-solid-svg-icons"
 import { take, of, switchMap, timer, takeUntil, map, merge } from "../../lib/rx"
-import { myLib } from "../../lib/app-state-mgt"
+import { componentUtil } from "../../lib/app-state-mgt"
 import { createEvent, createVoidEvent } from "../../lib/state-mgt"
 
 const formatter = Intl.NumberFormat("en", { notation: "compact" })
@@ -58,7 +58,7 @@ export class CardVideo {
     const mouseLeave$ = this.mouseLeaveEvent.$
     const mouseEnter$ = this.mouseEnterEvent.$
 
-    const component = myLib(this)
+    const component = componentUtil(this)
 
     const videoStream$ = mouseEnter$.pipe(
       switchMap(video =>

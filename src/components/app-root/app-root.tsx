@@ -4,7 +4,7 @@ import { Subject } from "rxjs"
 import { IAppError } from "../../lib/redux/global"
 import { NotificationModel } from "../../lib/notifier"
 import { notifcationState$ } from "../../lib/facades/notifier"
-import { myLib } from "../../lib/app-state-mgt"
+import { componentUtil } from "../../lib/app-state-mgt"
 import { globalState$ } from "../../lib/facades/global"
 
 @Component({
@@ -22,7 +22,7 @@ export class AppRoot {
   @Prop({ mutable: true }) notification: NotificationModel
 
   componentWillLoad() {
-    const component = myLib(this)
+    const component = componentUtil(this)
 
     component.untilDestroyed(globalState$).subscribe(state => {
       this.error = state.error

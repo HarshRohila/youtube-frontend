@@ -6,7 +6,7 @@ import { faCheck, faLink, faShare } from "@fortawesome/free-solid-svg-icons"
 import { AppRoute } from "../../utils/AppRoute"
 import { ShareFormState } from "../../lib/redux/video-page"
 import { Stream } from "../../YoutubeApi"
-import { myLib } from "../../lib/app-state-mgt"
+import { componentUtil } from "../../lib/app-state-mgt"
 
 const id = getId("share-cb")
 
@@ -22,7 +22,7 @@ export class ShareForm {
   @Prop() video: Stream
 
   componentWillLoad() {
-    const component = myLib(this)
+    const component = componentUtil(this)
 
     component.untilDestroyed(videoPageState.asObservable()).subscribe(state => {
       this.copiedLink = state.copiedLink

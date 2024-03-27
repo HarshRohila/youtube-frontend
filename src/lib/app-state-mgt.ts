@@ -1,7 +1,7 @@
-import { initMyLib } from "./state-mgt";
+import { initComponentUtil } from "./state-mgt"
 
-const myLib = initMyLib({
-	componentDestroyHandlerName: "disconnectedCallback"
+const componentUtil = initComponentUtil({
+  componentDestroyHandlerName: "disconnectedCallback"
 })
 
-export { myLib }
+export { componentUtil }

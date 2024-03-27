@@ -1,7 +1,7 @@
 import { untilDestroyed } from "@ngneat/until-destroy"
 import { BehaviorSubject, Observable, Subject } from "rxjs"
 
-function initMyLib({ componentDestroyHandlerName }: { componentDestroyHandlerName: string }) {
+function initComponentUtil({ componentDestroyHandlerName }: { componentDestroyHandlerName: string }) {
   return function initInComponent(componentContext: any) {
     const pub = {
       untilDestroyed<T>(anyObservable: Observable<T>) {
@@ -68,4 +68,4 @@ function createState<T>(initialState: T) {
   }
 }
 
-export { initMyLib, createEvent, createVoidEvent, createState }
+export { initComponentUtil, createEvent, createVoidEvent, createState }

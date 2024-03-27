@@ -20,7 +20,7 @@ import { addItemInPlaylist } from "../../playlist"
 import { getNotifier } from "../../lib/notifier"
 import { Comments } from "./comments"
 import { MediaSession } from "./mediaSession"
-import { myLib } from "../../lib/app-state-mgt"
+import { componentUtil } from "../../lib/app-state-mgt"
 import { createVoidEvent } from "../../lib/state-mgt"
 import { fetchComments } from "../../lib/facades/comments"
 
@@ -48,7 +48,7 @@ export class VideoPage {
 
   @State() commentsView: CommentsViewProps
 
-  component = myLib(this)
+  component = componentUtil(this)
 
   componentWillLoad() {
     const videoId = this.match.params.videoId

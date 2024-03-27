@@ -3,7 +3,7 @@ import { Component, Host, h, Prop, State } from "@stencil/core"
 import { CommentsViewProps, commentsState } from "../../lib/redux/video-page"
 import { filter, map, throttleTime } from "../../lib/rx"
 import { Comment, Comments } from "../../YoutubeApi"
-import { myLib } from "../../lib/app-state-mgt"
+import { componentUtil } from "../../lib/app-state-mgt"
 import { createEvent } from "../../lib/state-mgt"
 import { fetchComments } from "../../lib/facades/comments"
 
@@ -21,7 +21,7 @@ export class CommentsView {
 
   @State() commentsList = [] as Comment[]
 
-  component = myLib(this)
+  component = componentUtil(this)
   componentWillLoad() {
     const { component } = this
 

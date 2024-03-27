@@ -5,7 +5,7 @@ import { RouterHistory } from "@stencil-community/router"
 import { SearchResult } from "../../YoutubeApi"
 import { Router } from "../../lib/Router"
 import { IAppError } from "../../lib/redux/global"
-import { myLib } from "../../lib/app-state-mgt"
+import { componentUtil } from "../../lib/app-state-mgt"
 import { merge, startWith, tap } from "../../lib/rx"
 import { createEvent } from "../../lib/state-mgt"
 
@@ -28,7 +28,7 @@ export class SearchPage {
   componentWillLoad() {
     const searchText = this.history.location.query.q as string
 
-    const component = myLib(this)
+    const component = componentUtil(this)
 
     component.untilDestroyed(searchState.asObservable()).subscribe(state => {
       this.videos = state.searchResponse.results
