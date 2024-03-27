@@ -1,0 +1,1 @@
+import{c as o}from"./p-e8d0ac2d.js";const r=o({error:void 0,isLoading:!1});export{r as s}

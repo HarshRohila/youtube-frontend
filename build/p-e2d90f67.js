@@ -1,0 +1,1 @@
+import{O as t}from"./p-90d81ce8.js";import{i as r,a as o}from"./p-e202420a.js";import{g as e}from"./p-d991cb74.js";function s(s=0,i,n=o){let a=-1;return null!=i&&(e(i)?n=i:a=i),new t((t=>{let o=r(s)?+s-n.now():s;o<0&&(o=0);let e=0;return n.schedule((function(){t.closed||(t.next(e++),0<=a?this.schedule(void 0,a):t.complete())}),o)}))}export{s as t}
