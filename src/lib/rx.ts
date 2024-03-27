@@ -19,5 +19,6 @@ export {
   filter,
   timeout,
   throttleTime,
-  iif
+  iif,
+  skip
 } from "rxjs"

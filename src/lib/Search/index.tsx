@@ -37,7 +37,15 @@ export function SearchBar({
           onSearchSubmit(ev)
         }}
       >
-        <input type="text" class="search-input" value={searchText} placeholder="Search" onInput={onSearchTextChange} />
+        <input
+          type="text"
+          class="search-input"
+          value={searchText}
+          placeholder="Search"
+          onInput={ev => {
+            onSearchTextChange(ev)
+          }}
+        />
       </form>
       {showSearchbar && (
         <button class="close" onClick={onCloseClick}>

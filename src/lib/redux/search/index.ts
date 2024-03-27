@@ -1,10 +1,6 @@
-import { Action, PayloadAction, createSlice } from "@reduxjs/toolkit"
-import { ofType } from "redux-observable"
 import {
-  BehaviorSubject,
   Observable,
   catchError,
-  concat,
   debounceTime,
   filter,
   map,
@@ -15,17 +11,82 @@ import {
   timeout
 } from "../../../lib/rx"
 import { SearchResponse, YouTubeApi } from "../../../YoutubeApi"
-import { RootState } from ".."
 import { IAppError, globalState } from "../global"
 import { REQUEST_TIMEOUT } from "../../../utils/constants"
+import { createState } from "../../state-mgt"
 
-const initialState = {
+export {
+  toggleSearchBar,
+  searchState,
+  keyPress,
+  submitSearch,
+  setSearchResult,
+  setSuggestionsLoading,
+  fetchTrending,
+  getSuggestions,
+  doSearch,
+  setSearchText
+}
+
+const searchState = createState({
   showSearchBar: false,
   searchText: "",
-  suggestions: [] as string[],
   searchResponse: newSearchResponse(),
+  suggestions: [] as string[],
   suggestionsError: undefined as IAppError | undefined,
   suggestionsLoading: false
+})
+
+function setSuggestions(suggestions: string[]) {
+  searchState.update({ suggestions })
+}
+
+function toggleSearchBar() {
+  searchState.update(oldState => ({
+    showSearchBar: !oldState.showSearchBar,
+    suggestions: oldState.showSearchBar ? [] : oldState.suggestions
+  }))
+}
+
+function keyPress(searchText: string) {
+  searchState.update({ searchText })
+}
+
+function submitSearch(searchText: string) {
+  searchState.update(oldState => ({ suggestions: [], searchText: searchText ? searchText : oldState.searchText }))
+}
+
+function setSearchResult(searchResponse: SearchResponse) {
+  searchState.update(oldState => {
+    const newState = { ...oldState }
+
+    newState.searchResponse = searchResponse
+
+    if (oldState.showSearchBar) {
+      setStateAfterToggleSearchBar(newState)
+    }
+
+    return newState
+  })
+}
+
+function setStateAfterToggleSearchBar(state) {
+  state.showSearchBar = !state.showSearchBar
+
+  if (!state.showSearchBar) {
+    state.suggestions = []
+  }
+}
+
+function setSuggestionsError(suggestionsError: IAppError | undefined) {
+  searchState.update({ suggestionsError })
+}
+function setSuggestionsLoading(suggestionsLoading: boolean) {
+  searchState.update({ suggestionsLoading })
+}
+
+function setSearchText(searchText: string) {
+  searchState.update({ searchText })
 }
 
 export function newSearchResponse(): SearchResponse {
@@ -35,65 +96,11 @@ export function newSearchResponse(): SearchResponse {
   }
 }
 
-export const searchSlice = createSlice({
-  name: "search",
-  initialState,
-  reducers: {
-    toggleSearchBar: state => {
-      setStateAfterToggleSearchBar(state)
-    },
-    keyPress: (state, action: PayloadAction<string>) => {
-      state.searchText = action.payload
-    },
-    setSuggestions: (state, action: PayloadAction<string[]>) => {
-      state.suggestions = action.payload
-    },
-    submitSearch: (state, action: PayloadAction<string>) => {
-      if (action.payload) {
-        state.searchText = action.payload
-      }
-      state.suggestions = []
-    },
-    setSearchResult: (state, action: PayloadAction<SearchResponse>) => {
-      state.searchResponse = action.payload
-
-      if (state.showSearchBar) {
-        setStateAfterToggleSearchBar(state)
-      }
-    },
-    setSuggestionsError(state, action: PayloadAction<IAppError | undefined>) {
-      state.suggestionsError = action.payload
-    },
-    loadTrending() {},
-    setSuggestionsLoading(state, action: PayloadAction<boolean>) {
-      state.suggestionsLoading = action.payload
-    },
-    setSearchText(state, action: PayloadAction<string>) {
-      state.searchText = action.payload
-    }
-  }
-})
-
-export const {
-  keyPress,
-  toggleSearchBar,
-  setSuggestions,
-  submitSearch,
-  setSearchResult,
-  loadTrending,
-  setSuggestionsError,
-  setSuggestionsLoading,
-  setSearchText
-} = searchSlice.actions
-
-export default searchSlice.reducer
-
 const ERROR_FAILED_FETCH_TRENDING =
   "Failed to get response from the Server. Please try changing server from settings(in home page)"
 
-export const fetchTrendingEpic = (action$: Observable<Action>) =>
-  action$.pipe(
-    ofType(loadTrending),
+function fetchTrending(source: Observable<unknown>) {
+  return source.pipe(
     tap(() => {
       globalState.update({ isLoading: true })
     }),
@@ -120,48 +127,44 @@ export const fetchTrendingEpic = (action$: Observable<Action>) =>
       )
     })
   )
+}
 
-export const fetchSuggestionsEpic = (action$: Observable<Action>, state$: BehaviorSubject<RootState>) =>
-  action$.pipe(
-    ofType(keyPress.type),
-    map(() => state$.value.search.searchText),
+const getSuggestions = (submitSearch$: Observable<string>) => (searchText$: Observable<string>) =>
+  fetchSuggestions(searchText$, submitSearch$)
+
+function fetchSuggestions(searchText$: Observable<string>, submitSearch$: Observable<string>) {
+  return searchText$.pipe(
     filter(text => !!text.length),
     debounceTime(300),
     tap(() => {
       globalState.update({ isLoading: true })
+      setSuggestionsError(undefined)
     }),
     switchMap(text => {
-      const resetError = of(setSuggestionsError(undefined))
+      const api$ = YouTubeApi.getApi()
+        .getSuggestions(text)
+        .pipe(
+          tap(results => {
+            setSuggestions(results)
+          }),
+          catchError(() => {
+            setSuggestionsError({ message: "Failed to get Suggestions from the Server. Press Enter to Search" })
+            setSuggestions([])
+            return of([] as string[])
+          }),
+          tap(() => {
+            globalState.update({ isLoading: false })
+          }),
+          takeUntil(submitSearch$)
+        )
 
-      const api$ = of(text).pipe(
-        debounceTime(300),
-        switchMap(text => {
-          const api$ = YouTubeApi.getApi()
-            .getSuggestions(text)
-            .pipe(
-              map(results => setSuggestions(results)),
-              catchError(() =>
-                of(setSuggestionsError({ message: "Failed to get Suggestions from the Server. Press Enter to Search" }))
-              ),
-              takeUntil(action$.pipe(ofType(submitSearch.type)))
-            )
-
-          return api$.pipe(
-            tap(() => {
-              globalState.update({ isLoading: false })
-            })
-          )
-        })
-      )
-
-      return concat(resetError, api$)
+      return api$
     })
   )
+}
 
-export const doSearchEpic = (action$: Observable<Action>, state$: BehaviorSubject<RootState>) =>
-  action$.pipe(
-    ofType(submitSearch.type),
-    map(() => state$.value.search.searchText),
+function doSearch(submitSearch$: Observable<string>) {
+  return submitSearch$.pipe(
     filter(text => !!text.length),
     tap(() => {
       globalState.update({ isLoading: true })
@@ -184,11 +187,4 @@ export const doSearchEpic = (action$: Observable<Action>, state$: BehaviorSubjec
       )
     })
   )
-
-function setStateAfterToggleSearchBar(state) {
-  state.showSearchBar = !state.showSearchBar
-
-  if (!state.showSearchBar) {
-    state.suggestions = []
-  }
 }
