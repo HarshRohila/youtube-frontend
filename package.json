@@ -35,7 +35,6 @@
     "@fortawesome/free-brands-svg-icons": "^6.4.0",
     "@fortawesome/free-regular-svg-icons": "^6.4.0",
     "@fortawesome/free-solid-svg-icons": "^6.4.0",
-    "@ngneat/until-destroy": "10.0.0-beta.0",
     "axios": "^1.4.0",
     "dexie": "^3.2.3",
     "hotkeys-js": "^3.10.2",

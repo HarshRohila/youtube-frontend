@@ -136,8 +136,6 @@ export class VideoPage {
     })
   }
 
-  disconnectedCallback() {}
-
   private share = async () => {
     const time = (await this.videoPlayer.currentTime()) ?? 0
 

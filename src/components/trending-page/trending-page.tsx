@@ -74,8 +74,6 @@ export class TrendingPage {
     component.justSubscribe(doSearch$, keyPress$)
   }
 
-  disconnectedCallback() {}
-
   private onClickPlaylistBtn = () => {
     new Router(this.history).showPlaylistPage()
   }

@@ -34,8 +34,6 @@ export class AppRoot {
     })
   }
 
-  disconnectedCallback() {}
-
   render() {
     return (
       <div>

@@ -31,8 +31,6 @@ export class ShareForm {
     })
   }
 
-  disconnectedCallback() {}
-
   private handleCopyLink = async (link: string) => {
     copyToClipboard(link).then(() => {
       videoPageState.update({ copiedLink: link })

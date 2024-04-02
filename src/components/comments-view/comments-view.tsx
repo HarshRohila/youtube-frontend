@@ -25,13 +25,15 @@ export class CommentsView {
   componentWillLoad() {
     const { component } = this
 
-    component.untilDestroyed(commentsState.asObservable()).subscribe(state => {
-      if (this.comments !== state.comments) {
-        this.comments = state.comments
-        this.commentsList = [...this.commentsList, ...state.comments.comments]
+    component.untilDestroyed(commentsState.asObservable()).subscribe({
+      next: state => {
+        if (this.comments !== state.comments) {
+          this.comments = state.comments
+          this.commentsList = [...this.commentsList, ...state.comments.comments]
+        }
+        this.commentsView = state.commentsView
+        this.areCommentsLoading = state.areCommentsLoading
       }
-      this.commentsView = state.commentsView
-      this.areCommentsLoading = state.areCommentsLoading
     })
   }
 
@@ -50,8 +52,6 @@ export class CommentsView {
 
     this.component.justSubscribe(scrolledToBottom$.pipe(fetchComments))
   }
-
-  disconnectedCallback() {}
 
   render() {
     const comments = this.commentsList
