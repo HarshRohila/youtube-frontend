@@ -1,0 +1,1 @@
+import{o as c,c as o}from"./p-c9444cc0.js";function r(r,t){return c(((c,s)=>{let a=0;c.subscribe(o(s,(c=>r.call(t,c,a++)&&s.next(c))))}))}export{r as f}
