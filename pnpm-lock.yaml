@@ -20,6 +20,9 @@ dependencies:
   '@fortawesome/free-solid-svg-icons':
     specifier: ^6.4.0
     version: 6.4.0
+  '@rx-state-utils/js':
+    specifier: ^0.0.1
+    version: 0.0.1
   axios:
     specifier: ^1.4.0
     version: 1.4.0
@@ -901,6 +904,10 @@ packages:
       '@jridgewell/resolve-uri': 3.1.0
       '@jridgewell/sourcemap-codec': 1.4.14
     dev: true
+
+  /@rx-state-utils/js@0.0.1:
+    resolution: {integrity: sha512-4xNDjC1ZoJ7jzrnjszVSPYvXlJFWBEb6JlQO36/GhHCMwsIyo8xWyoDteWbnNaoJpbYH7ALN/7Xl51ok/XI5TA==}
+    dev: false
 
   /@sinonjs/commons@1.8.6:
     resolution: {integrity: sha512-Ky+XkAkqPZSm3NLBeUng77EBQl3cmeJhITaGHdYH8kjVB+aun3S4XBRti2zt17mtt0mIUDiNxYeoJm6drVvBJQ==}
