@@ -35,7 +35,7 @@
     "@fortawesome/free-brands-svg-icons": "^6.4.0",
     "@fortawesome/free-regular-svg-icons": "^6.4.0",
     "@fortawesome/free-solid-svg-icons": "^6.4.0",
-    "@rx-state-utils/js": "^0.0.1",
+    "@rx-state-utils/js": "^0.0.5",
     "axios": "^1.4.0",
     "dexie": "^3.2.3",
     "hotkeys-js": "^3.10.2",

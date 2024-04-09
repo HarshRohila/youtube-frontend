@@ -70,14 +70,14 @@ export class CardVideo {
       switchMap(this.getStream)
     )
 
-    component.untilDestroyed(videoStream$).subscribe(stream => {
+    component.subscribe(videoStream$, stream => {
       this.setStream(stream)
     })
 
     const showVideoPreview$ = videoStream$.pipe(map(() => true))
     const hideVideoPreview$ = merge(mouseLeave$, this.destroyEvent.$).pipe(map(() => false))
 
-    component.untilDestroyed(merge(showVideoPreview$, hideVideoPreview$)).subscribe(value => {
+    component.subscribe(merge(showVideoPreview$, hideVideoPreview$), value => {
       this.showVideoPreview = value
     })
   }

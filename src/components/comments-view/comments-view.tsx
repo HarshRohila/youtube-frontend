@@ -25,7 +25,7 @@ export class CommentsView {
   componentWillLoad() {
     const { component } = this
 
-    component.untilDestroyed(commentsState.asObservable()).subscribe({
+    component.subscribe(commentsState.asObservable(), {
       next: state => {
         if (this.comments !== state.comments) {
           this.comments = state.comments

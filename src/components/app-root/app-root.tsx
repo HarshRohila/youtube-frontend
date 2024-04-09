@@ -24,12 +24,11 @@ export class AppRoot {
   componentWillLoad() {
     const component = componentUtil(this)
 
-    component.untilDestroyed(globalState$).subscribe(state => {
+    component.subscribe(globalState$, state => {
       this.error = state.error
       this.isLoading = state.isLoading
     })
-
-    component.untilDestroyed(notifcationState$).subscribe(s => {
+    component.subscribe(notifcationState$, s => {
       this.notification = s
     })
   }

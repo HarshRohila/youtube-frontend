@@ -63,7 +63,7 @@ export class VideoPage {
       this.routeChange$.next({ videoId, time })
     })
 
-    this.component.untilDestroyed(this.routeChange$).subscribe(({ videoId, time }) => {
+    this.component.subscribe(this.routeChange$, ({ videoId, time }) => {
       if (videoId === this.stream.id) {
         this.setCurrentTime(time)
       } else {
@@ -71,11 +71,11 @@ export class VideoPage {
       }
     })
 
-    this.component.untilDestroyed(commentsState.asObservable()).subscribe(state => {
+    this.component.subscribe(commentsState.asObservable(), state => {
       this.commentsView = state.commentsView
     })
 
-    this.component.untilDestroyed(videoPageState.asObservable()).subscribe(state => {
+    this.component.subscribe(videoPageState.asObservable(), state => {
       this.shareForm = state.shareForm
     })
 
@@ -119,7 +119,7 @@ export class VideoPage {
 
     const videoStream$ = YouTubeApi.getApi().getStream(videoId)
 
-    this.component.untilDestroyed(videoStream$).subscribe({
+    this.component.subscribe(videoStream$, {
       next: stream => {
         this.stream = stream
         globalState.update({ isLoading: false })

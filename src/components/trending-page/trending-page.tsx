@@ -44,7 +44,7 @@ export class TrendingPage {
 
     component.justSubscribe(loadTrending$)
 
-    component.untilDestroyed(searchState.asObservable()).subscribe({
+    component.subscribe(searchState.asObservable(), {
       next: state => {
         this.showSearchbar = state.showSearchBar
         this.searchText = state.searchText

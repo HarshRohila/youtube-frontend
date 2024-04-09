@@ -21,8 +21,8 @@ dependencies:
     specifier: ^6.4.0
     version: 6.4.0
   '@rx-state-utils/js':
-    specifier: ^0.0.1
-    version: 0.0.1
+    specifier: ^0.0.5
+    version: 0.0.5(rxjs@7.8.1)
   axios:
     specifier: ^1.4.0
     version: 1.4.0
@@ -905,8 +905,12 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.14
     dev: true
 
-  /@rx-state-utils/js@0.0.1:
-    resolution: {integrity: sha512-4xNDjC1ZoJ7jzrnjszVSPYvXlJFWBEb6JlQO36/GhHCMwsIyo8xWyoDteWbnNaoJpbYH7ALN/7Xl51ok/XI5TA==}
+  /@rx-state-utils/js@0.0.5(rxjs@7.8.1):
+    resolution: {integrity: sha512-ZNw5k5Oqh32zUNUH878shl0ilEWWujVr1YCUsl6hykiF3KtLOx+ls8ZYF+EqyHUVvnVVqaKt+WWkMDZsIQDLjQ==}
+    peerDependencies:
+      rxjs: 7.x
+    dependencies:
+      rxjs: 7.8.1
     dev: false
 
   /@sinonjs/commons@1.8.6:

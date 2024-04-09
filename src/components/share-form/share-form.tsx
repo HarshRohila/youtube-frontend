@@ -24,7 +24,7 @@ export class ShareForm {
   componentWillLoad() {
     const component = componentUtil(this)
 
-    component.untilDestroyed(videoPageState.asObservable()).subscribe(state => {
+    component.subscribe(videoPageState.asObservable(), state => {
       this.copiedLink = state.copiedLink
       this.shareForm = state.shareForm
       this.currentTimeEnabled = state.currentTimeEnabled

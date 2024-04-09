@@ -30,7 +30,7 @@ export class SearchPage {
 
     const component = componentUtil(this)
 
-    component.untilDestroyed(searchState.asObservable()).subscribe(state => {
+    component.subscribe(searchState.asObservable(), state => {
       this.videos = state.searchResponse.results
       this.suggestions = state.suggestions
       this.suggestionsError = state.suggestionsError
