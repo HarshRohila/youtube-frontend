@@ -38,7 +38,8 @@ export class AppRoot {
       <div>
         <component-prefetcher
           components={[
-            ["settings-page", { deps: ["mobile-view", "dropdown-server", "page-header", "li-server-instance"] }]
+            ["settings-page", { deps: ["mobile-view", "dropdown-server", "page-header", "li-server-instance"] }],
+            ["a-playlist", { deps: ["video-player", "page-header"] }]
           ]}
         ></component-prefetcher>
         <main>

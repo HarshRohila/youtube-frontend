@@ -28,6 +28,7 @@ export class VideoPlayer {
 
   @Prop() sources: Source[]
   @Prop() muted = false
+  @Prop() prefetching = false
 
   get src() {
     return this.sources[0]
@@ -82,6 +83,8 @@ export class VideoPlayer {
   private disconnected$ = new Subject<void>()
 
   componentDidLoad() {
+    if (this.prefetching) return
+
     this.player = videojs(this.videoElement, {
       muted: this.muted,
       controls: true,
@@ -182,6 +185,8 @@ export class VideoPlayer {
   }
 
   disconnectedCallback() {
+    if (this.prefetching) return
+
     this.disconnected$.next()
     this.disconnected$.complete()
 
@@ -198,6 +203,8 @@ export class VideoPlayer {
   }
 
   render() {
+    if (this.prefetching) return
+
     return (
       <Host>
         <div class="container">

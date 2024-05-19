@@ -94,6 +94,7 @@ export namespace Components {
     interface VideoPlayer {
         "currentTime": (newTime?: number) => Promise<number>;
         "muted": boolean;
+        "prefetching": boolean;
         "skipSegments": number[][];
         "sources": Source[];
     }
@@ -360,6 +361,7 @@ declare namespace LocalJSX {
     interface VideoPlayer {
         "muted"?: boolean;
         "onLoaded"?: (event: CustomEvent<{ player: Player }>) => void;
+        "prefetching"?: boolean;
         "skipSegments"?: number[][];
         "sources"?: Source[];
     }
