@@ -1,0 +1,1 @@
+import{y as o}from"./p-8cb43504.js";const r=o({error:void 0,isLoading:!1});export{r as s}

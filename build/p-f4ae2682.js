@@ -1,1 +1,0 @@
-import{E as o}from"./p-1ef9e92e.js";import{o as r,c as t}from"./p-c9444cc0.js";function e(e){return e<=0?()=>o:r(((o,r)=>{let s=0;o.subscribe(t(r,(o=>{++s<=e&&(r.next(o),e<=s&&r.complete())})))}))}export{e as t}
