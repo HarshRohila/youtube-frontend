@@ -9,6 +9,7 @@ import { Comment, Comments, SearchResult, Source, Stream } from "./YoutubeApi";
 import { MatchResults, RouterHistory } from "@stencil-community/router";
 import { NotificationModel } from "./lib/notifier";
 import { CommentsViewProps, ShareFormState } from "./lib/redux/video-page";
+import { AnyComponent } from "./components/component-prefetcher/types";
 import { ServerInstance } from "./server-instance/serverInstanceApi";
 import { IAppError } from "./lib/redux/global";
 import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
@@ -36,6 +37,9 @@ export namespace Components {
         "closeCallback": () => void;
         "comments": Comments;
         "commentsView": CommentsViewProps;
+    }
+    interface ComponentPrefetcher {
+        "components": AnyComponent[];
     }
     interface DropdownServer {
         "serverInstances": ServerInstance[];
@@ -68,6 +72,7 @@ export namespace Components {
     }
     interface SettingsPage {
         "history": RouterHistory;
+        "prefetching": boolean;
     }
     interface ShareForm {
         "copiedLink": string;
@@ -138,6 +143,12 @@ declare global {
     var HTMLCommentsViewElement: {
         prototype: HTMLCommentsViewElement;
         new (): HTMLCommentsViewElement;
+    };
+    interface HTMLComponentPrefetcherElement extends Components.ComponentPrefetcher, HTMLStencilElement {
+    }
+    var HTMLComponentPrefetcherElement: {
+        prototype: HTMLComponentPrefetcherElement;
+        new (): HTMLComponentPrefetcherElement;
     };
     interface HTMLDropdownServerElement extends Components.DropdownServer, HTMLStencilElement {
     }
@@ -248,6 +259,7 @@ declare global {
         "app-root": HTMLAppRootElement;
         "card-video": HTMLCardVideoElement;
         "comments-view": HTMLCommentsViewElement;
+        "component-prefetcher": HTMLComponentPrefetcherElement;
         "dropdown-server": HTMLDropdownServerElement;
         "error-page": HTMLErrorPageElement;
         "icon-btn": HTMLIconBtnElement;
@@ -291,6 +303,9 @@ declare namespace LocalJSX {
         "comments"?: Comments;
         "commentsView"?: CommentsViewProps;
     }
+    interface ComponentPrefetcher {
+        "components"?: AnyComponent[];
+    }
     interface DropdownServer {
         "serverInstances"?: ServerInstance[];
     }
@@ -323,6 +338,7 @@ declare namespace LocalJSX {
     }
     interface SettingsPage {
         "history"?: RouterHistory;
+        "prefetching"?: boolean;
     }
     interface ShareForm {
         "copiedLink"?: string;
@@ -364,6 +380,7 @@ declare namespace LocalJSX {
         "app-root": AppRoot;
         "card-video": CardVideo;
         "comments-view": CommentsView;
+        "component-prefetcher": ComponentPrefetcher;
         "dropdown-server": DropdownServer;
         "error-page": ErrorPage;
         "icon-btn": IconBtn;
@@ -393,6 +410,7 @@ declare module "@stencil/core" {
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
             "card-video": LocalJSX.CardVideo & JSXBase.HTMLAttributes<HTMLCardVideoElement>;
             "comments-view": LocalJSX.CommentsView & JSXBase.HTMLAttributes<HTMLCommentsViewElement>;
+            "component-prefetcher": LocalJSX.ComponentPrefetcher & JSXBase.HTMLAttributes<HTMLComponentPrefetcherElement>;
             "dropdown-server": LocalJSX.DropdownServer & JSXBase.HTMLAttributes<HTMLDropdownServerElement>;
             "error-page": LocalJSX.ErrorPage & JSXBase.HTMLAttributes<HTMLErrorPageElement>;
             "icon-btn": LocalJSX.IconBtn & JSXBase.HTMLAttributes<HTMLIconBtnElement>;

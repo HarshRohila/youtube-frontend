@@ -36,6 +36,11 @@ export class AppRoot {
   render() {
     return (
       <div>
+        <component-prefetcher
+          components={[
+            ["settings-page", { deps: ["mobile-view", "dropdown-server", "page-header", "li-server-instance"] }]
+          ]}
+        ></component-prefetcher>
         <main>
           <stencil-router historyType="hash">
             <stencil-route-switch scrollTopOffset={0}>

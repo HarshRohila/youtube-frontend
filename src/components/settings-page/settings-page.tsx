@@ -13,7 +13,11 @@ export class SettingsPage {
   @State() serverInstances: ServerInstance[] = []
   @Prop() history: RouterHistory
 
+  @Prop() prefetching = false
+
   componentWillLoad() {
+    if (this.prefetching) return
+
     globalState.update({ isLoading: true })
 
     const done = () => {
@@ -32,6 +36,8 @@ export class SettingsPage {
   }
 
   render() {
+    if (this.prefetching) return
+
     return (
       <Host>
         <mobile-view>
