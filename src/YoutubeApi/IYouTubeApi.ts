@@ -4,7 +4,7 @@ export interface IYouTubeApi {
   getSuggestions(query: string): Observable<string[]>
   getSearchResults(query: string, nextpage?: string): Observable<SearchResponse>
   getStream(videoId: string): Observable<Stream>
-  getTrendingVideos(baseApiUrl?: string): Observable<SearchResult[]>
+  getTrendingVideos(): Observable<SearchResult[]>
   getSkipSegments(videoId: string): Observable<number[][]>
   getComments(videoId: string, nextpage?: string): Observable<Comments>
 }

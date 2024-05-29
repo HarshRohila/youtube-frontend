@@ -111,11 +111,10 @@ class PipedApi implements IYouTubeApi {
     )
   }
 
-  getTrendingVideos(baseApiUrl?: string): Observable<SearchResult[]> {
+  getTrendingVideos(): Observable<SearchResult[]> {
     const region = "IN"
-    const baseUrl = baseApiUrl ? baseApiUrl : this.getBaseUrl()
 
-    return httpGet$(`${baseUrl}/trending?region=${region}`).pipe(
+    return httpGet$(`${this.getBaseUrl()}/trending?region=${region}`).pipe(
       map(response => response.data),
       map(videos => {
         return videos.map(createSearchResultMapFunc())
