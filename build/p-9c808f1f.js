@@ -1,1 +1,0 @@
-import{y as o}from"./p-8cb43504.js";import{m as i}from"./p-14a93dff.js";const t=o({notification:void 0});function n(o){t.update({notification:o}),setTimeout((()=>{t.update({notification:void 0})}),2e3)}const c=t.asObservable().pipe(i((o=>o.notification)));export{n as c,c as n}
