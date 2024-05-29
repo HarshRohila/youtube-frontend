@@ -47,7 +47,7 @@ export function getServerInstances(): Observable<ServerInstance[]> {
 
 function testServer(server: ServerInstance): Observable<boolean> {
   const api = YouTubeApi.getApi({ baseUrl: server.apiUrl })
-  const trending$ = api.getTrendingVideos(server.apiUrl).pipe(timeout(200))
+  const trending$ = api.getTrendingVideos(server.apiUrl).pipe(timeout(500))
 
   const ANY_VIDEO_ID = "OgRoRBLZbUQ"
   const stream$ = api.getStream(ANY_VIDEO_ID).pipe(timeout(500))
