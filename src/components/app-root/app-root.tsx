@@ -1,7 +1,7 @@
 import { Component, h, Element, State, Prop } from "@stencil/core"
 import { AppRoute } from "../../utils/AppRoute"
 import { Subject } from "rxjs"
-import { IAppError } from "../../lib/redux/global"
+import { IAppError, IAppLoading } from "../../lib/redux/global"
 import { NotificationModel } from "../../lib/notifier"
 import { notifcationState$ } from "../../lib/facades/notifier"
 import { componentUtil } from "../../lib/app-state-mgt"
@@ -16,7 +16,7 @@ export class AppRoot {
   disconnected$ = new Subject<void>()
 
   @Element() el: HTMLElement
-  @State() private isLoading: boolean
+  @State() private loading: IAppLoading
   @State() private error: IAppError
 
   @Prop({ mutable: true }) notification: NotificationModel
@@ -26,7 +26,7 @@ export class AppRoot {
 
     component.subscribe(globalState$, state => {
       this.error = state.error
-      this.isLoading = state.isLoading
+      this.loading = state.loading
     })
     component.subscribe(notifcationState$, s => {
       this.notification = s
@@ -54,7 +54,7 @@ export class AppRoot {
             </stencil-route-switch>
           </stencil-router>
         </main>
-        {this.isLoading && <loading-page></loading-page>}
+        {!!this.loading && <loading-page loading={this.loading}></loading-page>}
         {this.error && <error-page error={this.error}></error-page>}
         {this.notification && <x-notification data={this.notification}></x-notification>}
       </div>

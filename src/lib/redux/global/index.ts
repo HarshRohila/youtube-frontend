@@ -2,13 +2,17 @@ import { createState } from "../../state-mgt"
 
 const initialState = {
   error: undefined as IAppError | undefined,
-  isLoading: false
+  loading: undefined as IAppLoading | undefined
 }
 
 interface IAppError {
   message: string
 }
 
+interface IAppLoading {
+  message?: string
+}
+
 const state = createState(initialState)
 
-export { IAppError, state as globalState }
+export { IAppError, IAppLoading, state as globalState }

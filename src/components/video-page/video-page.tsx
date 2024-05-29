@@ -107,7 +107,7 @@ export class VideoPage {
 
     if (!videoId) return
 
-    globalState.update({ isLoading: true })
+    globalState.update({ loading: {} })
 
     window.scrollTo({ top: 0, behavior: "smooth" })
 
@@ -122,7 +122,7 @@ export class VideoPage {
     this.component.subscribe(videoStream$, {
       next: stream => {
         this.stream = stream
-        globalState.update({ isLoading: false })
+        globalState.update({ loading: undefined })
         MediaSession.init({
           title: stream.title,
           author: stream.uploader,
@@ -131,7 +131,7 @@ export class VideoPage {
       },
       error: () => {
         this.error = { message: "Failed to load video. Please try changing server from settings(in home page)" }
-        globalState.update({ isLoading: false })
+        globalState.update({ loading: undefined })
       }
     })
   }

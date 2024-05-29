@@ -6,6 +6,7 @@ import {
   map,
   of,
   switchMap,
+  take,
   takeUntil,
   tap,
   timeout
@@ -14,6 +15,8 @@ import { SearchResponse, YouTubeApi } from "../../../YoutubeApi"
 import { IAppError, globalState } from "../global"
 import { REQUEST_TIMEOUT } from "../../../utils/constants"
 import { createState } from "../../state-mgt"
+import { ApiServer } from "../../../server-instance/serverInstanceApi"
+import { CurrentServerInstance } from "../../../server-instance/currentServerInstance"
 
 export {
   toggleSearchBar,
@@ -99,10 +102,12 @@ export function newSearchResponse(): SearchResponse {
 const ERROR_FAILED_FETCH_TRENDING =
   "Failed to get response from the Server. Please try changing server from settings(in home page)"
 
+const FIND_ACTIVE_SERVER_MESSAGE = "Trying to find Active Server. Please Wait..."
+
 function fetchTrending(source: Observable<unknown>) {
   return source.pipe(
     tap(() => {
-      globalState.update({ isLoading: true })
+      globalState.update({ loading: {} })
     }),
     switchMap(() => {
       const api$ = YouTubeApi.getApi()
@@ -112,17 +117,35 @@ function fetchTrending(source: Observable<unknown>) {
           map(results => setSearchResult({ results, nextpage: "" })),
           catchError(() => {
             globalState.update({
-              error: {
-                message: ERROR_FAILED_FETCH_TRENDING
+              loading: {
+                message: FIND_ACTIVE_SERVER_MESSAGE
               }
             })
+
+            ApiServer.getActiveServer()
+              .pipe(take(1))
+              .subscribe({
+                next: server => {
+                  CurrentServerInstance.set(server)
+                  window.location.reload()
+                },
+                error: () => {
+                  globalState.update({
+                    error: { message: "Sorry, all Servers are down now. Try after sometime." }
+                  })
+                }
+              })
+
             return of(setSearchResult({ results: [], nextpage: "" }))
           })
         )
 
       return api$.pipe(
         tap(() => {
-          globalState.update({ isLoading: false })
+          const msg = globalState.get().loading?.message
+          if (msg !== FIND_ACTIVE_SERVER_MESSAGE) {
+            globalState.update({ loading: undefined })
+          }
         })
       )
     })
@@ -137,7 +160,7 @@ function fetchSuggestions(searchText$: Observable<string>, submitSearch$: Observ
     filter(text => !!text.length),
     debounceTime(300),
     tap(() => {
-      globalState.update({ isLoading: true })
+      globalState.update({ loading: {} })
       setSuggestionsError(undefined)
     }),
     switchMap(text => {
@@ -153,7 +176,7 @@ function fetchSuggestions(searchText$: Observable<string>, submitSearch$: Observ
             return of([] as string[])
           }),
           tap(() => {
-            globalState.update({ isLoading: false })
+            globalState.update({ loading: undefined })
           }),
           takeUntil(submitSearch$)
         )
@@ -167,7 +190,7 @@ function doSearch(submitSearch$: Observable<string>) {
   return submitSearch$.pipe(
     filter(text => !!text.length),
     tap(() => {
-      globalState.update({ isLoading: true })
+      globalState.update({ loading: {} })
     }),
     switchMap(text => {
       const api$ = YouTubeApi.getApi()
@@ -182,7 +205,7 @@ function doSearch(submitSearch$: Observable<string>) {
 
       return api$.pipe(
         tap(() => {
-          globalState.update({ isLoading: false })
+          globalState.update({ loading: undefined })
         })
       )
     })

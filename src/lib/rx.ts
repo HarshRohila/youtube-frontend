@@ -21,5 +21,10 @@ export {
   throttleTime,
   iif,
   skip,
-  from
+  from,
+  defer,
+  concatMap,
+  lastValueFrom,
+  forkJoin,
+  throwIfEmpty
 } from "rxjs"
