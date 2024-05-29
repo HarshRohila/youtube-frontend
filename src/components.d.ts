@@ -11,7 +11,7 @@ import { NotificationModel } from "./lib/notifier";
 import { CommentsViewProps, ShareFormState } from "./lib/redux/video-page";
 import { AnyComponent } from "./components/component-prefetcher/types";
 import { ServerInstance } from "./server-instance/serverInstanceApi";
-import { IAppError } from "./lib/redux/global";
+import { IAppError, IAppLoading } from "./lib/redux/global";
 import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import { IconDefinition as IconDefinition1 } from "@fortawesome/fontawesome-svg-core";
 export namespace Components {
@@ -58,6 +58,7 @@ export namespace Components {
         "serverInsance": ServerInstance;
     }
     interface LoadingPage {
+        "loading"?: IAppLoading;
     }
     interface MobileView {
     }
@@ -325,6 +326,7 @@ declare namespace LocalJSX {
         "serverInsance"?: ServerInstance;
     }
     interface LoadingPage {
+        "loading"?: IAppLoading;
     }
     interface MobileView {
     }

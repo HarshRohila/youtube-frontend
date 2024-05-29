@@ -1,5 +1,6 @@
 import { faSpinner } from "@fortawesome/free-solid-svg-icons"
-import { Component, Host, h } from "@stencil/core"
+import { Component, Host, Prop, h } from "@stencil/core"
+import { IAppLoading } from "../../lib/redux/global"
 
 @Component({
   tag: "loading-page",
@@ -7,6 +8,8 @@ import { Component, Host, h } from "@stencil/core"
   shadow: true
 })
 export class LoadingPage {
+  @Prop() loading?: IAppLoading
+
   connectedCallback() {
     document.body.style.overflow = "hidden"
   }
@@ -18,6 +21,7 @@ export class LoadingPage {
       <Host>
         <div class="loading-page">
           <x-icon icon={faSpinner} spin size="3x"></x-icon>
+          {this.loading?.message && <p>{this.loading.message}</p>}
         </div>
       </Host>
     )

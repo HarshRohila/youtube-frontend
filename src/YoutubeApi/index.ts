@@ -15,16 +15,23 @@ export function newComments(): Comments {
   }
 }
 
+interface YoutubeApiConfig {
+  baseUrl: string
+}
+
 export const YouTubeApi = {
-  getApi(): IYouTubeApi {
-    return new PipedApi()
+  getApi(config?: YoutubeApiConfig): IYouTubeApi {
+    return new PipedApi(config)
   }
 }
 
 class PipedApi implements IYouTubeApi {
   private getBaseUrl() {
+    if (this.config?.baseUrl) return this.config.baseUrl
     return CurrentServerInstance.get().apiUrl
   }
+
+  constructor(private config: YoutubeApiConfig) {}
 
   getComments(videoId: string, nextpage?: string): Observable<Comments> {
     let url = `${this.getBaseUrl()}/comments/${videoId}`
@@ -106,6 +113,7 @@ class PipedApi implements IYouTubeApi {
 
   getTrendingVideos(): Observable<SearchResult[]> {
     const region = "IN"
+
     return httpGet$(`${this.getBaseUrl()}/trending?region=${region}`).pipe(
       map(response => response.data),
       map(videos => {

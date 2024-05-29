@@ -18,10 +18,10 @@ export class SettingsPage {
   componentWillLoad() {
     if (this.prefetching) return
 
-    globalState.update({ isLoading: true })
+    globalState.update({ loading: {} })
 
     const done = () => {
-      globalState.update({ isLoading: false })
+      globalState.update({ loading: undefined })
     }
 
     getServerInstances()
