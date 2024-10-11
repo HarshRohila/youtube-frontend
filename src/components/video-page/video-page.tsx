@@ -1,9 +1,17 @@
 import { MatchResults, RouterHistory } from "@stencil-community/router"
 import { Component, Host, Prop, h, State, Fragment } from "@stencil/core"
 import { SearchResult, Stream, YouTubeApi } from "../../YoutubeApi"
-import { Subject, map, take, tap } from "../../lib/rx"
+import { Subject, map, take, tap, Observable, lastValueFrom, timeout } from "../../lib/rx"
 import { IAppError, globalState } from "../../lib/redux/global"
-import { faComment, faPlus, faShare, faThumbsDown, faThumbsUp } from "@fortawesome/free-solid-svg-icons"
+import {
+  faComment,
+  faPlus,
+  faRedo,
+  faSearch,
+  faShare,
+  faThumbsDown,
+  faThumbsUp
+} from "@fortawesome/free-solid-svg-icons"
 import { Router } from "../../lib/Router"
 import { Videos } from "../../lib/Search"
 import { UploaderInfo } from "./Uploader"
@@ -23,6 +31,8 @@ import { MediaSession } from "./mediaSession"
 import { componentUtil } from "../../lib/app-state-mgt"
 import { createVoidEvent } from "../../lib/state-mgt"
 import { fetchComments } from "../../lib/facades/comments"
+import { ServerInstance, getServerInstances } from "../../server-instance/serverInstanceApi"
+import { CurrentServerInstance } from "../../server-instance/currentServerInstance"
 
 @Component({
   tag: "video-page",
@@ -51,7 +61,7 @@ export class VideoPage {
   component = componentUtil(this)
 
   componentWillLoad() {
-    const videoId = this.match.params.videoId
+    const videoId = this.videoId
 
     this.history.listen(args => {
       const { pathname, query } = args
@@ -130,7 +140,9 @@ export class VideoPage {
         })
       },
       error: () => {
-        this.error = { message: "Failed to load video. Please try changing server from settings(in home page)" }
+        this.error = {
+          message: "Failed to load video. Please try below actions."
+        }
         globalState.update({ loading: undefined })
       }
     })
@@ -201,6 +213,37 @@ export class VideoPage {
 
   viewCommentsEvent = createVoidEvent()
 
+  private handleFindActiveServer = () => {
+    getServerInstances()
+      .pipe(take(1))
+      .subscribe(async servers => {
+        for (const server of servers) {
+          console.log(server)
+
+          globalState.update({
+            loading: {
+              message: `Trying server ${server.name}...`
+            }
+          })
+
+          try {
+            await lastValueFrom(this.testServer(server))
+            CurrentServerInstance.set(server)
+            window.location.reload()
+          } catch (err) {
+            continue
+          }
+        }
+
+        this.error = {
+          message: "Sorry, all Servers are down now. Try after sometime."
+        }
+        globalState.update({
+          loading: undefined
+        })
+      })
+  }
+
   render() {
     return (
       <Host>
@@ -255,10 +298,35 @@ export class VideoPage {
               />
             </div>
           )}
-          {this.error && <h3>{this.error.message}</h3>}
+          {this.error && (
+            <div class="error-template">
+              <h3>{this.error.message}</h3>
+              <div class="action-btns">
+                <icon-btn
+                  label="Retry"
+                  icon={faRedo}
+                  onBtnClicked={() => {
+                    window.location.reload()
+                  }}
+                ></icon-btn>
+                <icon-btn
+                  label="Find Active Server"
+                  icon={faSearch}
+                  onBtnClicked={this.handleFindActiveServer}
+                ></icon-btn>
+              </div>
+            </div>
+          )}
         </div>
       </Host>
     )
+  }
+
+  private testServer(server: ServerInstance): Observable<void> {
+    const api = YouTubeApi.getApi({ baseUrl: server.apiUrl })
+    const stream$ = api.getStream(this.videoId).pipe(timeout(500))
+
+    return stream$.pipe(map(() => undefined))
   }
 }
 

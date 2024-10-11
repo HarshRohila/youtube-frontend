@@ -4,9 +4,18 @@
   flex-direction: column;
 }
 
+.error-template {
+  padding: 16px;
+  text-align: center;
+  .action-btns {
+    margin-top: 40px;
+    display: flex;
+    justify-content: space-evenly;
+  }
+}
+
 h3 {
-  margin: 16px;
-  margin-bottom: 2px;
+  margin: 16px 0;
   font-size: 1.1rem;
 }
 
