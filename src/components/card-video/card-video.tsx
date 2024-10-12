@@ -82,13 +82,17 @@ export class CardVideo {
     })
   }
 
+  handleThumbnailError = () => {
+    YouTubeApi.getApi().getStream(this.video.videoId).pipe(take(1)).subscribe(this.setStream)
+  }
+
   render() {
     const { video, subDescription } = this
 
     return (
       <Host>
         <div class="card" onMouseLeave={this.mouseLeaveEvent.handler} onMouseEnter={this.mouseEnterEvent.handler}>
-          <img class="thumbnail" src={this.thumbnail}></img>
+          <video-thumbnail imageSrc={this.thumbnail} onErrored={this.handleThumbnailError}></video-thumbnail>
           <div class="video-preview">
             {this.stream && this.showVideoPreview && (
               <video-player sources={this.stream.sources} muted={true}></video-player>

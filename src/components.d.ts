@@ -99,6 +99,9 @@ export namespace Components {
         "skipSegments": number[][];
         "sources": Source[];
     }
+    interface VideoThumbnail {
+        "imageSrc": string;
+    }
     interface XIcon {
         "icon": IconDefinition;
         "mask"?: IconDefinition;
@@ -242,6 +245,12 @@ declare global {
         prototype: HTMLVideoPlayerElement;
         new (): HTMLVideoPlayerElement;
     };
+    interface HTMLVideoThumbnailElement extends Components.VideoThumbnail, HTMLStencilElement {
+    }
+    var HTMLVideoThumbnailElement: {
+        prototype: HTMLVideoThumbnailElement;
+        new (): HTMLVideoThumbnailElement;
+    };
     interface HTMLXIconElement extends Components.XIcon, HTMLStencilElement {
     }
     var HTMLXIconElement: {
@@ -277,6 +286,7 @@ declare global {
         "trending-page": HTMLTrendingPageElement;
         "video-page": HTMLVideoPageElement;
         "video-player": HTMLVideoPlayerElement;
+        "video-thumbnail": HTMLVideoThumbnailElement;
         "x-icon": HTMLXIconElement;
         "x-notification": HTMLXNotificationElement;
     }
@@ -367,6 +377,10 @@ declare namespace LocalJSX {
         "skipSegments"?: number[][];
         "sources"?: Source[];
     }
+    interface VideoThumbnail {
+        "imageSrc"?: string;
+        "onErrored"?: (event: CustomEvent<any>) => void;
+    }
     interface XIcon {
         "icon"?: IconDefinition;
         "mask"?: IconDefinition;
@@ -400,6 +414,7 @@ declare namespace LocalJSX {
         "trending-page": TrendingPage;
         "video-page": VideoPage;
         "video-player": VideoPlayer;
+        "video-thumbnail": VideoThumbnail;
         "x-icon": XIcon;
         "x-notification": XNotification;
     }
@@ -430,6 +445,7 @@ declare module "@stencil/core" {
             "trending-page": LocalJSX.TrendingPage & JSXBase.HTMLAttributes<HTMLTrendingPageElement>;
             "video-page": LocalJSX.VideoPage & JSXBase.HTMLAttributes<HTMLVideoPageElement>;
             "video-player": LocalJSX.VideoPlayer & JSXBase.HTMLAttributes<HTMLVideoPlayerElement>;
+            "video-thumbnail": LocalJSX.VideoThumbnail & JSXBase.HTMLAttributes<HTMLVideoThumbnailElement>;
             "x-icon": LocalJSX.XIcon & JSXBase.HTMLAttributes<HTMLXIconElement>;
             "x-notification": LocalJSX.XNotification & JSXBase.HTMLAttributes<HTMLXNotificationElement>;
         }
