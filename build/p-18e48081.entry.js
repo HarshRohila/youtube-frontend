@@ -1,0 +1,1 @@
+import{r as s,c as t,h as r}from"./p-27ce4408.js";let i=class{constructor(r){s(this,r),this.errored=t(this,"errored",7),this.retriesLeft=1,this.handleError=()=>{this.retriesLeft>0&&(this.retriesLeft--,this.errored.emit())}}render(){return r("img",{class:"thumbnail",onError:this.handleError,src:this.imageSrc})}};export{i as video_thumbnail}
