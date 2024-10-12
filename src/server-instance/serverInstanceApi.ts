@@ -1,19 +1,5 @@
 import axios from "axios"
-import {
-  Observable,
-  catchError,
-  concatMap,
-  defer,
-  filter,
-  from,
-  map,
-  of,
-  switchMap,
-  take,
-  throwIfEmpty,
-  timeout
-} from "../lib/rx"
-import { YouTubeApi } from "../YoutubeApi"
+import { Observable, defer, map } from "../lib/rx"
 
 export function getServerInstances(): Observable<ServerInstance[]> {
   const apiUrl = "https://raw.githubusercontent.com/wiki/TeamPiped/Piped-Frontend/Instances.md"
@@ -44,45 +30,6 @@ export function getServerInstances(): Observable<ServerInstance[]> {
     })
   )
 }
-
-function testServer(server: ServerInstance): Observable<boolean> {
-  const api = YouTubeApi.getApi({ baseUrl: server.apiUrl })
-  const trending$ = api.getTrendingVideos().pipe(timeout(500))
-
-  const ANY_VIDEO_ID = "OgRoRBLZbUQ"
-  const stream$ = api.getStream(ANY_VIDEO_ID).pipe(timeout(500))
-
-  return trending$.pipe(
-    switchMap(() => stream$),
-    map(() => true),
-    catchError(() => of(false))
-  )
-}
-
-const ApiServer = {
-  getActiveServer(): Observable<ServerInstance> {
-    return getServerInstances().pipe(
-      switchMap(servers => {
-        return from(servers).pipe(
-          concatMap(value =>
-            testServer(value).pipe(
-              map(passed => {
-                if (passed) return value
-                return undefined
-              })
-            )
-          ),
-          filter(Boolean),
-          take(1),
-          map(value => value),
-          throwIfEmpty(() => new Error("No server found"))
-        )
-      })
-    )
-  }
-}
-
-export { ApiServer }
 
 export interface ServerInstance extends Record<string, unknown> {
   name: string

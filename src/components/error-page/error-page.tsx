@@ -26,6 +26,15 @@ export class ErrorPage {
           }}
         >
           <h3>{this.error.message}</h3>
+          {this.error.buttons && (
+            <ul>
+              {this.error.buttons.map(b => (
+                <li>
+                  <icon-btn label={b.text} icon={b.icon} onBtnClicked={b.clickHandler}></icon-btn>
+                </li>
+              ))}
+            </ul>
+          )}
         </Modal>
       </Host>
     )

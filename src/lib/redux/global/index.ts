@@ -1,3 +1,4 @@
+import { IconDefinition } from "@fortawesome/free-solid-svg-icons"
 import { createState } from "../../state-mgt"
 
 const initialState = {
@@ -7,6 +8,13 @@ const initialState = {
 
 interface IAppError {
   message: string
+  buttons?: ErrorActionButton[]
+}
+
+interface ErrorActionButton {
+  text: string
+  icon: IconDefinition
+  clickHandler: () => void
 }
 
 interface IAppLoading {

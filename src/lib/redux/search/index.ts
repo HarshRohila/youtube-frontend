@@ -3,6 +3,7 @@ import {
   catchError,
   debounceTime,
   filter,
+  lastValueFrom,
   map,
   of,
   switchMap,
@@ -15,8 +16,7 @@ import { SearchResponse, YouTubeApi } from "../../../YoutubeApi"
 import { IAppError, globalState } from "../global"
 import { REQUEST_TIMEOUT } from "../../../utils/constants"
 import { createState } from "../../state-mgt"
-import { ApiServer } from "../../../server-instance/serverInstanceApi"
-import { CurrentServerInstance } from "../../../server-instance/currentServerInstance"
+import { CurrentServerInstance, ServerInstance, getServerInstances } from "../../../server-instance"
 
 export {
   toggleSearchBar,
@@ -116,22 +116,29 @@ function fetchTrending(source: Observable<unknown>) {
           timeout(REQUEST_TIMEOUT),
           map(results => setSearchResult({ results, nextpage: "" })),
           catchError(() => {
-            globalState.update({
-              loading: {
-                message: FIND_ACTIVE_SERVER_MESSAGE
-              }
-            })
-
-            ApiServer.getActiveServer()
+            getServerInstances()
               .pipe(take(1))
               .subscribe({
-                next: server => {
-                  CurrentServerInstance.set(server)
-                  window.location.reload()
-                },
-                error: () => {
+                next: async servers => {
+                  for (const server of servers) {
+                    globalState.update({
+                      loading: {
+                        message: `Trying server ${server.name}...`
+                      }
+                    })
+
+                    try {
+                      await lastValueFrom(testServer(server))
+                      CurrentServerInstance.set(server)
+                      window.location.reload()
+                    } catch (err) {
+                      continue
+                    }
+                  }
+
                   globalState.update({
-                    error: { message: "Sorry, all Servers are down now. Try after sometime." }
+                    error: { message: "Sorry, all Servers are down now. Try after sometime." },
+                    loading: undefined
                   })
                 }
               })
@@ -150,6 +157,13 @@ function fetchTrending(source: Observable<unknown>) {
       )
     })
   )
+}
+
+function testServer(server: ServerInstance): Observable<void> {
+  const api = YouTubeApi.getApi({ baseUrl: server.apiUrl })
+  const trending$ = api.getTrendingVideos().pipe(timeout(500))
+
+  return trending$.pipe(map(() => undefined))
 }
 
 const getSuggestions = (submitSearch$: Observable<string>) => (searchText$: Observable<string>) =>

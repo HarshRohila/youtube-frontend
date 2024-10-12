@@ -7,7 +7,7 @@ import {
   faComment,
   faPlus,
   faRedo,
-  faSearch,
+  faServer,
   faShare,
   faThumbsDown,
   faThumbsUp
@@ -140,10 +140,26 @@ export class VideoPage {
         })
       },
       error: () => {
-        this.error = {
-          message: "Failed to load video. Please try below actions."
-        }
-        globalState.update({ loading: undefined })
+        globalState.update({
+          loading: undefined,
+          error: {
+            message: "Failed to load video. Please try below actions.",
+            buttons: [
+              {
+                text: "Retry",
+                icon: faRedo,
+                clickHandler: () => {
+                  window.location.reload()
+                }
+              },
+              {
+                text: "Find Active Server",
+                icon: faServer,
+                clickHandler: this.handleFindActiveServer
+              }
+            ]
+          }
+        })
       }
     })
   }
@@ -218,12 +234,11 @@ export class VideoPage {
       .pipe(take(1))
       .subscribe(async servers => {
         for (const server of servers) {
-          console.log(server)
-
           globalState.update({
             loading: {
               message: `Trying server ${server.name}...`
-            }
+            },
+            error: undefined
           })
 
           try {
@@ -235,11 +250,18 @@ export class VideoPage {
           }
         }
 
-        this.error = {
-          message: "Sorry, all Servers are down now. Try after sometime."
-        }
         globalState.update({
-          loading: undefined
+          loading: undefined,
+          error: {
+            message: "Sorry, all Servers are down now. Please try finding server again, as servers are warming up",
+            buttons: [
+              {
+                text: "Find Active Server",
+                icon: faServer,
+                clickHandler: this.handleFindActiveServer
+              }
+            ]
+          }
         })
       })
   }
@@ -296,25 +318,6 @@ export class VideoPage {
                 isShowingSuggestions={false}
                 onClickVideo={this.handleVideoClick}
               />
-            </div>
-          )}
-          {this.error && (
-            <div class="error-template">
-              <h3>{this.error.message}</h3>
-              <div class="action-btns">
-                <icon-btn
-                  label="Retry"
-                  icon={faRedo}
-                  onBtnClicked={() => {
-                    window.location.reload()
-                  }}
-                ></icon-btn>
-                <icon-btn
-                  label="Find Active Server"
-                  icon={faSearch}
-                  onBtnClicked={this.handleFindActiveServer}
-                ></icon-btn>
-              </div>
             </div>
           )}
         </div>
