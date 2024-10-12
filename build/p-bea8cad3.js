@@ -1,1 +1,0 @@
-import{m as s}from"./p-75c405c4.js";import{i as r}from"./p-6cf4a597.js";import{b as a,f as o,p as m,h as p}from"./p-1707b666.js";import{E as t}from"./p-73c5a77b.js";function f(a=1/0){return s(r,a)}function c(...s){const r=m(s),c=p(s,1/0),i=s;return i.length?1===i.length?a(i[0]):f(c)(o(i,r)):t}export{f as a,c as m}

@@ -1,0 +1,1 @@
+import{O as o}from"./p-6cf4a597.js";import{o as s,c as t}from"./p-14a93dff.js";const a=new o((o=>o.complete()));function r(o){return o<=0?()=>a:s(((s,a)=>{let r=0;s.subscribe(t(a,(s=>{++r<=o&&(a.next(s),o<=r&&a.complete())})))}))}export{a as E,r as t}

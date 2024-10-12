@@ -1,1 +1,0 @@
-import{y as o}from"./p-483a08e8.js";const r=o({error:void 0,loading:void 0});export{r as s}
