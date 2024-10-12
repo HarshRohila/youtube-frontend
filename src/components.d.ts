@@ -306,6 +306,7 @@ declare namespace LocalJSX {
     }
     interface CardVideo {
         "deleteCallback"?: (video: SearchResult) => void;
+        "onImageErrorFixed"?: (event: CustomEvent<Stream>) => void;
         "preloadStream"?: boolean;
         "video"?: SearchResult;
     }
@@ -379,6 +380,7 @@ declare namespace LocalJSX {
     }
     interface VideoThumbnail {
         "imageSrc"?: string;
+        "onErrorFixed"?: (event: CustomEvent<any>) => void;
         "onErrored"?: (event: CustomEvent<any>) => void;
     }
     interface XIcon {

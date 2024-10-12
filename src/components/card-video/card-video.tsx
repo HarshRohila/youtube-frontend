@@ -1,4 +1,4 @@
-import { Component, Host, Prop, State, h, Element } from "@stencil/core"
+import { Component, Host, Prop, State, h, Element, Event, EventEmitter } from "@stencil/core"
 import { SearchResult, Stream, YouTubeApi } from "../../YoutubeApi"
 import { faCheck, faTrash } from "@fortawesome/free-solid-svg-icons"
 import { take, of, switchMap, timer, takeUntil, map, merge } from "../../lib/rx"
@@ -86,20 +86,34 @@ export class CardVideo {
     YouTubeApi.getApi().getStream(this.video.videoId).pipe(take(1)).subscribe(this.setStream)
   }
 
+  get uploaderAvatar() {
+    return this.stream?.uploaderAvatar || this.video.uploaderAvatar
+  }
+
+  @Event() imageErrorFixed: EventEmitter<Stream>
+
+  handleImageErrorFixed = () => {
+    this.imageErrorFixed.emit(this.stream)
+  }
+
   render() {
     const { video, subDescription } = this
 
     return (
       <Host>
         <div class="card" onMouseLeave={this.mouseLeaveEvent.handler} onMouseEnter={this.mouseEnterEvent.handler}>
-          <video-thumbnail imageSrc={this.thumbnail} onErrored={this.handleThumbnailError}></video-thumbnail>
+          <video-thumbnail
+            onErrorFixed={this.handleImageErrorFixed}
+            imageSrc={this.thumbnail}
+            onErrored={this.handleThumbnailError}
+          ></video-thumbnail>
           <div class="video-preview">
             {this.stream && this.showVideoPreview && (
               <video-player sources={this.stream.sources} muted={true}></video-player>
             )}
           </div>
           <div class="video-desc">
-            <img class="uploader-avatar" onLoad={this.handleImageLoad} src={video.uploaderAvatar}></img>
+            <img class="uploader-avatar" onLoad={this.handleImageLoad} src={this.uploaderAvatar}></img>
             <span class="avatar-right">
               <h3>{video.title}</h3>
               <p class="sub-desc">

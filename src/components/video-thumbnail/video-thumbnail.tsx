@@ -9,17 +9,30 @@ const RETRY_COUNT = 1
 export class VideoThumbnail {
   @Prop() imageSrc: string
   @Event() errored: EventEmitter
+  @Event() errorFixed: EventEmitter
 
   @State() retriesLeft = RETRY_COUNT
+  @State() hasError = false
 
   handleError = () => {
+    this.hasError = true
+
     if (this.retriesLeft > 0) {
       this.retriesLeft--
       this.errored.emit()
     }
   }
 
+  handleLoad = () => {
+    const hadError = this.hasError
+    if (hadError) {
+      this.errorFixed.emit()
+    }
+
+    this.hasError = false
+  }
+
   render() {
-    return <img class="thumbnail" onError={this.handleError} src={this.imageSrc}></img>
+    return <img class="thumbnail" onError={this.handleError} onLoad={this.handleLoad} src={this.imageSrc}></img>
   }
 }

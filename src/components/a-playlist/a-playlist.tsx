@@ -1,6 +1,6 @@
 import { RouterHistory } from "@stencil-community/router"
 import { Component, Host, Prop, State, h } from "@stencil/core"
-import { deleteItemInPlaylist, listItems } from "../../playlist"
+import { addItemInPlaylist, deleteItemInPlaylist, listItems } from "../../playlist"
 import { take } from "rxjs"
 import { PlaylistItem } from "../../playlist/database/models"
 import { Videos } from "../../lib/Search"
@@ -8,6 +8,7 @@ import { Router } from "../../lib/Router"
 import { DEFAULT_PLAYLIST } from "../../utils/constants"
 import { Modal } from "../../lib/Modal"
 import { faCheck } from "@fortawesome/free-solid-svg-icons"
+import { SearchResult, Stream } from "../../YoutubeApi"
 
 @Component({
   tag: "a-playlist",
@@ -36,6 +37,19 @@ export class APlaylist {
   private deletePlaylistItem = (playlistItem: PlaylistItem) => {
     deleteItemInPlaylist(playlistItem).pipe(take(1)).subscribe()
     this.playlistItems = this.playlistItems.filter(i => i.videoId !== playlistItem.videoId)
+  }
+
+  private handleImageErrorFixed = (video: SearchResult, stream: Stream) => {
+    addItemInPlaylist({
+      thumbnail: stream.thumbnail,
+      videoId: video.videoId,
+      title: stream.title,
+      uploaderAvatar: stream.uploaderAvatar,
+      uploaderName: stream.uploader,
+      uploadedDate: stream.uploadDate
+    })
+      .pipe(take(1))
+      .subscribe()
   }
 
   render() {
@@ -69,6 +83,7 @@ export class APlaylist {
                 new Router(this.history).showVideoPage(video)
               }}
               onDeleteVideo={this.handleDelete}
+              imageErrorFixed={this.handleImageErrorFixed}
             ></Videos>
           )}
           {!this.playlistItems?.length && (
