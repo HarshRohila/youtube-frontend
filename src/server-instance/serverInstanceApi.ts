@@ -2,7 +2,7 @@ import axios from "axios"
 import { Observable, defer, map } from "../lib/rx"
 
 export function getServerInstances(): Observable<ServerInstance[]> {
-  const apiUrl = "https://raw.githubusercontent.com/wiki/TeamPiped/Piped-Frontend/Instances.md"
+  const apiUrl = "https://raw.githubusercontent.com/TeamPiped/documentation/refs/heads/main/content/docs/public-instances/index.md"
 
   return defer(() => axios.get(apiUrl)).pipe(
     map(response => response.data),
