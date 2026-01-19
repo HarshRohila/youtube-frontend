@@ -51,7 +51,10 @@ export class AppRoot {
               <stencil-route url={AppRoute.getPath("/shared-content-receiver")} component="shared-content-receiver" />
               <stencil-route url={AppRoute.getPath("/playlists/:playlistId")} component="a-playlist" />
               <stencil-route url={AppRoute.getPath("/settings")} component="settings-page" />
-              <stencil-route url={AppRoute.getPath("/youtube")} component="youtube-iframe" />
+              <stencil-route
+                url={AppRoute.getPath("/youtube/:videoId")}
+                component="youtube-iframe"
+              />
             </stencil-route-switch>
           </stencil-router>
         </main>

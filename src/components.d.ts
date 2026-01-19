@@ -112,6 +112,7 @@ export namespace Components {
         "data": NotificationModel;
     }
     interface YoutubeIframe {
+        "match": MatchResults;
     }
 }
 declare global {
@@ -403,6 +404,7 @@ declare namespace LocalJSX {
         "onTimedOut"?: (event: CustomEvent<void>) => void;
     }
     interface YoutubeIframe {
+        "match"?: MatchResults;
     }
     interface IntrinsicElements {
         "a-comment": AComment;
