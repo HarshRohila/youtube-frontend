@@ -111,6 +111,9 @@ export namespace Components {
     interface XNotification {
         "data": NotificationModel;
     }
+    interface YoutubeIframe {
+        "match": MatchResults;
+    }
 }
 declare global {
     interface HTMLACommentElement extends Components.AComment, HTMLStencilElement {
@@ -263,6 +266,12 @@ declare global {
         prototype: HTMLXNotificationElement;
         new (): HTMLXNotificationElement;
     };
+    interface HTMLYoutubeIframeElement extends Components.YoutubeIframe, HTMLStencilElement {
+    }
+    var HTMLYoutubeIframeElement: {
+        prototype: HTMLYoutubeIframeElement;
+        new (): HTMLYoutubeIframeElement;
+    };
     interface HTMLElementTagNameMap {
         "a-comment": HTMLACommentElement;
         "a-playlist": HTMLAPlaylistElement;
@@ -289,6 +298,7 @@ declare global {
         "video-thumbnail": HTMLVideoThumbnailElement;
         "x-icon": HTMLXIconElement;
         "x-notification": HTMLXNotificationElement;
+        "youtube-iframe": HTMLYoutubeIframeElement;
     }
 }
 declare namespace LocalJSX {
@@ -393,6 +403,9 @@ declare namespace LocalJSX {
         "data"?: NotificationModel;
         "onTimedOut"?: (event: CustomEvent<void>) => void;
     }
+    interface YoutubeIframe {
+        "match"?: MatchResults;
+    }
     interface IntrinsicElements {
         "a-comment": AComment;
         "a-playlist": APlaylist;
@@ -419,6 +432,7 @@ declare namespace LocalJSX {
         "video-thumbnail": VideoThumbnail;
         "x-icon": XIcon;
         "x-notification": XNotification;
+        "youtube-iframe": YoutubeIframe;
     }
 }
 export { LocalJSX as JSX };
@@ -450,6 +464,7 @@ declare module "@stencil/core" {
             "video-thumbnail": LocalJSX.VideoThumbnail & JSXBase.HTMLAttributes<HTMLVideoThumbnailElement>;
             "x-icon": LocalJSX.XIcon & JSXBase.HTMLAttributes<HTMLXIconElement>;
             "x-notification": LocalJSX.XNotification & JSXBase.HTMLAttributes<HTMLXNotificationElement>;
+            "youtube-iframe": LocalJSX.YoutubeIframe & JSXBase.HTMLAttributes<HTMLYoutubeIframeElement>;
         }
     }
 }

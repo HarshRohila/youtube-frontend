@@ -12,6 +12,7 @@ import {
   faThumbsDown,
   faThumbsUp
 } from "@fortawesome/free-solid-svg-icons"
+import { faYoutube } from "@fortawesome/free-brands-svg-icons"
 import { Router } from "../../lib/Router"
 import { Videos } from "../../lib/Search"
 import { UploaderInfo } from "./Uploader"
@@ -156,6 +157,14 @@ export class VideoPage {
                 text: "Find Active Server",
                 icon: faServer,
                 clickHandler: this.handleFindActiveServer
+              },
+              {
+                text: "Watch with YouTube",
+                icon: faYoutube,
+                clickHandler: () => {
+                  globalState.update({ error: undefined })
+                  new Router(this.history).showYoutubePage(this.videoId)
+                }
               }
             ]
           }
