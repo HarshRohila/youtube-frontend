@@ -1,6 +1,6 @@
 .container {
   aspect-ratio: 16 / 9;
-  width: min(100%, calc(100vh * 16 / 9));
+  width: min(100%, calc((100vh - $header-height) * 16 / 9));
   margin: 0 auto;
   position: relative;
   background-color: black;
