@@ -7,6 +7,11 @@
 .settings-page {
   padding: 0 10px;
 }
+.options-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
 
 .server-instances {
   height: calc(100vh - $header-height);

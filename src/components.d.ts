@@ -41,6 +41,8 @@ export namespace Components {
     interface ComponentPrefetcher {
         "components": AnyComponent[];
     }
+    interface DropdownPlayer {
+    }
     interface DropdownServer {
         "serverInstances": ServerInstance[];
     }
@@ -157,6 +159,12 @@ declare global {
     var HTMLComponentPrefetcherElement: {
         prototype: HTMLComponentPrefetcherElement;
         new (): HTMLComponentPrefetcherElement;
+    };
+    interface HTMLDropdownPlayerElement extends Components.DropdownPlayer, HTMLStencilElement {
+    }
+    var HTMLDropdownPlayerElement: {
+        prototype: HTMLDropdownPlayerElement;
+        new (): HTMLDropdownPlayerElement;
     };
     interface HTMLDropdownServerElement extends Components.DropdownServer, HTMLStencilElement {
     }
@@ -280,6 +288,7 @@ declare global {
         "card-video": HTMLCardVideoElement;
         "comments-view": HTMLCommentsViewElement;
         "component-prefetcher": HTMLComponentPrefetcherElement;
+        "dropdown-player": HTMLDropdownPlayerElement;
         "dropdown-server": HTMLDropdownServerElement;
         "error-page": HTMLErrorPageElement;
         "icon-btn": HTMLIconBtnElement;
@@ -328,6 +337,8 @@ declare namespace LocalJSX {
     }
     interface ComponentPrefetcher {
         "components"?: AnyComponent[];
+    }
+    interface DropdownPlayer {
     }
     interface DropdownServer {
         "serverInstances"?: ServerInstance[];
@@ -414,6 +425,7 @@ declare namespace LocalJSX {
         "card-video": CardVideo;
         "comments-view": CommentsView;
         "component-prefetcher": ComponentPrefetcher;
+        "dropdown-player": DropdownPlayer;
         "dropdown-server": DropdownServer;
         "error-page": ErrorPage;
         "icon-btn": IconBtn;
@@ -446,6 +458,7 @@ declare module "@stencil/core" {
             "card-video": LocalJSX.CardVideo & JSXBase.HTMLAttributes<HTMLCardVideoElement>;
             "comments-view": LocalJSX.CommentsView & JSXBase.HTMLAttributes<HTMLCommentsViewElement>;
             "component-prefetcher": LocalJSX.ComponentPrefetcher & JSXBase.HTMLAttributes<HTMLComponentPrefetcherElement>;
+            "dropdown-player": LocalJSX.DropdownPlayer & JSXBase.HTMLAttributes<HTMLDropdownPlayerElement>;
             "dropdown-server": LocalJSX.DropdownServer & JSXBase.HTMLAttributes<HTMLDropdownServerElement>;
             "error-page": LocalJSX.ErrorPage & JSXBase.HTMLAttributes<HTMLErrorPageElement>;
             "icon-btn": LocalJSX.IconBtn & JSXBase.HTMLAttributes<HTMLIconBtnElement>;

@@ -45,7 +45,11 @@ export class SettingsPage {
             <page-header history={this.history} />
             {this.serverInstances.length && (
               <div class="server-instances">
-                <dropdown-server serverInstances={this.serverInstances}></dropdown-server>
+                <div class="options-container">
+                  <dropdown-server serverInstances={this.serverInstances}></dropdown-server>
+                  <dropdown-player></dropdown-player>
+                </div>
+
                 <h3>Server Instances</h3>
                 <h4 class="head">
                   <span>Name</span>
