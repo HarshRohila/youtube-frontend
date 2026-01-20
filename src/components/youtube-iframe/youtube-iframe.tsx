@@ -1,5 +1,5 @@
-import { MatchResults } from "@stencil-community/router"
-import { Component, h, Prop } from "@stencil/core"
+import { MatchResults, RouterHistory } from "@stencil-community/router"
+import { Component, h, Host, Prop } from "@stencil/core"
 
 @Component({
   tag: "youtube-iframe",
@@ -8,6 +8,7 @@ import { Component, h, Prop } from "@stencil/core"
 })
 export class YoutubeIframe {
   @Prop() match: MatchResults
+  @Prop() history: RouterHistory
 
   get videoId() {
     return this.match.params.videoId
@@ -15,15 +16,19 @@ export class YoutubeIframe {
 
   render() {
     return (
-      <div class="container">
-        <iframe
-          id="ytplayer"
-          width="100%"
-          height="100%"
-          src={`https://www.youtube.com/embed/${this.videoId}?autoplay=1&origin=http://example.com`}
-          frameborder="0"
-        ></iframe>
-      </div>
+      <Host>
+        <page-header history={this.history} />
+        <div class="container">
+          <iframe
+            title="YouTube Video Player"
+            id="ytplayer"
+            width="100%"
+            height="100%"
+            src={`https://www.youtube.com/embed/${this.videoId}?autoplay=1&origin=http://example.com`}
+            frameborder="0"
+          ></iframe>
+        </div>
+      </Host>
     )
   }
 }

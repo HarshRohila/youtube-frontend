@@ -114,6 +114,7 @@ export namespace Components {
         "data": NotificationModel;
     }
     interface YoutubeIframe {
+        "history": RouterHistory;
         "match": MatchResults;
     }
 }
@@ -415,6 +416,7 @@ declare namespace LocalJSX {
         "onTimedOut"?: (event: CustomEvent<void>) => void;
     }
     interface YoutubeIframe {
+        "history"?: RouterHistory;
         "match"?: MatchResults;
     }
     interface IntrinsicElements {
