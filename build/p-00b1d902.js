@@ -1,0 +1,1 @@
+import{L as t}from"./p-020837dd.js";const s={apiUrl:"https://pipedapi.in.projectsegfau.lt",hasCdn:!1,locations:"",name:"projectsegfau.lt in"},a="s-instance",e={set(s){t.setJson(a,s)},get:()=>t.getJson(a)||s};export{e as C}

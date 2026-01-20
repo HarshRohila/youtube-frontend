@@ -1,0 +1,1 @@
+import{L as t}from"./p-020837dd.js";const e="default-video-player",r={set(r){t.setJson(e,{player:r})},get(){const r=t.getJson(e);return r?r.player:"in-built"}};export{r as D}

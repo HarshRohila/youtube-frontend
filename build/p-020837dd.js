@@ -1,0 +1,1 @@
+const t={getJson(t){const o=localStorage.getItem(t);return o?function(t){try{return JSON.parse(t)}catch(o){return console.error("Failed to parse",t),null}}(o):null},setJson(t,o){localStorage.setItem(t,JSON.stringify(o))}};export{t as L}
