@@ -26,6 +26,7 @@ export class YoutubeIframe {
             height="100%"
             src={`https://www.youtube.com/embed/${this.videoId}?autoplay=1&origin=http://example.com`}
             frameborder="0"
+            allowFullScreen
           ></iframe>
         </div>
       </Host>
