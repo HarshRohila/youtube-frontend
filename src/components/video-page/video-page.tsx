@@ -1,6 +1,6 @@
 import { MatchResults, RouterHistory } from "@stencil-community/router"
 import { Component, Host, Prop, h, State, Fragment } from "@stencil/core"
-import { SearchResult, Stream, YouTubeApi } from "../../YoutubeApi"
+import { SearchResult, Stream } from "../../YoutubeApi"
 import { Subject, map, take, tap, Observable, lastValueFrom, timeout } from "../../lib/rx"
 import { IAppError, globalState } from "../../lib/redux/global"
 import {
@@ -34,6 +34,7 @@ import { createVoidEvent } from "../../lib/state-mgt"
 import { fetchComments } from "../../lib/facades/comments"
 import { ServerInstance, getServerInstances } from "../../server-instance/serverInstanceApi"
 import { CurrentServerInstance } from "../../server-instance/currentServerInstance"
+import { container } from "../../container"
 
 @Component({
   tag: "video-page",
@@ -122,13 +123,12 @@ export class VideoPage {
 
     window.scrollTo({ top: 0, behavior: "smooth" })
 
-    YouTubeApi.getApi()
-      .getSkipSegments(videoId)
-      .subscribe(skipSegments => {
-        this.skipSegments = skipSegments
-      })
+    const api = container.resolve("youtubeApi")
+    api.getSkipSegments(videoId).subscribe(skipSegments => {
+      this.skipSegments = skipSegments
+    })
 
-    const videoStream$ = YouTubeApi.getApi().getStream(videoId)
+    const videoStream$ = api.getStream(videoId)
 
     this.component.subscribe(videoStream$, {
       next: stream => {
@@ -335,7 +335,8 @@ export class VideoPage {
   }
 
   private testServer(server: ServerInstance): Observable<void> {
-    const api = YouTubeApi.getApi({ baseUrl: server.apiUrl })
+    const apiFactory = container.resolve("youtubeApiFactory")
+    const api = apiFactory.getApi({ baseUrl: server.apiUrl })
     const stream$ = api.getStream(this.videoId).pipe(timeout(500))
 
     return stream$.pipe(map(() => undefined))

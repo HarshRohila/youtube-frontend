@@ -1,9 +1,10 @@
 import { Component, Host, Prop, State, h, Element, Event, EventEmitter } from "@stencil/core"
-import { SearchResult, Stream, YouTubeApi } from "../../YoutubeApi"
+import { SearchResult, Stream } from "../../YoutubeApi"
 import { faCheck, faTrash } from "@fortawesome/free-solid-svg-icons"
 import { take, of, switchMap, timer, takeUntil, map, merge } from "../../lib/rx"
 import { componentUtil } from "../../lib/app-state-mgt"
 import { createEvent, createVoidEvent } from "../../lib/state-mgt"
+import { container } from "../../container"
 
 const formatter = Intl.NumberFormat("en", { notation: "compact" })
 
@@ -47,7 +48,8 @@ export class CardVideo {
   private getStream = (video: SearchResult) => {
     if (this.stream) return of(this.stream)
 
-    return YouTubeApi.getApi().getStream(video.videoId)
+    const api = container.resolve("youtubeApi")
+    return api.getStream(video.videoId)
   }
 
   mouseLeaveEvent = createVoidEvent<MouseEvent>()
@@ -83,7 +85,8 @@ export class CardVideo {
   }
 
   handleThumbnailError = () => {
-    YouTubeApi.getApi().getStream(this.video.videoId).pipe(take(1)).subscribe(this.setStream)
+    const api = container.resolve("youtubeApi")
+    api.getStream(this.video.videoId).pipe(take(1)).subscribe(this.setStream)
   }
 
   get uploaderAvatar() {

@@ -1,5 +1,5 @@
 import { Observable, catchError, map, of } from "rxjs"
-import { Comments, IYouTubeApi, SearchResponse, SearchResult, Source, Stream } from "./IYouTubeApi"
+import { Comments, IYouTubeApi, SearchResponse, SearchResult, Source, Stream, YoutubeApiConfig } from "./IYouTubeApi"
 import { CurrentServerInstance } from "../server-instance/currentServerInstance"
 import { httpGet$ } from "../utils/http"
 
@@ -15,23 +15,13 @@ export function newComments(): Comments {
   }
 }
 
-interface YoutubeApiConfig {
-  baseUrl: string
-}
-
-export const YouTubeApi = {
-  getApi(config?: YoutubeApiConfig): IYouTubeApi {
-    return new PipedApi(config)
-  }
-}
-
-class PipedApi implements IYouTubeApi {
+export class PipedApi implements IYouTubeApi {
   private getBaseUrl() {
     if (this.config?.baseUrl) return this.config.baseUrl
     return CurrentServerInstance.get().apiUrl
   }
 
-  constructor(private config: YoutubeApiConfig) {}
+  constructor(private config?: YoutubeApiConfig) {}
 
   getComments(videoId: string, nextpage?: string): Observable<Comments> {
     let url = `${this.getBaseUrl()}/comments/${videoId}`

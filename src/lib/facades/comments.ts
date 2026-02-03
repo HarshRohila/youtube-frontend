@@ -1,4 +1,5 @@
-import { YouTubeApi, newComments } from "../../YoutubeApi"
+import { container } from "../../container"
+import { newComments } from "../../YoutubeApi"
 import { setAreCommentsLoading, setComments, CommentsViewProps } from "../redux/video-page"
 import { Observable, catchError, of, switchMap, tap } from "../rx"
 
@@ -9,7 +10,8 @@ function fetchComments(source: Observable<CommentsViewProps>) {
     }),
     switchMap(commentsView => {
       const { videoId, nextpage } = commentsView
-      const api$ = YouTubeApi.getApi().getComments(videoId, nextpage)
+      const api = container.resolve("youtubeApi")
+      const api$ = api.getComments(videoId, nextpage)
       return api$
     }),
     catchError(() => {

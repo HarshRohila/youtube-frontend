@@ -12,11 +12,12 @@ import {
   tap,
   timeout
 } from "../../../lib/rx"
-import { SearchResponse, YouTubeApi } from "../../../YoutubeApi"
+import { SearchResponse } from "../../../YoutubeApi"
 import { IAppError, globalState } from "../global"
 import { REQUEST_TIMEOUT } from "../../../utils/constants"
 import { createState } from "../../state-mgt"
 import { CurrentServerInstance, ServerInstance, getServerInstances } from "../../../server-instance"
+import { container } from "../../../container"
 
 export {
   toggleSearchBar,
@@ -110,42 +111,41 @@ function fetchTrending(source: Observable<unknown>) {
       globalState.update({ loading: {} })
     }),
     switchMap(() => {
-      const api$ = YouTubeApi.getApi()
-        .getTrendingVideos()
-        .pipe(
-          timeout(REQUEST_TIMEOUT),
-          map(results => setSearchResult({ results, nextpage: "" })),
-          catchError(() => {
-            getServerInstances()
-              .pipe(take(1))
-              .subscribe({
-                next: async servers => {
-                  for (const server of servers) {
-                    globalState.update({
-                      loading: {
-                        message: `Trying server ${server.name}...`
-                      }
-                    })
-
-                    try {
-                      await lastValueFrom(testServer(server))
-                      CurrentServerInstance.set(server)
-                      window.location.reload()
-                    } catch (err) {
-                      continue
-                    }
-                  }
-
+      const api = container.resolve("youtubeApi")
+      const api$ = api.getTrendingVideos().pipe(
+        timeout(REQUEST_TIMEOUT),
+        map(results => setSearchResult({ results, nextpage: "" })),
+        catchError(() => {
+          getServerInstances()
+            .pipe(take(1))
+            .subscribe({
+              next: async servers => {
+                for (const server of servers) {
                   globalState.update({
-                    error: { message: "Sorry, all Servers are down now. Try after sometime." },
-                    loading: undefined
+                    loading: {
+                      message: `Trying server ${server.name}...`
+                    }
                   })
-                }
-              })
 
-            return of(setSearchResult({ results: [], nextpage: "" }))
-          })
-        )
+                  try {
+                    await lastValueFrom(testServer(server))
+                    CurrentServerInstance.set(server)
+                    window.location.reload()
+                  } catch (err) {
+                    continue
+                  }
+                }
+
+                globalState.update({
+                  error: { message: "Sorry, all Servers are down now. Try after sometime." },
+                  loading: undefined
+                })
+              }
+            })
+
+          return of(setSearchResult({ results: [], nextpage: "" }))
+        })
+      )
 
       return api$.pipe(
         tap(() => {
@@ -160,7 +160,8 @@ function fetchTrending(source: Observable<unknown>) {
 }
 
 function testServer(server: ServerInstance): Observable<void> {
-  const api = YouTubeApi.getApi({ baseUrl: server.apiUrl })
+  const apiFactory = container.resolve("youtubeApiFactory")
+  const api = apiFactory.getApi({ baseUrl: server.apiUrl })
   const trending$ = api.getTrendingVideos().pipe(timeout(500))
 
   return trending$.pipe(map(() => undefined))
@@ -178,22 +179,21 @@ function fetchSuggestions(searchText$: Observable<string>, submitSearch$: Observ
       setSuggestionsError(undefined)
     }),
     switchMap(text => {
-      const api$ = YouTubeApi.getApi()
-        .getSuggestions(text)
-        .pipe(
-          tap(results => {
-            setSuggestions(results)
-          }),
-          catchError(() => {
-            setSuggestionsError({ message: "Failed to get Suggestions from the Server. Press Enter to Search" })
-            setSuggestions([])
-            return of([] as string[])
-          }),
-          tap(() => {
-            globalState.update({ loading: undefined })
-          }),
-          takeUntil(submitSearch$)
-        )
+      const api = container.resolve("youtubeApi")
+      const api$ = api.getSuggestions(text).pipe(
+        tap(results => {
+          setSuggestions(results)
+        }),
+        catchError(() => {
+          setSuggestionsError({ message: "Failed to get Suggestions from the Server. Press Enter to Search" })
+          setSuggestions([])
+          return of([] as string[])
+        }),
+        tap(() => {
+          globalState.update({ loading: undefined })
+        }),
+        takeUntil(submitSearch$)
+      )
 
       return api$
     })
@@ -207,15 +207,14 @@ function doSearch(submitSearch$: Observable<string>) {
       globalState.update({ loading: {} })
     }),
     switchMap(text => {
-      const api$ = YouTubeApi.getApi()
-        .getSearchResults(text)
-        .pipe(
-          map(results => setSearchResult(results)),
-          catchError(() => {
-            globalState.update({ error: { message: ERROR_FAILED_FETCH_TRENDING } })
-            return of(setSearchResult({ results: [], nextpage: "" }))
-          })
-        )
+      const api = container.resolve("youtubeApi")
+      const api$ = api.getSearchResults(text).pipe(
+        map(results => setSearchResult(results)),
+        catchError(() => {
+          globalState.update({ error: { message: ERROR_FAILED_FETCH_TRENDING } })
+          return of(setSearchResult({ results: [], nextpage: "" }))
+        })
+      )
 
       return api$.pipe(
         tap(() => {

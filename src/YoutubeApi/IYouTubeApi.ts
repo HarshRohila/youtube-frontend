@@ -1,5 +1,9 @@
 import { Observable } from "rxjs"
 
+export interface YoutubeApiConfig {
+  baseUrl: string
+}
+
 export interface IYouTubeApi {
   getSuggestions(query: string): Observable<string[]>
   getSearchResults(query: string, nextpage?: string): Observable<SearchResponse>

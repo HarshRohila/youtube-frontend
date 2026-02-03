@@ -38,6 +38,9 @@ dependencies:
   rxjs:
     specifier: ^7.8.1
     version: 7.8.1
+  singleton-injection:
+    specifier: ^2.0.0
+    version: 2.0.0
   videojs-contrib-quality-levels:
     specifier: ^4.0.0
     version: 4.0.0(video.js@8.3.0)
@@ -3857,6 +3860,10 @@ packages:
   /signal-exit@3.0.7:
     resolution: {integrity: sha512-wnD2ZE+l+SPC/uoS0vXeE9L1+0wuaMqKlfz9AMUo38JsyLSBWSFcHR1Rri62LZc12vLr1gb3jl7iwQhgwpAbGQ==}
     dev: true
+
+  /singleton-injection@2.0.0:
+    resolution: {integrity: sha512-6ISzBajPgRiNRS4WJTgZDsdSEwvlDn+i8CK8i3hsY+dcsssEtNtKCsZMe7m6NYNiTLZUf1T6OML/o6dqhMkx7g==}
+    dev: false
 
   /sisteransi@1.0.5:
     resolution: {integrity: sha512-bLGGlR1QxBcynn2d5YmDX4MGjlZvy2MRBDRNHLJ8VI6l6+9FUiyTFNJ0IveOSP0bcXgVDPRcfGqA0pjaqUpfVg==}
