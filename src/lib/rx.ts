@@ -28,3 +28,5 @@ export {
   forkJoin,
   throwIfEmpty
 } from "rxjs"
+
+export type { SchedulerLike } from "rxjs"

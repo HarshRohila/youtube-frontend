@@ -9,7 +9,7 @@ import { Comment, Comments, SearchResult, Source, Stream } from "./YoutubeApi";
 import { MatchResults, RouterHistory } from "@stencil-community/router";
 import { NotificationModel } from "./lib/notifier";
 import { CommentsViewProps, ShareFormState } from "./lib/redux/video-page";
-import { AnyComponent } from "./components/component-prefetcher/types";
+import { AnyComponent } from "./core/types";
 import { ServerInstance } from "./server-instance/serverInstanceApi";
 import { IAppError, IAppLoading } from "./lib/redux/global";
 import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
@@ -337,7 +337,7 @@ declare namespace LocalJSX {
         "commentsView"?: CommentsViewProps;
     }
     interface ComponentPrefetcher {
-        "components"?: AnyComponent[];
+        "components": AnyComponent[];
     }
     interface DropdownPlayer {
     }
