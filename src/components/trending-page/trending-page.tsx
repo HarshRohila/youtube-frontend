@@ -18,6 +18,10 @@ import { faList } from "@fortawesome/free-solid-svg-icons"
 import { componentUtil } from "../../lib/app-state-mgt"
 import { merge, of, tap } from "../../lib/rx"
 import { createEvent } from "../../lib/state-mgt"
+import { pipe } from "../../lib/fp"
+import { VideoController } from "../../core/VideoController"
+import { DefaultVideoPlayer } from "../../settings/defaultVideoPlayer"
+import { pushPath } from "../../utils/pushPath"
 
 @Component({
   tag: "trending-page",
@@ -36,6 +40,8 @@ export class TrendingPage {
   @Element() el: HTMLElement
 
   @Prop() history: RouterHistory
+
+  private readonly videoController = new VideoController(DefaultVideoPlayer.get())
 
   componentWillLoad() {
     const component = componentUtil(this)
@@ -127,9 +133,7 @@ export class TrendingPage {
           preloadStream
           videos={this.videos}
           isShowingSuggestions={isShowingSuggestions}
-          onClickVideo={video => {
-            new Router(this.history).showVideoPage(video)
-          }}
+          onClickVideo={pipe(this.videoController.handleClickVideo, pushPath(this.history))}
         />
       </Host>
     )

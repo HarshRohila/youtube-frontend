@@ -4,7 +4,10 @@ import { addItemInPlaylist, deleteItemInPlaylist, listItems } from "../../playli
 import { take } from "rxjs"
 import { PlaylistItem } from "../../playlist/database/models"
 import { Videos } from "../../lib/Search"
-import { Router } from "../../lib/Router"
+import { pipe } from "../../lib/fp"
+import { VideoController } from "../../core/VideoController"
+import { DefaultVideoPlayer } from "../../settings/defaultVideoPlayer"
+import { pushPath } from "../../utils/pushPath"
 import { DEFAULT_PLAYLIST } from "../../utils/constants"
 import { Modal } from "../../lib/Modal"
 import { faCheck } from "@fortawesome/free-solid-svg-icons"
@@ -19,6 +22,8 @@ export class APlaylist {
   @Prop() history: RouterHistory
 
   @State() playlistItems: PlaylistItem[]
+
+  private readonly videoController = new VideoController(DefaultVideoPlayer.get())
 
   componentWillLoad() {
     listItems()
@@ -79,9 +84,7 @@ export class APlaylist {
             <Videos
               videos={this.playlistItems}
               isShowingSuggestions={false}
-              onClickVideo={video => {
-                new Router(this.history).showVideoPage(video)
-              }}
+              onClickVideo={pipe(this.videoController.handleClickVideo, pushPath(this.history))}
               onDeleteVideo={this.handleDelete}
               imageErrorFixed={this.handleImageErrorFixed}
             ></Videos>

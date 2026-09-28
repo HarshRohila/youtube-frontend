@@ -35,6 +35,10 @@ import { fetchComments } from "../../lib/facades/comments"
 import { ServerInstance, getServerInstances } from "../../server-instance/serverInstanceApi"
 import { CurrentServerInstance } from "../../server-instance/currentServerInstance"
 import { container } from "../../container"
+import { pipe } from "../../lib/fp"
+import { VideoController } from "../../core/VideoController"
+import { DefaultVideoPlayer } from "../../settings/defaultVideoPlayer"
+import { pushPath } from "../../utils/pushPath"
 
 @Component({
   tag: "video-page",
@@ -61,6 +65,8 @@ export class VideoPage {
   @State() commentsView: CommentsViewProps
 
   component = componentUtil(this)
+
+  private readonly videoController = new VideoController(DefaultVideoPlayer.get())
 
   componentWillLoad() {
     const videoId = this.videoId
@@ -177,10 +183,6 @@ export class VideoPage {
     const time = (await this.videoPlayer.currentTime()) ?? 0
 
     getShareHandler().share(this.stream, { currentTime: time })
-  }
-
-  private handleVideoClick = (video: SearchResult) => {
-    new Router(this.history).showVideoPage(video)
   }
 
   get views() {
@@ -325,7 +327,7 @@ export class VideoPage {
                 preloadStream
                 videos={this.stream.relatedVideos}
                 isShowingSuggestions={false}
-                onClickVideo={this.handleVideoClick}
+                onClickVideo={pipe(this.videoController.handleClickVideo, pushPath(this.history))}
               />
             </div>
           )}

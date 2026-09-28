@@ -8,6 +8,10 @@ import { IAppError } from "../../lib/redux/global"
 import { componentUtil } from "../../lib/app-state-mgt"
 import { merge, startWith, tap } from "../../lib/rx"
 import { createEvent } from "../../lib/state-mgt"
+import { pipe } from "../../lib/fp"
+import { VideoController } from "../../core/VideoController"
+import { DefaultVideoPlayer } from "../../settings/defaultVideoPlayer"
+import { pushPath } from "../../utils/pushPath"
 
 @Component({
   tag: "search-page",
@@ -24,6 +28,8 @@ export class SearchPage {
 
   searchSubmitEvent = createEvent(() => this.searchText)
   suggestionClickEvent = createEvent<string>()
+
+  private readonly videoController = new VideoController(DefaultVideoPlayer.get())
 
   componentWillLoad() {
     const searchText = this.history.location.query.q as string
@@ -102,7 +108,7 @@ export class SearchPage {
           <Videos
             videos={this.videos}
             isShowingSuggestions={isShowingSuggestions}
-            onClickVideo={video => new Router(this.history).showVideoPage(video)}
+            onClickVideo={pipe(this.videoController.handleClickVideo, pushPath(this.history))}
           />
         )}
       </Host>
