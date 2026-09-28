@@ -3,7 +3,7 @@ import { SearchBar, Suggestions, Videos } from "../../lib/Search"
 import { submitSearch, keyPress, setSearchText, searchState, doSearch, getSuggestions } from "../../lib/redux/search"
 import { RouterHistory } from "@stencil-community/router"
 import { SearchResult } from "../../YoutubeApi"
-import { Router } from "../../lib/Router"
+import { RouteUtils } from "../../core/RouteUtils"
 import { IAppError } from "../../lib/redux/global"
 import { componentUtil } from "../../lib/app-state-mgt"
 import { merge, startWith, tap } from "../../lib/rx"
@@ -33,6 +33,7 @@ export class SearchPage {
 
   private readonly searchPageController = new SearchPageController()
   private readonly videoController = new VideoController(DefaultVideoPlayer.get())
+  private readonly routeUtils = new RouteUtils()
 
   componentWillLoad() {
     const searchText = this.history.location.query.q as string
@@ -71,10 +72,6 @@ export class SearchPage {
     component.justSubscribe(doSearch$, keyPress$)
   }
 
-  private handleBack = () => {
-    new Router(this.history).showTrendingPage()
-  }
-
   disconnectedCallback() {
     setSearchText("")
   }
@@ -93,7 +90,7 @@ export class SearchPage {
             onSearchSubmit={this.searchSubmitEvent.handler}
             showSearchbar={true}
             onSearchTextChange={this.searchTextChangeEvent.handler}
-            onClickBack={this.handleBack}
+            onClickBack={pipe(this.routeUtils.getTrendingPath, pushPath(this.history))}
           />
         </header>
         {isShowingSuggestions && (

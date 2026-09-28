@@ -1,7 +1,9 @@
 import { Component, Host, Prop, h } from "@stencil/core"
 import { Header } from "../../lib/Header"
 import { RouterHistory } from "@stencil-community/router"
-import { Router } from "../../lib/Router"
+import { RouteUtils } from "../../core/RouteUtils"
+import { pipe } from "../../lib/fp"
+import { pushPath } from "../../utils/pushPath"
 
 @Component({
   tag: "page-header",
@@ -11,14 +13,15 @@ import { Router } from "../../lib/Router"
 export class PageHeader {
   @Prop() history: RouterHistory
 
-  private handleHeaderClick = () => {
-    new Router(this.history).showTrendingPage()
-  }
+  private readonly routeUtils = new RouteUtils()
 
   render() {
     return (
       <Host>
-        <Header className="page-header" onHeaderClick={this.handleHeaderClick} />
+        <Header
+          className="page-header"
+          onHeaderClick={pipe(this.routeUtils.getTrendingPath, pushPath(this.history))}
+        />
       </Host>
     )
   }
