@@ -8,9 +8,7 @@ export class TrendingPageController {
 
   readonly handleOpenSettings = (): string => AppRoute.getPath("/settings")
 
-  readonly handleOpenPlaylist = (): string =>
-    this.defaultPlaylistUtils.getDefaultPlaylistPath()
+  readonly handleOpenPlaylist = (): string => this.defaultPlaylistUtils.getDefaultPlaylistPath()
 
-  readonly handleOpenSearch = (query: string): string =>
-    this.searchRouteUtils.getSearchPath(query)
+  readonly handleOpenSearch = this.searchRouteUtils.getSearchPath
 }
