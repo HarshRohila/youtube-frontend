@@ -1,6 +1,6 @@
 import { TestScheduler } from "rxjs/testing"
-import { ComponentPrefetcherController } from "../core/ComponentPrefetcherController"
-import { AnyComponent } from "../core/types"
+import { ComponentPrefetcherController } from "../ComponentPrefetcherController"
+import { AnyComponent } from "../types"
 
 const appRootComponents: AnyComponent[] = [
   ["settings-page", { deps: ["mobile-view", "dropdown-server", "page-header", "li-server-instance"] }],
