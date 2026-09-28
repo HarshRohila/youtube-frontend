@@ -71,7 +71,7 @@ export namespace Components {
         "history": RouterHistory;
     }
     interface SettingsBtn {
-        "history": RouterHistory;
+        "onOpenSettings": () => void;
     }
     interface SettingsPage {
         "history": RouterHistory;
@@ -370,7 +370,7 @@ declare namespace LocalJSX {
         "history"?: RouterHistory;
     }
     interface SettingsBtn {
-        "history"?: RouterHistory;
+        "onOpenSettings": () => void;
     }
     interface SettingsPage {
         "history"?: RouterHistory;

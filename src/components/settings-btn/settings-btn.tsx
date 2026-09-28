@@ -1,7 +1,5 @@
 import { faGear } from "@fortawesome/free-solid-svg-icons"
 import { Component, Host, Prop, h } from "@stencil/core"
-import { Router } from "../../lib/Router"
-import { RouterHistory } from "@stencil-community/router"
 
 @Component({
   tag: "settings-btn",
@@ -9,17 +7,13 @@ import { RouterHistory } from "@stencil-community/router"
   shadow: true
 })
 export class SettingsBtn {
-  @Prop() history: RouterHistory
-
-  private handleClick = () => {
-    new Router(this.history).showSettingsPage()
-  }
+  @Prop() onOpenSettings!: () => void
 
   render() {
     return (
       <Host>
         <div class="settings-btn">
-          <icon-btn icon={faGear} onBtnClicked={this.handleClick}></icon-btn>
+          <icon-btn icon={faGear} onBtnClicked={this.onOpenSettings}></icon-btn>
         </div>
       </Host>
     )

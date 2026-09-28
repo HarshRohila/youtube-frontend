@@ -19,6 +19,7 @@ import { componentUtil } from "../../lib/app-state-mgt"
 import { merge, of, tap } from "../../lib/rx"
 import { createEvent } from "../../lib/state-mgt"
 import { pipe } from "../../lib/fp"
+import { TrendingPageController } from "../../core/TrendingPageController"
 import { VideoController } from "../../core/VideoController"
 import { DefaultVideoPlayer } from "../../settings/defaultVideoPlayer"
 import { pushPath } from "../../utils/pushPath"
@@ -41,6 +42,7 @@ export class TrendingPage {
 
   @Prop() history: RouterHistory
 
+  private readonly trendingPageController = new TrendingPageController()
   private readonly videoController = new VideoController(DefaultVideoPlayer.get())
 
   componentWillLoad() {
@@ -120,7 +122,14 @@ export class TrendingPage {
             onSearchTextChange={this.searchTextChangeEvent.handler}
           />
         </header>
-        {!this.showSearchbar && <settings-btn history={this.history}></settings-btn>}
+        {!this.showSearchbar && (
+          <settings-btn
+            onOpenSettings={pipe(
+              this.trendingPageController.handleOpenSettings,
+              pushPath(this.history)
+            )}
+          ></settings-btn>
+        )}
         {isShowingSuggestions && (
           <Suggestions
             suggestions={this.suggestions}
