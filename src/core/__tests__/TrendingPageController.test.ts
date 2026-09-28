@@ -22,4 +22,15 @@ describe("TrendingPageController", () => {
     // Assert
     expect(path).toEqual("/playlists/1")
   })
+
+  it("returns search route when opening search", () => {
+    // Arrange
+    const controller = new TrendingPageController()
+
+    // Act
+    const path = controller.handleOpenSearch("cats")
+
+    // Assert
+    expect(path).toEqual("/search?q=cats")
+  })
 })

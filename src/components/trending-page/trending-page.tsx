@@ -1,7 +1,6 @@
 import { Component, Host, Prop, State, h, Element } from "@stencil/core"
 import { SearchResult } from "../../YoutubeApi"
 import { RouterHistory } from "@stencil-community/router"
-import { Router } from "../../lib/Router"
 import { SearchBar, Suggestions, Videos } from "../../lib/Search"
 import {
   doSearch,
@@ -18,7 +17,7 @@ import { faList } from "@fortawesome/free-solid-svg-icons"
 import { componentUtil } from "../../lib/app-state-mgt"
 import { merge, of, tap } from "../../lib/rx"
 import { createEvent } from "../../lib/state-mgt"
-import { pipe } from "../../lib/fp"
+import { pipe, R } from "../../lib/fp"
 import { TrendingPageController } from "../../core/TrendingPageController"
 import { VideoController } from "../../core/VideoController"
 import { DefaultVideoPlayer } from "../../settings/defaultVideoPlayer"
@@ -42,7 +41,7 @@ export class TrendingPage {
 
   @Prop() history: RouterHistory
 
-  private readonly trendingPageController = new TrendingPageController()
+  private readonly controller = new TrendingPageController()
   private readonly videoController = new VideoController(DefaultVideoPlayer.get())
 
   componentWillLoad() {
@@ -64,10 +63,12 @@ export class TrendingPage {
     })
 
     const submitSearch$ = merge(this.suggestionClickEvent.$, this.searchSubmitEvent.$).pipe(
-      tap(searchText => {
-        submitSearch(searchText)
-        new Router(this.history).showSearchPage(searchText)
-      })
+      tap(
+        pipe(
+          R.tap(submitSearch),
+          R.tap(pipe(this.controller.handleOpenSearch, pushPath(this.history)))
+        )
+      )
     )
 
     const doSearch$ = doSearch(submitSearch$)
@@ -98,13 +99,7 @@ export class TrendingPage {
       <Host>
         <header class={this.headerClass + " home"}>
           {!this.showSearchbar && (
-            <button
-              class="playlist-btn"
-              onClick={pipe(
-                this.trendingPageController.handleOpenPlaylist,
-                pushPath(this.history)
-              )}
-            >
+            <button class="playlist-btn" onClick={pipe(this.controller.handleOpenPlaylist, pushPath(this.history))}>
               <x-icon icon={faList}></x-icon>
             </button>
           )}
@@ -126,10 +121,7 @@ export class TrendingPage {
         </header>
         {!this.showSearchbar && (
           <settings-btn
-            onOpenSettings={pipe(
-              this.trendingPageController.handleOpenSettings,
-              pushPath(this.history)
-            )}
+            onOpenSettings={pipe(this.controller.handleOpenSettings, pushPath(this.history))}
           ></settings-btn>
         )}
         {isShowingSuggestions && (

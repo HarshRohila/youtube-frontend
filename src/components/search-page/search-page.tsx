@@ -9,9 +9,11 @@ import { componentUtil } from "../../lib/app-state-mgt"
 import { merge, startWith, tap } from "../../lib/rx"
 import { createEvent } from "../../lib/state-mgt"
 import { pipe } from "../../lib/fp"
+import { SearchPageController } from "../../core/SearchPageController"
 import { VideoController } from "../../core/VideoController"
 import { DefaultVideoPlayer } from "../../settings/defaultVideoPlayer"
 import { pushPath } from "../../utils/pushPath"
+import { replacePath } from "../../utils/replacePath"
 
 @Component({
   tag: "search-page",
@@ -29,6 +31,7 @@ export class SearchPage {
   searchSubmitEvent = createEvent(() => this.searchText)
   suggestionClickEvent = createEvent<string>()
 
+  private readonly searchPageController = new SearchPageController()
   private readonly videoController = new VideoController(DefaultVideoPlayer.get())
 
   componentWillLoad() {
@@ -46,10 +49,7 @@ export class SearchPage {
     })
 
     const laterSubmits$ = merge(this.searchSubmitEvent.$, this.suggestionClickEvent.$).pipe(
-      tap(searchText => {
-        window.scrollTo({ top: 0 })
-        new Router(this.history).showSearchPage(searchText, { replace: true })
-      })
+      tap(pipe(this.searchPageController.handleSubmitSearch, replacePath(this.history)))
     )
 
     const submitSearch$ = laterSubmits$.pipe(

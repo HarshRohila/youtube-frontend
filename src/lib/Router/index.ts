@@ -2,15 +2,6 @@ import { AppRoute } from "../../utils/AppRoute"
 
 export class Router {
   constructor(private history: IHistory) {}
-  showSearchPage(query: string, { replace }: { replace: boolean } = { replace: false }) {
-    const path = AppRoute.getPath(`/search?q=${query}`)
-
-    if (replace) {
-      this.history.replace(path)
-    } else {
-      this.history.push(path)
-    }
-  }
   showTrendingPage() {
     this.history.push(AppRoute.getPath(`/`))
   }
