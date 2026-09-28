@@ -11,4 +11,15 @@ describe("VideoPageController", () => {
     // Assert
     expect(path).toEqual("/youtube/abc123")
   })
+
+  it("returns default playlist route when opening playlist", () => {
+    // Arrange
+    const controller = new VideoPageController()
+
+    // Act
+    const path = controller.handleOpenPlaylist()
+
+    // Assert
+    expect(path).toEqual("/playlists/1")
+  })
 })

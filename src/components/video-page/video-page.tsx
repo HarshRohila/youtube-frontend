@@ -13,7 +13,6 @@ import {
   faThumbsUp
 } from "@fortawesome/free-solid-svg-icons"
 import { faYoutube } from "@fortawesome/free-brands-svg-icons"
-import { Router } from "../../lib/Router"
 import { Videos } from "../../lib/Search"
 import { UploaderInfo } from "./Uploader"
 import { getTimeAgoFormatter } from "../../utils/TimeFormatter"
@@ -211,10 +210,6 @@ export class VideoPage {
     this.setCurrentTime(time)
   }
 
-  private handleViewPlaylist = () => {
-    new Router(this.history).showPlaylistPage()
-  }
-
   private handleAddPlaylist = () => {
     addItemInPlaylist({
       thumbnail: this.stream.thumbnail,
@@ -230,7 +225,7 @@ export class VideoPage {
     getNotifier().notify("Added in Watch Later", [
       {
         text: "View",
-        clickHandler: this.handleViewPlaylist
+        clickHandler: pipe(this.videoPageController.handleOpenPlaylist, pushPath(this.history))
       }
     ])
   }

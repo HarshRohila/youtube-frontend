@@ -14,9 +14,6 @@ export class Router {
   showTrendingPage() {
     this.history.push(AppRoute.getPath(`/`))
   }
-  showPlaylistPage() {
-    this.history.push(AppRoute.getPath(`/playlists/1`))
-  }
 }
 
 interface IHistory {

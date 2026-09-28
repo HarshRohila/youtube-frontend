@@ -82,10 +82,6 @@ export class TrendingPage {
     component.justSubscribe(doSearch$, keyPress$)
   }
 
-  private onClickPlaylistBtn = () => {
-    new Router(this.history).showPlaylistPage()
-  }
-
   get headerClass() {
     return this.showSearchbar ? "search-active" : ""
   }
@@ -102,7 +98,13 @@ export class TrendingPage {
       <Host>
         <header class={this.headerClass + " home"}>
           {!this.showSearchbar && (
-            <button class="playlist-btn" onClick={this.onClickPlaylistBtn}>
+            <button
+              class="playlist-btn"
+              onClick={pipe(
+                this.trendingPageController.handleOpenPlaylist,
+                pushPath(this.history)
+              )}
+            >
               <x-icon icon={faList}></x-icon>
             </button>
           )}
