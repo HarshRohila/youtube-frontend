@@ -17,9 +17,6 @@ export class Router {
   showPlaylistPage() {
     this.history.push(AppRoute.getPath(`/playlists/1`))
   }
-  showYoutubePage(videoId: string) {
-    this.history.replace(AppRoute.getPath(`/youtube/${videoId}`))
-  }
 }
 
 interface IHistory {

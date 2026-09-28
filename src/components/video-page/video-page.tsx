@@ -1,6 +1,6 @@
 import { MatchResults, RouterHistory } from "@stencil-community/router"
 import { Component, Host, Prop, h, State, Fragment } from "@stencil/core"
-import { SearchResult, Stream } from "../../YoutubeApi"
+import { Stream } from "../../YoutubeApi"
 import { Subject, map, take, tap, Observable, lastValueFrom, timeout } from "../../lib/rx"
 import { IAppError, globalState } from "../../lib/redux/global"
 import {
@@ -37,6 +37,7 @@ import { CurrentServerInstance } from "../../server-instance/currentServerInstan
 import { container } from "../../container"
 import { pipe } from "../../lib/fp"
 import { VideoController } from "../../core/VideoController"
+import { VideoPageController } from "../../core/VideoPageController"
 import { DefaultVideoPlayer } from "../../settings/defaultVideoPlayer"
 import { pushPath } from "../../utils/pushPath"
 
@@ -67,6 +68,7 @@ export class VideoPage {
   component = componentUtil(this)
 
   private readonly videoController = new VideoController(DefaultVideoPlayer.get())
+  private readonly videoPageController = new VideoPageController()
 
   componentWillLoad() {
     const videoId = this.videoId
@@ -169,7 +171,7 @@ export class VideoPage {
                 icon: faYoutube,
                 clickHandler: () => {
                   globalState.update({ error: undefined })
-                  new Router(this.history).showYoutubePage(this.videoId)
+                  pipe(this.videoPageController.handleWatchWithYoutube, this.history.replace)(this.videoId)
                 }
               }
             ]
