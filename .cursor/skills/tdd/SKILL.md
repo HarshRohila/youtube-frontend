@@ -10,8 +10,8 @@ description: >-
   only via src/lib/rx. Agent runs class tests with bun test. Test files stay
   portable (no bun:test imports). Test only classes wired from Stencil
   components. Use when writing unit tests, TDD, controllers, class-based
-  logic, LoadCommand, matchCommand, bun test, ramda pipe, componentUtil, or
-  fearless refactoring tests.
+  logic, LoadCommand, matchCommand, bun test, ramda pipe, R.tap, point-free
+  wiring, componentUtil, or fearless refactoring tests.
 disable-model-invocation: true
 ---
 
@@ -21,7 +21,7 @@ This repo. Stencil for DOM. Logic lives in `src/core` classes. Tests hit public 
 
 ## Repo rules (this project)
 
-- The component will have minimal wiring logic, use "pipe" from ramda library to compose functions which helps in wiring logic
+- Stencil wiring stays minimal and **point-free** where it helps: `pipe` from `src/lib/fp` for controller → effect chains; `R.tap` only when a `pipe` runs multiple side effects in order on the same value. Prefer `pipe(controller.method, effect)` over `() => effect(controller.method())`. Do not wrap a lone callback in `R.tap`.
 - The tests, will be placed under src/core/__tests__
 - Core folder should be independent of any library or framework, as tests are in it, so this applies to tests too
 
@@ -29,7 +29,25 @@ This repo. Stencil for DOM. Logic lives in `src/core` classes. Tests hit public 
 
 `src/core/__tests__`: import the class and `src/core` types only. No Stencil, ramda, RxJS, test-runner imports. Read state with `getState()`.
 
-Ramda `pipe`, `matchCommand`, and `componentUtil` belong in the Stencil component (or `src/utils`), never in `src/core`. Import `pipe` from `src/lib/fp` (same pattern as RxJS via `src/lib/rx`). Never `from "ramda"`.
+Ramda `pipe`, `andThen`, `R.tap`, `matchCommand`, and `componentUtil` belong in the Stencil component (or `src/utils`), never in `src/core`. Import `pipe`, `andThen`, and `R` from `src/lib/fp` (same pattern as RxJS via `src/lib/rx`). Never `from "ramda"`. Use `R.<name>` only when the name clashes with another import (e.g. `R.tap` because RxJS exports `tap`).
+
+## Point-free wiring (Stencil)
+
+Logic stays in the controller; the component **threads values** with `pipe` instead of imperative wrappers. Use **`R.tap` only inside `pipe`** when stacking side effects — not for every callback.
+
+| Pattern | Prefer | Avoid |
+|--------|--------|--------|
+| Click / callback | `onClick={pipe(this.controller.handleOpenSettings, pushPath(this.history))}` | `onClick={() => pushPath(this.history)(this.controller.handleOpenSettings())}` |
+| Cmd → `matchCommand` | `pipe(controller.handleOpenChange, command => matchCommand(command, handlers))` | `const c = controller.handleOpenChange(x); if (c.type === …)` |
+| One side effect in Rx `tap` | `tap(pipe(controller.handleSubmitSearch, replacePath(this.history)))` | `tap(x => replacePath(this.history)(controller.handleSubmitSearch(x)))` when args already flow |
+| Several ordered effects on same value | `tap(pipe(R.tap(submitSearch), R.tap(pipe(controller.handleOpenSearch, pushPath(this.history)))))` | `tap(x => { submitSearch(x); pushPath(...)(...) })` |
+
+- `pipe(f, g)` — `g` receives `f`'s return value (cmd, route string, event payload, etc.).
+- `R.tap(fn)` — run `fn` for side work; pass the value through to the next step in `pipe` (or to the next `R.tap`).
+- `andThen(fn)` — promise step in `pipe` after sync work or another `andThen`; prefer over `async`/`await` arrows. Often `andThen(pipe(serviceMethod, toResult))` when args map straight into the service.
+- RxJS `tap` is only for stream operators (import from `src/lib/rx`). Ramda `R.tap` is for value pipelines inside that operator or in DOM handlers.
+
+`componentUtil.subscribe` takes a plain next handler (e.g. `applyState` or `state => { this.foo = state.foo }`). That is not a `pipe` — do not wrap it in `R.tap`. Keep business rules out of it — only assignments from state shape.
 
 ## Hard rules
 
@@ -140,12 +158,12 @@ type LoadCommand =
 
 UI runs cmds with `matchCommand` so every `type` has a handler. Copy [matchCommand.ts](matchCommand.ts) into `src/utils/matchCommand.ts` if it is missing. Do not put it in `src/core`. Do not reimplement with `if`/`switch`. `matchCommand` is a shared type util, not business logic — do not wrap it in a Controller/Utils class.
 
-Compose with ramda `pipe` in the component:
+Compose point-free in the component:
 
 ```ts
 import { pipe } from "../../lib/fp"
 
-pipe(controller.handleOpenChange, (command) =>
+pipe(controller.handleOpenChange, command =>
   matchCommand(command, {
     fetch: ({ queryParams }) => {
       void execute(fetchOptions, queryParams)
@@ -195,13 +213,16 @@ class OrderFormController {
 }
 ```
 
-UI wiring (not in unit tests): ramda `pipe` + existing services.
+UI wiring (not in unit tests): point-free `pipe` + existing services.
 
 ```ts
-const submit = pipe(controller.handleSubmit, async (args) => {
-  const result = await toResult(ordersService.create(args))
-  controller.handleSubmitResult(result)
-})
+import { andThen, pipe } from "../../lib/fp"
+
+const submit = pipe(
+  controller.handleSubmit,
+  andThen(pipe(ordersService.create, toResult)),
+  andThen(controller.handleSubmitResult),
+)
 ```
 
 Full example: [examples.md](examples.md).
@@ -258,7 +279,7 @@ it('adds a line item with quantity 1', () => {
 - Hide internals (`private`). Tests never reach private fields.
 - Public methods as `readonly` arrow properties so `this` survives when Stencil passes them as callbacks. Private arrow properties are `private readonly`.
 - HTTP / services stay in UI wiring. Controller: cmd out, `Result` in. If `matchCommand` is missing, add it from this skill to `src/utils` before wiring.
-- Component wiring: ramda `pipe` for cmd composition; `componentUtil.subscribe` for streams. No business logic in the component.
+- Component wiring: point-free `pipe` + `R.tap` for cmds and effects; `componentUtil.subscribe` for streams. No business logic in the component.
 
 ## Anti-patterns
 
@@ -268,7 +289,11 @@ it('adds a line item with quantity 1', () => {
 - Listener-set / callback `subscribe` on the controller
 - `controller.asObservable().subscribe(...)` (or any raw `.subscribe`) in a Stencil component — use `componentUtil(this).subscribe` so it unsubscribes on destroy
 - Putting tests next to the class or under `src/components`
-- Fat Stencil `componentWillLoad` / `componentDidLoad` instead of ramda `pipe` + `componentUtil.subscribe`
+- Fat Stencil `componentWillLoad` / `componentDidLoad` instead of `pipe` / `R.tap` + `componentUtil.subscribe`
+- Handlers like `onClick={() => effect(controller.method())}` when `onClick={pipe(controller.method, effect)}` works
+- `tap(value => { a(value); b(value) })` when `tap(pipe(R.tap(a), R.tap(b)))` expresses the same order
+- Importing `tap` from `ramda` — use `R.tap` from `src/lib/fp`
+- `R.tap(state => …)` as the only step, or around a single subscribe handler — use a plain function instead
 - Installing extra state libs only to hold controller state
 - Constructing a new Controller each render
 - `jest.mock` / `vi.mock` / `import { … } from 'bun:test'` / module mocks / fake timers to hide the store

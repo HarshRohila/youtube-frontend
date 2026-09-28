@@ -2,9 +2,11 @@
 
 Classes live in `src/core`. Tests live in `src/core/__tests__`. Stencil components import both and stay thin.
 
-## Controller + Stencil wiring + ramda `pipe`
+## Controller + Stencil wiring (point-free `pipe` + `R.tap`)
 
 `BehaviorSubject` in core (from `src/lib/rx`). UI subscribes with `componentUtil` — it unsubscribes on `disconnectedCallback`. Do not call `.subscribe` on the observable in the component.
+
+Wiring is **point-free** where it helps: `pipe` for controller → effect chains; `R.tap` only inside a `pipe` when you need several ordered side effects on the same value. A single `subscribe` next handler stays a plain function — no `R.tap` wrapper.
 
 ```ts
 // src/core/OrderLineItemsTableController.ts
@@ -40,11 +42,9 @@ export class OrderLineItemsTableController {
 }
 ```
 
-The component will have minimal wiring logic, use "pipe" from ramda library to compose functions which helps in wiring logic.
-
 ```tsx
 import { Component, Host, State, h } from "@stencil/core";
-import { pipe } from "../../lib/fp";
+import { pipe, R } from "../../lib/fp";
 import { componentUtil } from "../../lib/app-state-mgt";
 import { OrderLineItemsTableController } from "../../core/OrderLineItemsTableController";
 
@@ -59,7 +59,7 @@ export class OrderLineItemsTable {
       this.lineItems = state.lineItems;
     };
     const compUtil = componentUtil(this);
-    pipe(this.controller.asObservable, (state$) =>
+    pipe(this.controller.asObservable, state$ =>
       compUtil.subscribe(state$, applyState),
     )();
   }
@@ -75,6 +75,10 @@ export class OrderLineItemsTable {
   }
 }
 ```
+
+Click / navigation elsewhere: `onClick={pipe(this.controller.handleOpenSettings, pushPath(this.history))}`.
+
+Stream `tap` operators should thread values through `pipe` + `R.tap`, not re-wrap controller calls in arrows when composition is enough.
 
 Pass the same controller instance as a prop when a child needs it. Do not create a second Controller unless the child is its own business entity.
 
@@ -123,13 +127,30 @@ it("skips fetch when the filter is closed", () => {
 import { pipe } from "../../lib/fp";
 import { matchCommand } from "../../utils/matchCommand";
 
-const loadOptions = pipe(controller.handleOpenChange, (command) =>
+const loadOptions = pipe(controller.handleOpenChange, command =>
   matchCommand(command, {
     fetch: ({ queryParams }) => {
       void execute(fetchUsers, queryParams);
     },
     skip: () => {},
   }),
+);
+```
+
+Rx stream with two ordered effects on the same payload:
+
+```ts
+import { tap } from "../../lib/rx";
+import { pipe, R } from "../../lib/fp";
+import { pushPath } from "../../utils/pushPath";
+
+const submitSearch$ = merge(suggestionClick$, searchSubmit$).pipe(
+  tap(
+    pipe(
+      R.tap(submitSearch),
+      R.tap(pipe(controller.handleOpenSearch, pushPath(history))),
+    ),
+  ),
 );
 ```
 
@@ -203,18 +224,19 @@ export class OrderFormController {
 }
 ```
 
-UI (not unit-tested) composes with `pipe`. Service / HTTP stay outside `src/core`.
+UI (not unit-tested) composes point-free with `pipe`, `andThen`, and `R.tap`. Service / HTTP stay outside `src/core`.
 
 ```ts
-import { pipe } from "../../lib/fp";
+import { andThen, pipe } from "../../lib/fp";
 
-const submit = pipe(controller.handleSubmit, async (args) => {
-  const result = await toResult(ordersService.create(args));
-  controller.handleSubmitResult(result);
-});
+const submit = pipe(
+  controller.handleSubmit,
+  andThen(pipe(ordersService.create, toResult)),
+  andThen(controller.handleSubmitResult),
+);
 ```
 
-`toResult` maps service success/throw/error-body into `Result`. Keep it at the boundary, not in the controller.
+`toResult` maps service success/throw/error-body into `Result`. Keep it at the boundary, not in the controller. Nest `pipe` inside `andThen` when the async step is just service → `toResult`.
 
 ## Tests as documentation
 
